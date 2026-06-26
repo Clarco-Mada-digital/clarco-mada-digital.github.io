@@ -272,7 +272,7 @@
       "id": 6,
       "name": "My Professor",
       "year": "2025",
-      "featured": false,
+      "featured": true,
       "shortDesc": "Plateforme d'apprentissage qui génère des cours par IA (Gemini, OpenRouter, Ollama), avec parcours personnalisés et communauté.",
       "fullDesc": "My Professor est une plateforme d'apprentissage qui combine IA générative et création manuelle. Génération automatique de cours structurés (modules, leçons, exercices, quiz) via Google Gemini, OpenRouter ou des modèles locaux Ollama (gratuit et privé). Éditeur Markdown complet pour créer ses propres cours, parcours d'apprentissage séquentiels avec suivi de progression (badges, statistiques), et dimension communautaire (partage et import de parcours).",
       "tags": [
@@ -283,9 +283,11 @@
       ],
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
       "repoUrl": "https://github.com/Clarco-Mada-digital/MyP",
-      "demoUrl": "",
-      "cover": "",
-      "gallery": [],
+      "demoUrl": "https://myp-v1.mada-digital.xyz/",
+      "cover": "/projects/myprofessor-cover.jpg",
+      "gallery": [
+        "/projects/myprofessor-02.jpg"
+      ],
       "features": [
         "Génération de cours par IA (Gemini/OpenRouter/Ollama)",
         "Éditeur de cours Markdown",
