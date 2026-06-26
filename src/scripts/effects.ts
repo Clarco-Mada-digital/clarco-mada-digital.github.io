@@ -35,17 +35,46 @@ export function refreshReveal() {
 }
 
 function initCustomCursor() {
+  // Inutile sur écran tactile : on rétablit alors le curseur système
+  // (le body est en `cursor: none`) pour ne jamais laisser l'utilisateur sans.
+  if (window.matchMedia && !window.matchMedia("(pointer: fine)").matches) {
+    document.body.style.cursor = "auto";
+    return;
+  }
+
   const dot = document.querySelector<HTMLElement>(".cursor-dot");
   const outline = document.querySelector<HTMLElement>(".cursor-outline");
-  if (!dot || !outline) return;
+  if (!dot || !outline) {
+    document.body.style.cursor = "auto";
+    return;
+  }
 
-  window.addEventListener("mousemove", (e) => {
-    dot.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
-    outline.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
-  });
+  let mx = window.innerWidth / 2;
+  let my = window.innerHeight / 2;
+  let ox = mx;
+  let oy = my;
 
-  // Délégation d'événements : fonctionne aussi pour les éléments ajoutés
-  // dynamiquement (cartes projet générées par Alpine).
+  // Le point suit instantanément (pas de transition CSS = pas de latence) ;
+  // le cercle suit avec un léger lissage (lerp) pour l'effet de traîne.
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+      dot.style.transform = `translate3d(${mx - 4}px, ${my - 4}px, 0)`;
+    },
+    { passive: true },
+  );
+
+  const loop = () => {
+    ox += (mx - ox) * 0.2;
+    oy += (my - oy) * 0.2;
+    outline.style.transform = `translate3d(${ox - 20}px, ${oy - 20}px, 0)`;
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+
+  // Délégation d'événements : couvre aussi les éléments ajoutés dynamiquement.
   document.addEventListener("mouseover", (e) => {
     if ((e.target as Element)?.closest("a, button, .card-hover, input, textarea")) {
       outline.classList.add("hovered");
@@ -69,7 +98,9 @@ function initParticles() {
 
   const createParticles = () => {
     particles = [];
-    const count = (window.innerWidth * window.innerHeight) / 15000;
+    // Densité réduite + plafond : évite une boucle O(n²) trop lourde sur
+    // grands écrans (le coût des connexions explose avec le nombre).
+    const count = Math.min(70, Math.floor((window.innerWidth * window.innerHeight) / 22000));
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -85,25 +116,34 @@ function initParticles() {
   canvas.height = window.innerHeight;
   createParticles();
 
+  let resizeTimer: number | undefined;
   window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    createParticles();
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createParticles();
+    }, 150);
   });
-  window.addEventListener("mousemove", (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
+  window.addEventListener(
+    "mousemove",
+    (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    },
+    { passive: true },
+  );
 
+  let rafId = 0;
   const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(0, 240, 255, 0.4)";
     particles.forEach((p1, index) => {
       p1.x += p1.vx;
       p1.y += p1.vy;
       if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1;
       if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1;
 
-      ctx.fillStyle = "rgba(0, 240, 255, 0.4)";
       ctx.beginPath();
       ctx.arc(p1.x, p1.y, p1.size, 0, Math.PI * 2);
       ctx.fill();
@@ -137,9 +177,19 @@ function initParticles() {
         }
       }
     });
-    requestAnimationFrame(animate);
+    rafId = requestAnimationFrame(animate);
   };
   animate();
+
+  // Met l'animation en pause quand l'onglet n'est pas visible (CPU/batterie).
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      cancelAnimationFrame(rafId);
+    } else {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(animate);
+    }
+  });
 }
 
 function initCounters() {

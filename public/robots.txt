@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /clarco-console
 
-Sitemap: /sitemap-index.xml
+Sitemap: https://clarco-mada-digital.github.io/sitemap-index.xml

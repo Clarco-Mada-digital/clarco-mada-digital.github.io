@@ -48,6 +48,13 @@ body {
   display: none !important;
 }
 
+/* Accessibilité : focus clavier visible (sans gêner la navigation souris) */
+:focus-visible {
+  outline: 2px solid #00f0ff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .card-hover {
   transition: all 0.3s ease;
 }
@@ -72,7 +79,8 @@ body {
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
-  transition: transform 0.1s ease;
+  /* Suivi instantané (lissage géré en JS) + accélération GPU */
+  will-change: transform;
   mix-blend-mode: difference;
 }
 .cursor-outline {
@@ -85,8 +93,9 @@ body {
   border-radius: 50%;
   pointer-events: none;
   z-index: 9998;
+  will-change: transform;
+  /* Pas de transition sur transform (lissage JS) ; on garde l'effet hover */
   transition:
-    transform 0.2s ease-out,
     width 0.3s ease,
     height 0.3s ease,
     background 0.3s ease;
