@@ -41,6 +41,7 @@ function portfolioApp() {
 
   return {
     activeView: "home",
+    mobileMenuOpen: false,
     selectedProject: null as Project | null,
     lightbox: null as string | null,
     lightboxImages: [] as string[],
@@ -106,6 +107,7 @@ function portfolioApp() {
 
     changeView(view: string) {
       this.activeView = view;
+      this.mobileMenuOpen = false;
       if (history.replaceState) history.replaceState(null, "", `#${view}`);
       window.scrollTo({ top: 0, behavior: "smooth" });
       refreshReveal();

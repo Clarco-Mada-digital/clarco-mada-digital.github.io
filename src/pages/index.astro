@@ -35,7 +35,7 @@ const bootstrap = {
 <Base>
   <div
     x-data="portfolioApp"
-    x-effect="document.body.style.overflow = selectedProject ? 'hidden' : ''"
+    x-effect="document.body.style.overflow = (selectedProject || mobileMenuOpen) ? 'hidden' : ''"
     class="min-h-screen flex flex-col md:flex-row"
   >
     <Sidebar />
