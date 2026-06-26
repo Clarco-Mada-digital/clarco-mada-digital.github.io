@@ -186,11 +186,11 @@ function adminApp() {
       });
     },
 
-    /** Upload une image vers public/projects/ (dev only) → renvoie le chemin. */
-    async uploadImage(file: File): Promise<string | null> {
+    /** Upload un fichier vers public/<dir>/ (dev only) → renvoie le chemin. */
+    async uploadFile(file: File, dir: "projects" | "cv" = "projects"): Promise<string | null> {
       if (!this.apiAvailable) {
         this.flash(
-          "L'upload de fichier nécessite le serveur local (npm run dev). Tu peux sinon coller une URL d'image.",
+          "L'upload de fichier nécessite le serveur local (npm run dev). Tu peux sinon coller une URL.",
           "error",
         );
         return null;
@@ -200,11 +200,11 @@ function adminApp() {
         const res = await fetch("/api/admin/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: file.name, dataUrl }),
+          body: JSON.stringify({ name: file.name, dataUrl, dir }),
         });
         const out = await res.json();
         if (!res.ok || !out.ok) throw new Error(out.error || "Échec de l'upload");
-        this.flash("✓ Image ajoutée dans public/projects/.", "success");
+        this.flash(`✓ Fichier ajouté dans public/${dir}/.`, "success");
         return out.path as string;
       } catch (err) {
         this.flash("Upload : " + (err as Error).message, "error");
@@ -217,7 +217,7 @@ function adminApp() {
       const file = input.files?.[0];
       input.value = "";
       if (!file) return;
-      const path = await this.uploadImage(file);
+      const path = await this.uploadFile(file, "projects");
       if (path) project.cover = path;
     },
 
@@ -227,9 +227,18 @@ function adminApp() {
       input.value = "";
       if (!project.gallery) project.gallery = [];
       for (const file of files) {
-        const path = await this.uploadImage(file);
+        const path = await this.uploadFile(file, "projects");
         if (path) project.gallery.push(path);
       }
+    },
+
+    async uploadCv(event: Event) {
+      const input = event.target as HTMLInputElement;
+      const file = input.files?.[0];
+      input.value = "";
+      if (!file) return;
+      const path = await this.uploadFile(file, "cv");
+      if (path) this.data.site.cvUrl = path;
     },
 
     // ---- Compétences ----

@@ -1,11 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="clarco" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#00f0ff" />
       <stop offset="1" stop-color="#bc13fe" />
     </linearGradient>
   </defs>
-  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#g)" />
-  <text x="32" y="44" font-family="JetBrains Mono, monospace" font-size="36"
-        font-weight="800" text-anchor="middle" fill="#070a0f">B</text>
+  <!-- Fond dégradé arrondi -->
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="url(#clarco)" />
+  <!-- Monogramme « C » Clarco -->
+  <text x="30" y="45" font-family="'JetBrains Mono', ui-monospace, monospace"
+        font-size="40" font-weight="800" text-anchor="middle" fill="#070a0f">C</text>
+  <!-- Curseur terminal néon-vert (rappel du thème « lab ») -->
+  <rect x="42" y="38" width="9" height="4" rx="1.5" fill="#00ff9d" />
+  <!-- Pastille « disponible » -->
+  <circle cx="49" cy="15" r="5" fill="#00ff9d" stroke="#070a0f" stroke-width="2" />
 </svg>

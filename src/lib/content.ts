@@ -49,6 +49,8 @@ export interface Content {
     description: string;
     available: boolean;
     availabilityLabel: string;
+    /** Lien vers le CV (URL externe ou chemin local type /cv/cv.pdf). Vide = bouton masqué. */
+    cvUrl?: string;
   };
   hero: {
     tagline: string;

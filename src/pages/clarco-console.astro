@@ -116,6 +116,23 @@ const addBtn =
               <input type="checkbox" x-model="data.site.available" class="accent-neon-cyan" /> Afficher « disponible »
             </label>
           </div>
+
+          <!-- CV -->
+          <div class="border-t border-lab-border pt-4">
+            <label class={label}>CV (bouton « Télécharger mon CV »)</label>
+            <div class="flex flex-wrap items-center gap-2">
+              <input class={input + ' !flex-1 min-w-[200px]'} x-model="data.site.cvUrl" placeholder="URL ou /cv/mon-cv.pdf — vide = bouton masqué" />
+              <label class={addBtn + ' cursor-pointer'}>
+                ⬆ Uploader (PDF)
+                <input type="file" accept="application/pdf,image/*" class="hidden" @change="uploadCv($event)" />
+              </label>
+              <template x-if="data.site.cvUrl">
+                <a :href="asset(data.site.cvUrl)" target="_blank" rel="noopener" class={addBtn}>Voir</a>
+              </template>
+              <button x-show="data.site.cvUrl" class={miniBtn + ' !w-auto px-2'} @click="data.site.cvUrl = ''">retirer</button>
+            </div>
+            <p class="text-[11px] text-gray-600 mt-2 font-mono">Le PDF déposé est enregistré dans <span class="text-neon-cyan">public/cv/</span>.</p>
+          </div>
         </section>
 
         <!-- ====== HERO ====== -->

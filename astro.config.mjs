@@ -15,9 +15,11 @@ import path from "node:path";
  */
 function adminDevApi() {
   const dataFile = fileURLToPath(new URL("./src/data/content.json", import.meta.url));
-  const uploadDir = fileURLToPath(new URL("./public/projects/", import.meta.url));
+  const publicDir = fileURLToPath(new URL("./public/", import.meta.url));
 
   const MAX_UPLOAD = 10 * 1024 * 1024; // 10 Mo
+  // Dossiers de destination autorisés (anti path-traversal).
+  const ALLOWED_DIRS = new Set(["projects", "cv"]);
   const EXT_BY_MIME = {
     "image/png": "png",
     "image/jpeg": "jpg",
@@ -25,6 +27,7 @@ function adminDevApi() {
     "image/gif": "gif",
     "image/svg+xml": "svg",
     "image/avif": "avif",
+    "application/pdf": "pdf",
   };
 
   function readBody(req, limit = MAX_UPLOAD * 1.4) {
@@ -82,20 +85,22 @@ function adminDevApi() {
       res.end(JSON.stringify({ ok: false, error: "Méthode non autorisée" }));
       return;
     }
-    const { name, dataUrl } = JSON.parse(await readBody(req));
+    const { name, dataUrl, dir } = JSON.parse(await readBody(req));
+    const targetDir = ALLOWED_DIRS.has(dir) ? dir : "projects";
     const match = /^data:([^;]+);base64,(.+)$/s.exec(dataUrl || "");
-    if (!match) throw new Error("Image invalide (dataURL base64 attendu)");
+    if (!match) throw new Error("Fichier invalide (dataURL base64 attendu)");
     const mime = match[1];
     const ext = EXT_BY_MIME[mime];
     if (!ext) throw new Error("Format non supporté : " + mime);
     const buffer = Buffer.from(match[2], "base64");
     if (buffer.length > MAX_UPLOAD) throw new Error("Fichier trop volumineux (max 10 Mo)");
 
-    await fs.mkdir(uploadDir, { recursive: true });
-    const baseName = slugify((name || "image").replace(/\.[^.]+$/, ""));
+    const outDir = path.join(publicDir, targetDir);
+    await fs.mkdir(outDir, { recursive: true });
+    const baseName = slugify((name || "fichier").replace(/\.[^.]+$/, ""));
     const fileName = `${baseName}-${Date.now().toString(36)}.${ext}`;
-    await fs.writeFile(path.join(uploadDir, fileName), buffer);
-    const publicPath = `/projects/${fileName}`;
+    await fs.writeFile(path.join(outDir, fileName), buffer);
+    const publicPath = `/${targetDir}/${fileName}`;
     res.statusCode = 200;
     res.end(JSON.stringify({ ok: true, path: publicPath }));
   }

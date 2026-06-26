@@ -7,7 +7,8 @@
     "titleTag": "Bryan Clark // Full-Stack & Mobile Architect",
     "description": "Portfolio de Bryan Clark, développeur Full-Stack, Web et Mobile.",
     "available": true,
-    "availabilityLabel": "Disponible"
+    "availabilityLabel": "Disponible",
+    "cvUrl": ""
   },
   "hero": {
     "tagline": "Full-Stack & Mobile Architect. Je conçois des applications performantes, élégantes et scalables.",
