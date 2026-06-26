@@ -142,9 +142,42 @@ function initParticles() {
   animate();
 }
 
+function initCounters() {
+  const els = document.querySelectorAll<HTMLElement>("[data-count-to]");
+  if (!els.length) return;
+  const ease = (t: number) => 1 - Math.pow(1 - t, 3); // easeOutCubic
+  const run = (el: HTMLElement) => {
+    const target = Number(el.dataset.countTo || "0");
+    const prefix = el.dataset.countPrefix || "";
+    const suffix = el.dataset.countSuffix || "";
+    const duration = 1200;
+    const start = performance.now();
+    const step = (now: number) => {
+      const p = Math.min(1, (now - start) / duration);
+      const value = Math.round(ease(p) * target);
+      el.textContent = `${prefix}${value}${suffix}`;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          run(entry.target as HTMLElement);
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 },
+  );
+  els.forEach((el) => obs.observe(el));
+}
+
 export function initEffects() {
   initScrollReveal();
-  if (prefersReducedMotion) return; // pas de curseur custom ni de particules
+  if (prefersReducedMotion) return; // valeurs finales déjà affichées, pas d'anim
+  initCounters();
   initCustomCursor();
   initParticles();
 }

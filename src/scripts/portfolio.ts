@@ -1,7 +1,8 @@
 import Alpine from "alpinejs";
 import { refreshReveal } from "./effects";
 import { assetUrl } from "../lib/url";
-import type { Project } from "../lib/content";
+import { generateCv, CV_TEMPLATES } from "./cv";
+import type { Project, Content } from "../lib/content";
 
 interface PortfolioBootstrap {
   projects: Project[];
@@ -9,6 +10,7 @@ interface PortfolioBootstrap {
   formEndpoint: string;
   email: string;
   base: string;
+  content: Content;
 }
 
 declare global {
@@ -25,12 +27,20 @@ function portfolioApp() {
     formEndpoint: "",
     email: "",
     base: "/",
+    content: null as unknown as Content,
   };
 
   return {
     activeView: "home",
     selectedProject: null as Project | null,
     lightbox: null as string | null,
+    cvOpen: false,
+    cvBusy: "",
+    cvTemplates: CV_TEMPLATES,
+    customCv: boot.content?.site?.cvUrl || "",
+    isLight:
+      typeof document !== "undefined" &&
+      document.documentElement.classList.contains("light"),
     formSent: false,
     formError: "",
     form: { name: "", email: "", message: "" },
@@ -82,6 +92,34 @@ function portfolioApp() {
 
     openImage(src: string) {
       this.lightbox = src;
+    },
+
+    openCv() {
+      this.cvOpen = true;
+    },
+
+    toggleTheme() {
+      this.isLight = !this.isLight;
+      document.documentElement.classList.toggle("light", this.isLight);
+      try {
+        localStorage.setItem("theme", this.isLight ? "light" : "dark");
+      } catch {
+        /* ignore */
+      }
+    },
+
+    async generateCv(templateId: string) {
+      if (this.cvBusy) return;
+      this.cvBusy = templateId;
+      try {
+        await generateCv(boot.content, templateId);
+      } catch (err) {
+        console.error("Génération CV échouée", err);
+        alert("La génération du CV a échoué. Réessaie.");
+      } finally {
+        this.cvBusy = "";
+        this.cvOpen = false;
+      }
     },
 
     async submitForm() {

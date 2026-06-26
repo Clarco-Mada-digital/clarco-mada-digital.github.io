@@ -1,9 +1,15 @@
 ---
 import { content } from "../../lib/content";
-import { assetUrl } from "../../lib/url";
 
 const { site, hero, stats } = content;
-const base = import.meta.env.BASE_URL;
+
+// Décompose une valeur de stat en { prefix, num, suffix } pour l'animation.
+// Ex: "40+" -> { prefix:"", num:40, suffix:"+" } ; "∞" -> null (non animé).
+function parseStat(v: string) {
+  const m = v.match(/^(\D*)(\d+)(\D*)$/);
+  if (!m) return null;
+  return { prefix: m[1], num: Number(m[2]), suffix: m[3] };
+}
 
 // Sépare le nom pour l'effet glitch (1er mot blanc + reste en dégradé).
 const parts = site.name.trim().split(/\s+/);
@@ -74,30 +80,23 @@ const stackStr = code.stack.map((s) => `'${s}'`).join(", ");
         >
           Me contacter
         </button>
-        {
-          site.cvUrl && (
-            <a
-              href={assetUrl(site.cvUrl, base)}
-              download
-              target="_blank"
-              rel="noopener noreferrer"
-              class="px-6 py-3 border border-neon-green/40 text-neon-green font-bold rounded-lg hover:bg-neon-green/10 hover:border-neon-green transition-all flex items-center gap-2"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              Télécharger mon CV
-            </a>
-          )
-        }
+        <button
+          @click="openCv()"
+          class="px-6 py-3 border border-neon-green/40 text-neon-green font-bold rounded-lg hover:bg-neon-green/10 hover:border-neon-green transition-all flex items-center gap-2"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Télécharger mon CV
+        </button>
       </div>
     </div>
   </div>
@@ -105,19 +104,32 @@ const stackStr = code.stack.map((s) => `'${s}'`).join(", ");
   <!-- Stats rapides -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
     {
-      stats.map((stat, i) => (
-        <div
-          class="reveal bg-lab-card border border-lab-border rounded-xl p-5 card-hover"
-          style={`transition-delay: ${i * 0.1}s`}
-        >
-          <div class={`text-3xl font-bold font-mono text-${stat.color}`}>
-            {stat.value}
+      stats.map((stat, i) => {
+        const parsed = parseStat(stat.value);
+        return (
+          <div
+            class="reveal bg-lab-card border border-lab-border rounded-xl p-5 card-hover"
+            style={`transition-delay: ${i * 0.1}s`}
+          >
+            <div class={`text-3xl font-bold font-mono text-${stat.color}`}>
+              {parsed ? (
+                <span
+                  data-count-to={parsed.num}
+                  data-count-prefix={parsed.prefix}
+                  data-count-suffix={parsed.suffix}
+                >
+                  {stat.value}
+                </span>
+              ) : (
+                stat.value
+              )}
+            </div>
+            <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+              {stat.label}
+            </div>
           </div>
-          <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">
-            {stat.label}
-          </div>
-        </div>
-      ))
+        );
+      })
     }
   </div>
 

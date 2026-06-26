@@ -58,6 +58,44 @@ const year = new Date().getFullYear();
 
   <!-- Socials -->
   <div class="hidden md:block mt-10">
+    <!-- Bascule thème clair/sombre -->
+    <button
+      @click="toggleTheme()"
+      class="flex items-center gap-2 mb-6 text-xs font-mono text-gray-500 hover:text-neon-cyan transition-colors"
+      :aria-label="isLight ? 'Passer en mode sombre' : 'Passer en mode clair'"
+    >
+      <span
+        class="w-9 h-9 rounded-lg border border-lab-border flex items-center justify-center"
+      >
+        <!-- Lune (visible en clair) -->
+        <svg
+          x-show="isLight"
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+        </svg>
+        <!-- Soleil (visible en sombre) -->
+        <svg
+          x-show="!isLight"
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path
+            d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+          ></path>
+        </svg>
+      </span>
+      <span x-text="isLight ? 'Mode sombre' : 'Mode clair'"></span>
+    </button>
+
     <div class="text-[10px] text-gray-600 uppercase tracking-[0.2em] mb-4">
       Connect
     </div>

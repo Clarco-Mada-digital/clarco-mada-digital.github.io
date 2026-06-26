@@ -51,9 +51,9 @@
   ],
   "about": {
     "paragraphs": [
-      "Bonjour ! Je suis Bryan Clark, un développeur passionné basé à Paris. Depuis plus de 5 ans, je transforme des idées en applications web et mobiles robustes, utilisées par des milliers de personnes.",
-      "Mon approche est simple : un code propre, une architecture réfléchie, et une obsession pour le détail. Je navigue entre le front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go, Python) et le mobile (Flutter, React Native).",
-      "Quand je ne code pas, je contribue à des projets open-source, j'expérimente avec des outils d'IA, ou j'explore les nouveautés tech sur GitHub et HackerNews."
+      "Bonjour ! Je suis Bryan Clark, développeur Full-Stack & Mobile et fondateur de <span class=\"text-neon-cyan font-semibold\">Clarco Mada digital</span>. Je transforme des idées en applications web et mobiles robustes, pensées pour durer.",
+      "Mon approche est simple : un code propre, une architecture réfléchie et une obsession du détail. Je navigue entre le front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go, Python) et le mobile (Flutter, React Native).",
+      "Quand je ne code pas, je contribue à des projets open-source, j'expérimente avec des outils d'IA et j'explore les nouveautés tech. Avec Clarco Mada digital, j'accompagne les entreprises de l'idée jusqu'à la mise en production."
     ],
     "doing": [
       "Architecture d'applications web SaaS",

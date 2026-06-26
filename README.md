@@ -47,6 +47,15 @@ Toutes les données vivent dans un seul fichier : **`src/data/content.json`**.
 Le bouton **Exporter** télécharge un `content.json` ; remplace le fichier dans
 `src/data/` puis `git push`. **Importer** permet de recharger un JSON existant.
 
+## ✨ Fonctionnalités phares
+- **CV PDF généré à la volée** depuis tes données, avec **3 templates** au choix
+  (Moderne, Minimal, Terminal). Bouton « Télécharger mon CV » → choix du style →
+  PDF. pdfmake est chargé à la demande (pas dans le bundle principal).
+- **Mode clair / sombre** avec bascule dans la sidebar, persistance
+  (localStorage) et respect de la préférence système, sans flash au chargement.
+- **Compteurs animés** sur les statistiques (au défilement).
+- **Accès admin caché** (Konami code / triple-clic logo) — voir plus haut.
+
 ## 🎨 Améliorations apportées (en plus de la migration)
 - **Contenu 100 % éditable** via `/admin` (CRUD + réordonnancement) au lieu de
   données codées en dur.
