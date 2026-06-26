@@ -9,20 +9,21 @@
     "available": true,
     "availabilityLabel": "Disponible",
     "cvUrl": "",
-    "photo": ""
+    "photo": "https://res.cloudinary.com/dqhksjmzp/image/upload/v1770882848/gestion-projet/img-hero-presentation.png"
   },
   "hero": {
     "tagline": "Full-Stack & Mobile Architect. Je conçois des applications performantes, élégantes et scalables.",
     "code": {
       "name": "Bryan Clark",
       "role": "Full-Stack & Mobile Architect",
-      "location": "Paris, France",
+      "location": "Antsiranana,Madagascar",
       "stack": [
         "React",
         "Vue.js",
         "Node.js",
         "Flutter",
-        "Go"
+        "Rust",
+        "React Native"
       ],
       "passions": "Résoudre des problèmes complexes avec du code élégant",
       "available": true
@@ -30,7 +31,7 @@
   },
   "stats": [
     {
-      "value": "5+",
+      "value": "3+",
       "label": "Ans d'expérience",
       "color": "neon-cyan"
     },
@@ -46,19 +47,19 @@
     },
     {
       "value": "∞",
-      "label": "Cafés consommés",
+      "label": "Nuit blanche à coder",
       "color": "white"
     }
   ],
   "about": {
     "paragraphs": [
-      "Bonjour ! Je suis Bryan Clark, développeur Full-Stack & Mobile et fondateur de <span class=\"text-neon-cyan font-semibold\">Clarco Mada digital</span>. Je transforme des idées en applications web et mobiles robustes, pensées pour durer.",
-      "Mon approche est simple : un code propre, une architecture réfléchie et une obsession du détail. Je navigue entre le front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go, Python) et le mobile (Flutter, React Native).",
-      "Quand je ne code pas, je contribue à des projets open-source, j'expérimente avec des outils d'IA et j'explore les nouveautés tech. Avec Clarco Mada digital, j'accompagne les entreprises de l'idée jusqu'à la mise en production."
+      "Bonjour ! Je suis Bryan Clark, développeur Full-Stack & Mobile et fondateur de <span class=\"text-neon-cyan font-semibold\">ABC.Dev</span>. Je transforme des idées en applications web et mobiles robustes, pensées pour durer.",
+      "Mon approche est simple : un code propre, une architecture réfléchie et une obsession du détail. Je navigue entre le front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go, Python, Rust) et le mobile (Flutter, React Native).",
+      "Quand je ne code pas, je contribue à des projets open-source, j'expérimente avec des outils d'IA et j'explore les nouveautés tech. Avec ABC.Dev, j'accompagne les entreprises de l'idée jusqu'à la mise en production."
     ],
     "doing": [
       "Architecture d'applications web SaaS",
-      "Développement mobile cross-platform (Flutter)",
+      "Développement mobile cross-platform (Flutter, React Native)",
       "API RESTful & GraphQL",
       "Optimisation performance & SEO",
       "CI/CD & DevOps (Docker, K8s)"
@@ -79,7 +80,7 @@
         "React",
         "Vue.js",
         "Next.js",
-        "Nuxt.js",
+        "Astro.js",
         "TypeScript",
         "Tailwind CSS",
         "Alpine.js",
@@ -98,7 +99,8 @@
         "PostgreSQL",
         "MongoDB",
         "Redis",
-        "GraphQL"
+        "GraphQL",
+        "Rust"
       ]
     },
     {
@@ -123,7 +125,8 @@
     "Jira / Notion",
     "AWS / GCP",
     "Vercel / Netlify",
-    "Linux / Bash"
+    "Linux / Bash",
+    "Dockploy"
   ],
   "projects": [
     {
@@ -149,7 +152,9 @@
         "Prédictions IA du budget",
         "Export PDF des relevés",
         "Mode hors-ligne"
-      ]
+      ],
+      "cover": "",
+      "gallery": []
     },
     {
       "id": 2,
@@ -174,7 +179,9 @@
         "Système de Roadmap",
         "Mode sombre/clair",
         "API publique"
-      ]
+      ],
+      "cover": "",
+      "gallery": []
     },
     {
       "id": 3,
@@ -199,7 +206,9 @@
         "Wallet integré",
         "Marketplace en temps réel",
         "Royalties automatiques"
-      ]
+      ],
+      "cover": "",
+      "gallery": []
     },
     {
       "id": 4,
@@ -224,7 +233,9 @@
         "Estimation d'arrivée IA",
         "Multi-transporteurs",
         "API REST publique"
-      ]
+      ],
+      "cover": "",
+      "gallery": []
     },
     {
       "id": 5,
@@ -249,7 +260,9 @@
         "Versioning de fichiers",
         "Client cross-platform",
         "Open-source"
-      ]
+      ],
+      "cover": "",
+      "gallery": []
     },
     {
       "id": 6,
@@ -274,76 +287,72 @@
         "Dossier médical partagé",
         "Authentification forte",
         "Conforme RGPD/HDS"
-      ]
+      ],
+      "cover": "",
+      "gallery": []
     }
   ],
   "experience": [
     {
-      "id": 1,
-      "role": "Lead Developer & Co-fondateur",
-      "company": "DevFlow (Startup)",
-      "period": "2023 — Présent",
-      "description": "Conception et développement d'un SaaS de gestion de projets pour équipes tech. Architecture microservices, management d'une équipe de 3 développeurs, levée de fonds de 500k€.",
-      "tech": [
-        "React",
-        "Node.js",
-        "PostgreSQL",
-        "Docker",
-        "AWS"
-      ]
-    },
-    {
       "id": 2,
       "role": "Senior Full-Stack Developer",
-      "company": "Nebula Tech",
-      "period": "2021 — 2023",
+      "company": "MADA-Digital",
+      "period": " 2023 — Mainteant",
       "description": "Développement de plateformes web à fort traffic (2M+ utilisateurs). Migration d'une architecture monolithique vers microservices. Optimisation des performances (Core Web Vitals).",
       "tech": [
-        "Next.js",
-        "Go",
-        "GraphQL",
+        "React.js",
+        "Django",
+        "Dockploy",
         "Kubernetes",
-        "GCP"
+        "GCP",
+        "WordPress",
+        "ReactNative"
       ]
     },
     {
       "id": 3,
       "role": "Mobile & Web Developer",
-      "company": "Pixel Studio",
-      "period": "2019 — 2021",
+      "company": "Freelance",
+      "period": "2021 — 2023",
       "description": "Création d'applications mobiles et web pour divers clients (Fintech, E-commerce, Santé). Mise en place de CI/CD et de process de tests automatisés.",
       "tech": [
         "Flutter",
         "React",
         "Node.js",
-        "Firebase"
+        "Firebase",
+        "Supabase",
+        "Python"
       ]
     },
     {
       "id": 4,
       "role": "Développeur Junior",
-      "company": "WebAgency Lyon",
-      "period": "2018 — 2019",
+      "company": "Freelance",
+      "period": "2018 — 2020",
       "description": "Développement de sites vitrines et e-commerce sous WordPress et Shopify. Premiers pas en React et Node.js. Sensibilisation aux bonnes pratiques de développement.",
       "tech": [
         "PHP",
         "JavaScript",
         "React",
-        "MySQL"
+        "MySQL",
+        "Vue.js",
+        "Python",
+        "SCSS/CSS"
       ]
     }
   ],
   "contact": {
     "intro": "Je suis actuellement ouvert à de nouvelles opportunités. Que ce soit pour un CDI, du freelancing ou juste échanger sur un projet, n'hésitez pas à me contacter.",
-    "email": "bryan.clark@example.com",
-    "phone": "",
-    "location": "Paris, France (Remote OK)",
+    "email": "brayanraherinandrasana@gmail.com",
+    "phone": "+261.32.88.942.01",
+    "location": "Diego, Madagascar (Remote OK)",
     "status": "Disponible immédiatement",
-    "formEndpoint": ""
+    "formEndpoint": "",
+    "web3formsKey": ""
   },
   "socials": {
-    "github": "https://github.com/",
-    "linkedin": "https://www.linkedin.com/",
-    "email": "bryan.clark@example.com"
+    "github": "https://github.com/clarco-mada-digital",
+    "linkedin": "https://www.linkedin.com/brayn-clark",
+    "email": "brayanraherinandrasana@gmail.com"
   }
 }

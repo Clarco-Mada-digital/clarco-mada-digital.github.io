@@ -71,8 +71,11 @@ Le bouton **Exporter** télécharge un `content.json` ; remplace le fichier dans
   favicon SVG dégradé.
 - **Accessibilité** : respect de `prefers-reduced-motion` (désactive
   particules/curseur/animations), liens sociaux avec `aria-label`.
-- **Formulaire de contact fonctionnel** : `mailto:` par défaut, ou envoi AJAX
-  si tu renseignes un *endpoint* (Formspree…) dans l'admin.
+- **Écran de chargement** (splash) terminal/néon le temps que tout soit prêt.
+- **Formulaire de contact qui envoie de vrais emails** sans serveur :
+  renseigne une **clé Web3Forms** (gratuit — `web3forms.com`, juste ton email)
+  dans l'admin (onglet Contact). Repli : Formspree, puis `mailto:`. Honeypot
+  anti-spam inclus.
 - **Projets enrichis** : liens repo/démo et badge « featured ».
 - **Navigation par hash** (`#projects`, `#contact`…) partageable.
 - **Déploiement GitHub Pages automatisé** (`.github/workflows/deploy.yml`).

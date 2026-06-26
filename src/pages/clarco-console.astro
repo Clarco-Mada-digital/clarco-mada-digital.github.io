@@ -490,7 +490,16 @@ const addBtn =
             <div><label class={label}>Téléphone (CV)</label><input class={input} x-model="data.contact.phone" placeholder="+261 ..." /></div>
             <div><label class={label}>Localisation</label><input class={input} x-model="data.contact.location" /></div>
             <div><label class={label}>Statut</label><input class={input} x-model="data.contact.status" /></div>
-            <div><label class={label}>Endpoint formulaire (Formspree…)</label><input class={input} x-model="data.contact.formEndpoint" placeholder="https://formspree.io/f/xxxx (option.)" /></div>
+            <div><label class={label}>Endpoint Formspree (option.)</label><input class={input} x-model="data.contact.formEndpoint" placeholder="https://formspree.io/f/xxxx" /></div>
+          </div>
+          <div class="bg-lab-dark border border-lab-border rounded-lg p-4">
+            <label class={label}>Clé Web3Forms (recevoir les messages par email — gratuit)</label>
+            <input class={input} x-model="data.contact.web3formsKey" placeholder="Ex: 1a2b3c4d-...." />
+            <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
+              Va sur <span class="text-neon-cyan">web3forms.com</span>, entre ton email, reçois une clé d'accès et colle-la ici.
+              Les soumissions du formulaire t'arriveront alors par email, <span class="text-neon-green">sans serveur</span>.
+              Prioritaire sur Formspree ; sans aucune des deux, le formulaire ouvre le client mail du visiteur.
+            </p>
           </div>
           <h3 class="text-gray-400 text-sm font-mono pt-2">Réseaux (sidebar)</h3>
           <div class="grid sm:grid-cols-3 gap-4">

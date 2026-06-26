@@ -113,6 +113,16 @@ const { contact } = content;
       style="transition-delay: 0.2s"
     >
       <form @submit.prevent="submitForm()">
+        <!-- Honeypot anti-spam (caché aux humains) -->
+        <input
+          type="text"
+          x-model="form.botcheck"
+          name="botcheck"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          class="hidden"
+        />
         <div class="space-y-4">
           <div>
             <label class="text-xs text-gray-500 font-mono mb-1.5 block">Nom</label
@@ -150,9 +160,11 @@ const { contact } = content;
           </div>
           <button
             type="submit"
-            class="w-full py-3 bg-gradient-to-r from-neon-cyan to-neon-purple text-lab-dark font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            :disabled="formSending"
+            class="w-full py-3 bg-gradient-to-r from-neon-cyan to-neon-purple text-lab-dark font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-60"
           >
-            <span x-show="!formSent">Envoyer le message</span>
+            <span x-show="!formSent && !formSending">Envoyer le message</span>
+            <span x-show="formSending" style="display: none">Envoi…</span>
             <span x-show="formSent" style="display: none">✓ Message envoyé !</span>
           </button>
           <p

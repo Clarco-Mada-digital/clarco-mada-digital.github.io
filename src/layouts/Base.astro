@@ -119,6 +119,36 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
   <body
     class="font-sans text-gray-300 antialiased bg-grid selection:bg-neon-cyan selection:text-lab-dark"
   >
+    <!-- Écran de chargement (ADN terminal du portfolio) -->
+    <div id="preloader" aria-hidden="true">
+      <div class="pl-box">
+        <div class="pl-logo">{content.site.initials}</div>
+        <div class="pl-line">
+          <span class="pl-prompt">$</span>initialisation du portfolio<span
+            class="pl-cursor">▋</span
+          >
+        </div>
+        <div class="pl-bar"><i></i></div>
+      </div>
+    </div>
+    <script is:inline>
+      (function () {
+        var done = function () {
+          document.documentElement.classList.add("pl-done");
+        };
+        // Masque dès que tout est chargé (avec un minimum visuel court),
+        // et un filet de sécurité si l'évènement load tarde.
+        if (document.readyState === "complete") {
+          setTimeout(done, 300);
+        } else {
+          window.addEventListener("load", function () {
+            setTimeout(done, 350);
+          });
+        }
+        setTimeout(done, 2500);
+      })();
+    </script>
+
     <!-- Canvas pour les particules de fond -->
     <canvas id="particle-canvas"></canvas>
 

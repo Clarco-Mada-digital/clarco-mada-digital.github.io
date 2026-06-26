@@ -56,8 +56,9 @@ function portfolioApp() {
     fontId: DEFAULT_FONT,
     paletteId: DEFAULT_THEME,
     formSent: false,
+    formSending: false,
     formError: "",
-    form: { name: "", email: "", message: "" },
+    form: { name: "", email: "", message: "", botcheck: "" },
     typedText: "",
     fullText: boot.tagline,
     projects: boot.projects,
@@ -186,39 +187,62 @@ function portfolioApp() {
 
     async submitForm() {
       this.formError = "";
-      const endpoint = boot.formEndpoint;
+      // Anti-spam : honeypot rempli => on ignore silencieusement (bot).
+      if (this.form.botcheck) return;
 
-      // Pas d'endpoint configuré → on ouvre le client mail (fonctionne en statique).
-      if (!endpoint) {
-        const subject = encodeURIComponent(`Contact portfolio — ${this.form.name}`);
-        const body = encodeURIComponent(
-          `${this.form.message}\n\n— ${this.form.name} (${this.form.email})`,
-        );
-        window.location.href = `mailto:${boot.email}?subject=${subject}&body=${body}`;
-        this.markSent();
-        return;
-      }
+      const web3key = boot.content?.contact?.web3formsKey?.trim();
+      const endpoint = boot.formEndpoint?.trim();
+      this.formSending = true;
 
-      // Endpoint configuré (ex: Formspree) → envoi AJAX.
       try {
-        const res = await fetch(endpoint, {
-          method: "POST",
-          headers: { Accept: "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify(this.form),
-        });
-        if (!res.ok) throw new Error("Échec de l'envoi");
-        this.markSent();
+        if (web3key) {
+          // --- Web3Forms (gratuit, sans serveur) ---
+          const res = await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({
+              access_key: web3key,
+              subject: `Portfolio — nouveau message de ${this.form.name}`,
+              from_name: "Portfolio Bryan Clark",
+              name: this.form.name,
+              email: this.form.email,
+              message: this.form.message,
+            }),
+          });
+          const out = await res.json();
+          if (!out.success) throw new Error(out.message || "Échec");
+          this.markSent();
+        } else if (endpoint) {
+          // --- Formspree (ou autre endpoint compatible) ---
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify(this.form),
+          });
+          if (!res.ok) throw new Error("Échec de l'envoi");
+          this.markSent();
+        } else {
+          // --- Repli : ouvre le client mail (aucune config) ---
+          const subject = encodeURIComponent(`Contact portfolio — ${this.form.name}`);
+          const body = encodeURIComponent(
+            `${this.form.message}\n\n— ${this.form.name} (${this.form.email})`,
+          );
+          window.location.href = `mailto:${boot.email}?subject=${subject}&body=${body}`;
+          this.markSent();
+        }
       } catch (err) {
-        this.formError = "Oups, l'envoi a échoué. Réessaie ou écris-moi directement.";
+        this.formError = "Oups, l'envoi a échoué. Réessaie ou écris-moi directement par email.";
+      } finally {
+        this.formSending = false;
       }
     },
 
     markSent() {
       this.formSent = true;
       setTimeout(() => {
-        this.form = { name: "", email: "", message: "" };
+        this.form = { name: "", email: "", message: "", botcheck: "" };
         this.formSent = false;
-      }, 3000);
+      }, 4000);
     },
   };
 }

@@ -81,7 +81,10 @@ export interface Content {
     phone?: string;
     location: string;
     status: string;
+    /** Endpoint Formspree (optionnel). */
     formEndpoint: string;
+    /** Clé d'accès Web3Forms (optionnel, recommandé). */
+    web3formsKey?: string;
   };
   socials: {
     github: string;
