@@ -1,4 +1,8 @@
 ---
+// Polices auto-hébergées (woff2 dans le build, aucune requête externe).
+import "@fontsource-variable/space-grotesk/index.css";
+import "@fontsource/space-mono/400.css";
+import "@fontsource/space-mono/700.css";
 import "../styles/global.css";
 import { content } from "../lib/content";
 
@@ -86,13 +90,6 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
 
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <meta name="theme-color" content="#070a0f" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
   </head>
 
   <body

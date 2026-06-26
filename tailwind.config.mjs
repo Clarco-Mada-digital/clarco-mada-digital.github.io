@@ -8,8 +8,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        sans: ['"Space Grotesk Variable"', "Inter", "system-ui", "sans-serif"],
+        mono: ['"Space Mono"', '"JetBrains Mono"', "monospace"],
       },
       colors: {
         "lab-dark": "#070a0f",
