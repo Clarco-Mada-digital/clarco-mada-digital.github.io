@@ -1,8 +1,17 @@
 ---
 // Polices auto-hébergées (woff2 dans le build, aucune requête externe).
+// Plusieurs familles : le visiteur peut changer de combinaison (le navigateur
+// ne télécharge que la police réellement utilisée).
 import "@fontsource-variable/space-grotesk/index.css";
 import "@fontsource/space-mono/400.css";
 import "@fontsource/space-mono/700.css";
+import "@fontsource-variable/sora/index.css";
+import "@fontsource-variable/jetbrains-mono/index.css";
+import "@fontsource-variable/inter/index.css";
+import "@fontsource/chakra-petch/400.css";
+import "@fontsource/chakra-petch/700.css";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/700.css";
 import "../styles/global.css";
 import { content } from "../lib/content";
 
@@ -43,9 +52,11 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Applique le thème AVANT le rendu pour éviter tout flash. -->
+    <!-- Applique thème clair/sombre + préférences (police, palette) AVANT le
+         rendu pour éviter tout flash. -->
     <script is:inline>
       (function () {
+        var root = document.documentElement;
         try {
           var t = localStorage.getItem("theme");
           if (!t) {
@@ -53,7 +64,20 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
               ? "light"
               : "dark";
           }
-          document.documentElement.classList.toggle("light", t === "light");
+          root.classList.toggle("light", t === "light");
+
+          var fs = localStorage.getItem("ui-font-sans");
+          var fm = localStorage.getItem("ui-font-mono");
+          if (fs) root.style.setProperty("--font-sans", fs);
+          if (fm) root.style.setProperty("--font-mono", fm);
+
+          var neon = localStorage.getItem("ui-neon");
+          if (neon) {
+            var n = JSON.parse(neon);
+            root.style.setProperty("--neon-cyan", n[0]);
+            root.style.setProperty("--neon-purple", n[1]);
+            root.style.setProperty("--neon-green", n[2]);
+          }
         } catch (e) {}
       })();
     </script>

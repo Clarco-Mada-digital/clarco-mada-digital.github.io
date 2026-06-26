@@ -3,6 +3,18 @@
 @tailwind utilities;
 
 /* ===================================================================
+   Variables personnalisables par le visiteur (police + palette néon).
+   Valeurs par défaut ; surchargées via localStorage (cf. Base.astro).
+   =================================================================== */
+:root {
+  --font-sans: "Space Grotesk Variable", Inter, system-ui, sans-serif;
+  --font-mono: "Space Mono", "JetBrains Mono", monospace;
+  --neon-cyan: 0 240 255;
+  --neon-purple: 188 19 254;
+  --neon-green: 0 255 157;
+}
+
+/* ===================================================================
    Styles repris à l'identique du portfolio d'origine (thème "lab").
    =================================================================== */
 
@@ -13,8 +25,8 @@ body {
 
 .bg-grid {
   background-image:
-    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgb(var(--neon-cyan) / 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--neon-cyan) / 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
 }
 
@@ -29,13 +41,13 @@ body {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #00f0ff;
+  background: rgb(var(--neon-cyan));
 }
 
 .cursor::after {
   content: "▋";
   animation: blink 1s step-end infinite;
-  color: #00f0ff;
+  color: rgb(var(--neon-cyan));
   margin-left: 4px;
 }
 @keyframes blink {
@@ -60,12 +72,12 @@ body {
 }
 .card-hover:hover {
   transform: translateY(-4px);
-  border-color: #00f0ff;
-  box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.2);
+  border-color: rgb(var(--neon-cyan));
+  box-shadow: 0 10px 30px -10px rgb(var(--neon-cyan) / 0.2);
 }
 
 .glow-text {
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+  text-shadow: 0 0 20px rgb(var(--neon-cyan) / 0.5);
 }
 
 /* === CURSEUR PERSONNALISÉ === */
@@ -75,7 +87,7 @@ body {
   left: 0;
   width: 8px;
   height: 8px;
-  background: #00f0ff;
+  background: rgb(var(--neon-cyan));
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
@@ -89,7 +101,7 @@ body {
   left: 0;
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(0, 240, 255, 0.5);
+  border: 1px solid rgb(var(--neon-cyan) / 0.5);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9998;
@@ -103,8 +115,8 @@ body {
 .cursor-outline.hovered {
   width: 60px;
   height: 60px;
-  background: rgba(188, 19, 254, 0.1);
-  border-color: rgba(188, 19, 254, 0.8);
+  background: rgb(var(--neon-purple) / 0.1);
+  border-color: rgb(var(--neon-purple) / 0.8);
 }
 
 /* === ANIMATION REVEAL AU SCROLL === */
@@ -136,13 +148,13 @@ body {
 }
 .glitch::before {
   left: 2px;
-  text-shadow: -1px 0 #bc13fe;
+  text-shadow: -1px 0 rgb(var(--neon-purple));
   clip-path: inset(0 0 0 0);
   animation: glitch-anim-1 3s infinite linear alternate-reverse;
 }
 .glitch::after {
   left: -2px;
-  text-shadow: -1px 0 #00f0ff;
+  text-shadow: -1px 0 rgb(var(--neon-cyan));
   clip-path: inset(0 0 0 0);
   animation: glitch-anim-2 2s infinite linear alternate-reverse;
 }

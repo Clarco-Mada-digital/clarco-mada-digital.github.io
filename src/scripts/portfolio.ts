@@ -2,6 +2,13 @@ import Alpine from "alpinejs";
 import { refreshReveal } from "./effects";
 import { assetUrl } from "../lib/url";
 import { generateCv, CV_TEMPLATES } from "./cv";
+import {
+  FONT_PAIRINGS,
+  COLOR_THEMES,
+  DEFAULT_FONT,
+  DEFAULT_THEME,
+  STORAGE,
+} from "../lib/customize";
 import type { Project, Content } from "../lib/content";
 
 interface PortfolioBootstrap {
@@ -42,6 +49,12 @@ function portfolioApp() {
     isLight:
       typeof document !== "undefined" &&
       document.documentElement.classList.contains("light"),
+    // --- Personnaliseur visiteur (police + palette) ---
+    customizeOpen: false,
+    fontPairings: FONT_PAIRINGS,
+    colorThemes: COLOR_THEMES,
+    fontId: DEFAULT_FONT,
+    paletteId: DEFAULT_THEME,
     formSent: false,
     formError: "",
     form: { name: "", email: "", message: "" },
@@ -54,6 +67,14 @@ function portfolioApp() {
       const hash = window.location.hash.replace("#", "");
       if (hash && document.querySelector(`[x-show="activeView === '${hash}'"]`)) {
         this.activeView = hash;
+      }
+      // Synchronise l'état du personnaliseur (le CSS est déjà appliqué par
+      // le script inline du <head>).
+      try {
+        this.fontId = localStorage.getItem(STORAGE.fontId) || DEFAULT_FONT;
+        this.paletteId = localStorage.getItem(STORAGE.themeId) || DEFAULT_THEME;
+      } catch {
+        /* ignore */
       }
       this.typeWriter();
     },
@@ -107,6 +128,46 @@ function portfolioApp() {
       } catch {
         /* ignore */
       }
+    },
+
+    // --- Personnaliseur ---
+    setFont(id: string) {
+      const f = this.fontPairings.find((x) => x.id === id);
+      if (!f) return;
+      this.fontId = id;
+      const root = document.documentElement;
+      root.style.setProperty("--font-sans", f.sans);
+      root.style.setProperty("--font-mono", f.mono);
+      try {
+        localStorage.setItem(STORAGE.fontId, id);
+        localStorage.setItem(STORAGE.fontSans, f.sans);
+        localStorage.setItem(STORAGE.fontMono, f.mono);
+      } catch {
+        /* ignore */
+      }
+    },
+
+    setPalette(id: string) {
+      const t = this.colorThemes.find((x) => x.id === id);
+      if (!t) return;
+      this.paletteId = id;
+      const root = document.documentElement;
+      root.style.setProperty("--neon-cyan", t.cyan);
+      root.style.setProperty("--neon-purple", t.purple);
+      root.style.setProperty("--neon-green", t.green);
+      try {
+        localStorage.setItem(STORAGE.themeId, id);
+        localStorage.setItem(STORAGE.neon, JSON.stringify([t.cyan, t.purple, t.green]));
+      } catch {
+        /* ignore */
+      }
+      // Prévient les effets canvas (particules) de recharger la palette.
+      window.dispatchEvent(new Event("palette-change"));
+    },
+
+    resetCustomize() {
+      this.setFont(DEFAULT_FONT);
+      this.setPalette(DEFAULT_THEME);
     },
 
     async generateCv(templateId: string) {

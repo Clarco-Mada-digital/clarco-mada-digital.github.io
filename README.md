@@ -48,6 +48,11 @@ Le bouton **Exporter** télécharge un `content.json` ; remplace le fichier dans
 `src/data/` puis `git push`. **Importer** permet de recharger un JSON existant.
 
 ## ✨ Fonctionnalités phares
+- **Personnaliseur visiteur** (bouton flottant ⚙) : chaque visiteur choisit sa
+  **combinaison de polices** (Space, Sora, Cyber, Classique) et sa **palette de
+  couleurs** (Néon, Sunset, Matrix, Glacier, Fuchsia), appliquées en live à tout
+  le site (dégradés, particules, curseur…) et mémorisées. Piloté par variables
+  CSS (`--font-sans/mono`, `--neon-*`), sans flash au chargement.
 - **CV PDF généré à la volée** depuis tes données, avec **3 templates graphiques**
   (Élégant, Vibrant, Rosé) : photo de profil, sidebar/bandeau coloré, en-têtes de
   section colorés, mise en page deux colonnes. La **photo** se règle dans l'admin

@@ -8,16 +8,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Space Grotesk Variable"', "Inter", "system-ui", "sans-serif"],
-        mono: ['"Space Mono"', '"JetBrains Mono"', "monospace"],
+        // Pilotées par variable CSS → changeables par le visiteur.
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
       },
       colors: {
         "lab-dark": "#070a0f",
         "lab-card": "#0f131a",
         "lab-border": "#1c2230",
-        "neon-cyan": "#00f0ff",
-        "neon-purple": "#bc13fe",
-        "neon-green": "#00ff9d",
+        // Néon : pilotées par variable CSS (palette changeable par le visiteur).
+        "neon-cyan": "rgb(var(--neon-cyan) / <alpha-value>)",
+        "neon-purple": "rgb(var(--neon-purple) / <alpha-value>)",
+        "neon-green": "rgb(var(--neon-green) / <alpha-value>)",
       },
     },
   },

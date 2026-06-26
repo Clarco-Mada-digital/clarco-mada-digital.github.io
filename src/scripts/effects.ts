@@ -96,6 +96,19 @@ function initParticles() {
   let particles: { x: number; y: number; vx: number; vy: number; size: number }[] = [];
   const mouse = { x: null as number | null, y: null as number | null, radius: 150 };
 
+  // Couleurs lues depuis la palette CSS (suivent le choix du visiteur).
+  let cyan = "0,240,255";
+  let purple = "188,19,254";
+  const readPalette = () => {
+    const cs = getComputedStyle(document.documentElement);
+    const c = cs.getPropertyValue("--neon-cyan").trim();
+    const p = cs.getPropertyValue("--neon-purple").trim();
+    if (c) cyan = c.replace(/\s+/g, ",");
+    if (p) purple = p.replace(/\s+/g, ",");
+  };
+  readPalette();
+  window.addEventListener("palette-change", readPalette);
+
   const createParticles = () => {
     particles = [];
     // Densité réduite + plafond : évite une boucle O(n²) trop lourde sur
@@ -137,7 +150,7 @@ function initParticles() {
   let rafId = 0;
   const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "rgba(0, 240, 255, 0.4)";
+    ctx.fillStyle = `rgba(${cyan}, 0.4)`;
     particles.forEach((p1, index) => {
       p1.x += p1.vx;
       p1.y += p1.vy;
@@ -154,7 +167,7 @@ function initParticles() {
         const dy = p1.y - p2.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 100) {
-          ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 + (1 - dist / 100) * 0.2})`;
+          ctx.strokeStyle = `rgba(${cyan}, ${0.1 + (1 - dist / 100) * 0.2})`;
           ctx.lineWidth = 0.5;
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
@@ -168,7 +181,7 @@ function initParticles() {
         const dy = p1.y - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < mouse.radius) {
-          ctx.strokeStyle = `rgba(188, 19, 254, ${(1 - dist / mouse.radius) * 0.5})`;
+          ctx.strokeStyle = `rgba(${purple}, ${(1 - dist / mouse.radius) * 0.5})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
