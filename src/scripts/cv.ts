@@ -236,5 +236,23 @@ export async function generateCv(content: Content, templateId: string) {
   pdfMake.vfs = fontsExport.pdfMake?.vfs ?? fontsExport.vfs ?? fontsExport;
 
   const filename = `CV-${slug(content.site.name) || "cv"}.pdf`;
-  pdfMake.createPdf(docDefinition).download(filename);
+
+  // Téléchargement via Blob (plus fiable que .download() selon les environnements).
+  await new Promise<void>((resolve, reject) => {
+    try {
+      pdfMake.createPdf(docDefinition).getBlob((blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        resolve();
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
 }

@@ -35,7 +35,8 @@ function portfolioApp() {
     selectedProject: null as Project | null,
     lightbox: null as string | null,
     cvOpen: false,
-    cvBusy: "",
+    // null (et pas "") : Alpine considère "" comme vrai pour :disabled.
+    cvBusy: null as string | null,
     cvTemplates: CV_TEMPLATES,
     customCv: boot.content?.site?.cvUrl || "",
     isLight:
@@ -117,7 +118,7 @@ function portfolioApp() {
         console.error("Génération CV échouée", err);
         alert("La génération du CV a échoué. Réessaie.");
       } finally {
-        this.cvBusy = "";
+        this.cvBusy = null;
         this.cvOpen = false;
       }
     },
