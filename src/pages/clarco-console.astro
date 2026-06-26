@@ -102,6 +102,32 @@ const addBtn =
         <!-- ====== IDENTITÉ ====== -->
         <section x-show="activeTab === 'site'" class:list={[card, 'space-y-4']}>
           <h2 class="text-white font-bold">Identité</h2>
+
+          <!-- Photo de profil -->
+          <div class="flex items-start gap-4">
+            <div
+              class="w-20 h-20 rounded-full overflow-hidden border-2 border-lab-border shrink-0 bg-lab-dark flex items-center justify-center"
+            >
+              <template x-if="data.site.photo">
+                <img :src="asset(data.site.photo)" alt="" class="w-full h-full object-cover" />
+              </template>
+              <template x-if="!data.site.photo">
+                <span class="text-[10px] text-gray-600 font-mono text-center">aucune<br />photo</span>
+              </template>
+            </div>
+            <div class="flex-1">
+              <label class={label}>Photo de profil (affichée sur le CV)</label>
+              <input class={input} x-model="data.site.photo" placeholder="URL ou /profile/moi.jpg" />
+              <div class="flex gap-2 mt-2">
+                <label class={addBtn + ' cursor-pointer'}>
+                  ⬆ Uploader une photo
+                  <input type="file" accept="image/*" class="hidden" @change="uploadPhoto($event)" />
+                </label>
+                <button x-show="data.site.photo" class={miniBtn + ' !w-auto px-2'} @click="data.site.photo = ''">retirer</button>
+              </div>
+            </div>
+          </div>
+
           <div class="grid sm:grid-cols-2 gap-4">
             <div><label class={label}>Nom complet</label><input class={input} x-model="data.site.name" /></div>
             <div><label class={label}>Handle (~/...)</label><input class={input} x-model="data.site.handle" /></div>
@@ -461,6 +487,7 @@ const addBtn =
           <div><label class={label}>Intro</label><textarea rows="2" class={input} x-model="data.contact.intro"></textarea></div>
           <div class="grid sm:grid-cols-2 gap-4">
             <div><label class={label}>Email</label><input class={input} x-model="data.contact.email" /></div>
+            <div><label class={label}>Téléphone (CV)</label><input class={input} x-model="data.contact.phone" placeholder="+261 ..." /></div>
             <div><label class={label}>Localisation</label><input class={input} x-model="data.contact.location" /></div>
             <div><label class={label}>Statut</label><input class={input} x-model="data.contact.status" /></div>
             <div><label class={label}>Endpoint formulaire (Formspree…)</label><input class={input} x-model="data.contact.formEndpoint" placeholder="https://formspree.io/f/xxxx (option.)" /></div>

@@ -113,7 +113,7 @@ function portfolioApp() {
       if (this.cvBusy) return;
       this.cvBusy = templateId;
       try {
-        await generateCv(boot.content, templateId);
+        await generateCv(boot.content, templateId, boot.base);
       } catch (err) {
         console.error("Génération CV échouée", err);
         alert("La génération du CV a échoué. Réessaie.");

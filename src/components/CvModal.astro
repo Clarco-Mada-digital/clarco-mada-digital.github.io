@@ -47,9 +47,10 @@
           class="w-full flex items-center gap-4 p-4 bg-lab-dark border border-lab-border rounded-xl text-left hover:border-neon-cyan transition-all disabled:opacity-50 group"
         >
           <div
-            class="w-10 h-12 rounded-md border border-lab-border bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center shrink-0"
+            class="w-10 h-12 rounded-md flex items-center justify-center shrink-0 text-white"
+            :style="'background:' + tpl.color"
           >
-            <svg class="w-5 h-5 text-neon-cyan" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
             </svg>

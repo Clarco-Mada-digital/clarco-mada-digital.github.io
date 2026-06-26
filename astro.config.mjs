@@ -19,7 +19,7 @@ function adminDevApi() {
 
   const MAX_UPLOAD = 10 * 1024 * 1024; // 10 Mo
   // Dossiers de destination autorisés (anti path-traversal).
-  const ALLOWED_DIRS = new Set(["projects", "cv"]);
+  const ALLOWED_DIRS = new Set(["projects", "cv", "profile"]);
   const EXT_BY_MIME = {
     "image/png": "png",
     "image/jpeg": "jpg",

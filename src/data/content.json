@@ -8,7 +8,8 @@
     "description": "Portfolio de Bryan Clark, développeur Full-Stack, Web et Mobile.",
     "available": true,
     "availabilityLabel": "Disponible",
-    "cvUrl": ""
+    "cvUrl": "",
+    "photo": ""
   },
   "hero": {
     "tagline": "Full-Stack & Mobile Architect. Je conçois des applications performantes, élégantes et scalables.",
@@ -335,6 +336,7 @@
   "contact": {
     "intro": "Je suis actuellement ouvert à de nouvelles opportunités. Que ce soit pour un CDI, du freelancing ou juste échanger sur un projet, n'hésitez pas à me contacter.",
     "email": "bryan.clark@example.com",
+    "phone": "",
     "location": "Paris, France (Remote OK)",
     "status": "Disponible immédiatement",
     "formEndpoint": ""

@@ -51,6 +51,8 @@ export interface Content {
     availabilityLabel: string;
     /** Lien vers le CV (URL externe ou chemin local type /cv/cv.pdf). Vide = bouton masqué. */
     cvUrl?: string;
+    /** Photo de profil (URL ou chemin local type /profile/photo.jpg). Utilisée sur le CV. */
+    photo?: string;
   };
   hero: {
     tagline: string;
@@ -76,6 +78,7 @@ export interface Content {
   contact: {
     intro: string;
     email: string;
+    phone?: string;
     location: string;
     status: string;
     formEndpoint: string;

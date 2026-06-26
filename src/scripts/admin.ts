@@ -187,7 +187,7 @@ function adminApp() {
     },
 
     /** Upload un fichier vers public/<dir>/ (dev only) → renvoie le chemin. */
-    async uploadFile(file: File, dir: "projects" | "cv" = "projects"): Promise<string | null> {
+    async uploadFile(file: File, dir: "projects" | "cv" | "profile" = "projects"): Promise<string | null> {
       if (!this.apiAvailable) {
         this.flash(
           "L'upload de fichier nécessite le serveur local (npm run dev). Tu peux sinon coller une URL.",
@@ -239,6 +239,15 @@ function adminApp() {
       if (!file) return;
       const path = await this.uploadFile(file, "cv");
       if (path) this.data.site.cvUrl = path;
+    },
+
+    async uploadPhoto(event: Event) {
+      const input = event.target as HTMLInputElement;
+      const file = input.files?.[0];
+      input.value = "";
+      if (!file) return;
+      const path = await this.uploadFile(file, "profile");
+      if (path) this.data.site.photo = path;
     },
 
     // ---- Compétences ----
