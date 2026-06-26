@@ -382,7 +382,7 @@
       "id": 2,
       "role": "Senior Full-Stack Developer",
       "company": "MADA-Digital",
-      "period": " 2023 — Mainteant",
+      "period": " 2023 — Présent",
       "description": "Développement de plateformes web à fort traffic (2M+ utilisateurs). Migration d'une architecture monolithique vers microservices. Optimisation des performances (Core Web Vitals).",
       "tech": [
         "React.js",
@@ -423,6 +423,16 @@
         "Vue.js",
         "Python",
         "SCSS/CSS"
+      ]
+    },
+    {
+      "id": 5,
+      "role": "Etude Informatique parcours BDGL",
+      "company": "CNTEMAD",
+      "period": "2016 — 2020",
+      "description": "Etude au CNTEMAD avec parcours BDGL (Base de Donné Genie Logiciel).",
+      "tech": [
+        "Licence"
       ]
     }
   ],
