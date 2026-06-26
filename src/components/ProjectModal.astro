@@ -14,7 +14,7 @@
   x-transition:leave-end="opacity-0"
   class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-lab-dark/80 backdrop-blur-sm"
   @click.self="selectedProject = null"
-  @keydown.escape.window="selectedProject = null"
+  @keydown.escape.window="!lightbox && (selectedProject = null)"
   style="display: none"
 >
   <div
@@ -94,27 +94,21 @@
             </ul>
           </div>
 
-          <div
-            class="mb-6"
-            x-show="selectedProject.gallery && selectedProject.gallery.length"
-          >
+          <div class="mb-6" x-show="galleryAll.length">
             <h4
               class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
             >
               Galerie
             </h4>
             <div class="grid grid-cols-3 gap-2">
-              <template
-                x-for="(img, gi) in selectedProject.gallery"
-                :key="gi"
-              >
+              <template x-for="(img, gi) in galleryAll" :key="gi">
                 <button
                   type="button"
-                  @click="openImage(asset(img))"
+                  @click="openImageAt(gi)"
                   class="block group/g"
                 >
                   <img
-                    :src="asset(img)"
+                    :src="img"
                     loading="lazy"
                     alt="Aperçu du projet"
                     class="w-full h-20 object-cover rounded-md border border-lab-border group-hover/g:border-neon-cyan transition-colors"
@@ -170,19 +164,68 @@
   </div>
 </div>
 
-<!-- Lightbox : agrandit une image de la galerie -->
+<!-- Lightbox : agrandit une image de la galerie, navigable au clavier -->
 <div
   x-show="lightbox"
   x-cloak
   x-transition.opacity
-  @click="lightbox = null"
-  @keydown.escape.window="lightbox = null"
-  class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-lab-dark/90 backdrop-blur-sm cursor-zoom-out"
+  @click.self="closeLightbox()"
+  @keydown.escape.window="closeLightbox()"
+  @keydown.arrow-right.window="nextImage()"
+  @keydown.arrow-left.window="prevImage()"
+  class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-lab-dark/90 backdrop-blur-sm"
   style="display: none"
 >
-  <img
-    :src="lightbox"
-    alt="Image agrandie"
-    class="max-w-full max-h-[90vh] rounded-lg border border-lab-border"
-  />
+  <!-- Bouton précédent -->
+  <button
+    type="button"
+    x-show="lightboxImages.length > 1"
+    @click.stop="prevImage()"
+    aria-label="Image précédente"
+    class="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-lab-card/80 border border-lab-border flex items-center justify-center text-gray-300 hover:text-neon-cyan hover:border-neon-cyan transition-colors z-10"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M15 18l-6-6 6-6"></path>
+    </svg>
+  </button>
+
+  <!-- Image + compteur -->
+  <div class="relative flex flex-col items-center gap-3" @click.stop>
+    <img
+      :src="lightbox"
+      alt="Image agrandie"
+      class="max-w-full max-h-[82vh] rounded-lg border border-lab-border"
+    />
+    <div
+      x-show="lightboxImages.length > 1"
+      class="px-3 py-1 rounded-full bg-lab-card/80 border border-lab-border text-xs font-mono text-gray-300"
+    >
+      <span x-text="lightboxIndex + 1"></span> / <span x-text="lightboxImages.length"></span>
+    </div>
+  </div>
+
+  <!-- Bouton suivant -->
+  <button
+    type="button"
+    x-show="lightboxImages.length > 1"
+    @click.stop="nextImage()"
+    aria-label="Image suivante"
+    class="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-lab-card/80 border border-lab-border flex items-center justify-center text-gray-300 hover:text-neon-cyan hover:border-neon-cyan transition-colors z-10"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M9 18l6-6-6-6"></path>
+    </svg>
+  </button>
+
+  <!-- Bouton fermer -->
+  <button
+    type="button"
+    @click.stop="closeLightbox()"
+    aria-label="Fermer"
+    class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-lab-card/80 border border-lab-border flex items-center justify-center text-gray-400 hover:text-white transition-colors z-10"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg>
+  </button>
 </div>

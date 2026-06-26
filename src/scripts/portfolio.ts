@@ -43,6 +43,8 @@ function portfolioApp() {
     activeView: "home",
     selectedProject: null as Project | null,
     lightbox: null as string | null,
+    lightboxImages: [] as string[],
+    lightboxIndex: 0,
     cvOpen: false,
     // null (et pas "") : Alpine considère "" comme vrai pour :disabled.
     cvBusy: null as string | null,
@@ -118,8 +120,42 @@ function portfolioApp() {
       return assetUrl(path, boot.base);
     },
 
-    openImage(src: string) {
-      this.lightbox = src;
+    /** Liste défilable de la lightbox : couverture + galerie (URLs résolues). */
+    get galleryAll(): string[] {
+      const p = this.selectedProject;
+      if (!p) return [];
+      const list: string[] = [];
+      if (p.cover) list.push(p.cover);
+      if (p.gallery && p.gallery.length) list.push(...p.gallery);
+      return list.map((img) => this.asset(img));
+    },
+
+    /** Ouvre la lightbox sur l'image d'index donné de galleryAll. */
+    openImageAt(index: number) {
+      const imgs = this.galleryAll;
+      if (!imgs.length) return;
+      this.lightboxImages = imgs;
+      this.lightboxIndex = Math.max(0, Math.min(index, imgs.length - 1));
+      this.lightbox = imgs[this.lightboxIndex];
+    },
+
+    nextImage() {
+      if (!this.lightbox || !this.lightboxImages.length) return;
+      this.lightboxIndex = (this.lightboxIndex + 1) % this.lightboxImages.length;
+      this.lightbox = this.lightboxImages[this.lightboxIndex];
+    },
+
+    prevImage() {
+      if (!this.lightbox || !this.lightboxImages.length) return;
+      const n = this.lightboxImages.length;
+      this.lightboxIndex = (this.lightboxIndex - 1 + n) % n;
+      this.lightbox = this.lightboxImages[this.lightboxIndex];
+    },
+
+    closeLightbox() {
+      this.lightbox = null;
+      this.lightboxImages = [];
+      this.lightboxIndex = 0;
     },
 
     openCv() {
