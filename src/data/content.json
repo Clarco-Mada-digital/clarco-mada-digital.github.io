@@ -23,18 +23,14 @@
         "Node.js",
         "Flutter",
         "Rust",
-        "React Native"
+        "React Native",
+        "Astro.js"
       ],
       "passions": "Résoudre des problèmes complexes avec du code élégant",
       "available": true
     }
   },
   "stats": [
-    {
-      "value": "3+",
-      "label": "Ans d'expérience",
-      "color": "neon-cyan"
-    },
     {
       "value": "40+",
       "label": "Projets livrés",
@@ -44,6 +40,11 @@
       "value": "15+",
       "label": "Clients satisfaits",
       "color": "neon-green"
+    },
+    {
+      "value": "3+",
+      "label": "Ans d'expérience",
+      "color": "neon-cyan"
     },
     {
       "value": "∞",
@@ -366,8 +367,13 @@
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
       "repoUrl": "https://github.com/Brayan-Clark/adventools",
       "demoUrl": "",
-      "cover": "",
-      "gallery": [],
+      "cover": "/projects/adventools-5-mqv5hc73.jpg",
+      "gallery": [
+        "/projects/adventools-1-mqv5hndy.jpg",
+        "/projects/adventools-2-mqv5hni6.jpg",
+        "/projects/adventools-3-mqv5hnm1.jpg",
+        "/projects/adventools-4-mqv5hnq9.jpg"
+      ],
       "features": [
         "Étude biblique",
         "Recueils de chants",
@@ -447,7 +453,7 @@
   },
   "socials": {
     "github": "https://github.com/clarco-mada-digital",
-    "linkedin": "https://www.linkedin.com/brayn-clark",
+    "linkedin": "https://www.linkedin.com/brayan-clarck/",
     "email": "brayanraherinandrasana@gmail.com"
   }
 }
