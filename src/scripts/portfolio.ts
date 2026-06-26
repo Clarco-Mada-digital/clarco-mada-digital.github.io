@@ -16,6 +16,7 @@ interface PortfolioBootstrap {
   tagline: string;
   formEndpoint: string;
   email: string;
+  web3formsKey: string;
   base: string;
   content: Content;
 }
@@ -33,6 +34,7 @@ function portfolioApp() {
     tagline: "",
     formEndpoint: "",
     email: "",
+    web3formsKey: "",
     base: "/",
     content: null as unknown as Content,
   };
@@ -190,7 +192,7 @@ function portfolioApp() {
       // Anti-spam : honeypot rempli => on ignore silencieusement (bot).
       if (this.form.botcheck) return;
 
-      const web3key = boot.content?.contact?.web3formsKey?.trim();
+      const web3key = (boot.web3formsKey || boot.content?.contact?.web3formsKey || "").trim();
       const endpoint = boot.formEndpoint?.trim();
       this.formSending = true;
 

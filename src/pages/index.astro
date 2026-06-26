@@ -15,11 +15,17 @@ import { content } from "../lib/content";
 const { site, hero, contact } = content;
 
 // Données injectées dans Alpine (modale projet + formulaire + typewriter).
+// Clé Web3Forms : priorité à la variable d'env (secret GitHub, non committée),
+// sinon valeur de l'admin (content.json). NB : sur un site statique, la valeur
+// finit de toute façon dans le JS livré (clé publique par conception).
+const web3formsKey = process.env.WEB3FORMS_KEY || contact.web3formsKey || "";
+
 const bootstrap = {
   projects: content.projects,
   tagline: hero.tagline,
   formEndpoint: contact.formEndpoint || "",
   email: contact.email,
+  web3formsKey,
   base: import.meta.env.BASE_URL,
   content, // contenu complet, utilisé pour générer le CV PDF
 };

@@ -38,6 +38,11 @@ jobs:
           SITE_URL: https://clarco-mada-digital.github.io
           # Pas de BASE_PATH nécessaire (site à la racine). Si un jour tu passes
           # sur un dépôt "projet" (URL .../<repo>/), ajoute : BASE_PATH: /<repo>
+          #
+          # Clé Web3Forms via secret GitHub (Settings > Secrets > Actions) :
+          # ajoute un secret nommé WEB3FORMS_KEY. La clé n'est PAS dans le repo
+          # (mais reste visible dans le JS livré : clé publique par conception).
+          WEB3FORMS_KEY: ${{ secrets.WEB3FORMS_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
