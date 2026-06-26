@@ -131,165 +131,248 @@
   "projects": [
     {
       "id": 1,
-      "name": "NeoBank",
-      "year": "2024",
+      "name": "SurveySense",
+      "year": "2025",
       "featured": true,
-      "shortDesc": "Application bancaire mobile avec gestion en temps réel et IA pour les prédictions de budget.",
-      "fullDesc": "NeoBank est une fintech mobile complète développée avec Flutter. L'application permet aux utilisateurs de gérer leurs comptes, suivre leurs dépenses en temps réel, et utilise le machine learning pour prédire les budgets futurs. J'ai conçu l'architecture backend en Go et l'API GraphQL qui sert l'application.",
+      "shortDesc": "Application web pour créer, partager et analyser des questionnaires — privée par conception (local-first, chiffrement AES-256).",
+      "fullDesc": "SurveySense est une application web moderne pour créer, gérer et analyser des questionnaires. Approche « Private-by-Design » : toutes les données (questionnaires et réponses) restent stockées localement dans le navigateur, jamais sur un serveur tiers, avec un chiffrement AES-256. Générateur de formulaires intuitif (texte, choix multiples, cases, échelles), tableaux de bord d'analyse avec graphiques interactifs (Recharts), export/import JSON et CSV.",
       "tags": [
-        "Flutter",
-        "Go",
-        "GraphQL",
-        "PostgreSQL",
-        "AWS"
+        "TypeScript",
+        "React",
+        "Recharts",
+        "AES-256",
+        "Local-First"
       ],
       "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
-      "repoUrl": "",
-      "demoUrl": "",
-      "features": [
-        "Authentification biométrique",
-        "Transactions en temps réel",
-        "Prédictions IA du budget",
-        "Export PDF des relevés",
-        "Mode hors-ligne"
+      "repoUrl": "https://github.com/Clarco-Mada-digital/SurveySense",
+      "demoUrl": "https://clarco-mada-digital.github.io/SurveySense/",
+      "cover": "/projects/surveysense-cover.jpg",
+      "gallery": [
+        "/projects/surveysense-02.jpg"
       ],
-      "cover": "",
-      "gallery": []
+      "features": [
+        "Générateur de formulaires intuitif",
+        "Analyse visuelle (graphiques Recharts)",
+        "Stockage local chiffré AES-256",
+        "Export JSON / CSV",
+        "Interface responsive"
+      ]
     },
     {
       "id": 2,
-      "name": "DevFlow",
-      "year": "2023",
+      "name": "Gestion de Projet",
+      "year": "2025",
       "featured": true,
-      "shortDesc": "Plateforme SaaS de gestion de projets pour équipes de développement agiles.",
-      "fullDesc": "DevFlow est un SaaS B2B pensé pour les équipes tech. C'est un mix entre Jira et Linear, avec un focus sur la vélocité et l'expérience développeur. Tableau Kanban, roadmaps, intégrations GitHub/GitLab, et un système de commentaires en temps réel. Le tout propulsé par React, Node.js et WebSocket.",
+      "shortDesc": "Tableau de bord de gestion de projet (Astro + React) : Kanban en glisser-déposer, collaboration temps réel (Firebase) et assistant IA.",
+      "fullDesc": "Tableau de bord moderne de gestion de projet construit avec Astro, React et Tailwind CSS. Gestion des tâches en glisser-déposer, tableaux Kanban, collaboration et synchronisation temps réel via Firebase, gestion d'équipe. Intègre « Nexus IA », un assistant contextuel, et un « Assistant Vision IA » qui génère des dossiers stratégiques (vision, tech, planning, roadmap), avec exports PDF, HTML et Markdown. Mode sombre/clair et UI moderne (glassmorphism, Framer Motion).",
       "tags": [
+        "Astro",
         "React",
-        "Node.js",
-        "WebSocket",
-        "Docker",
-        "K8s"
+        "Firebase",
+        "TypeScript",
+        "Tailwind CSS"
       ],
       "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
-      "repoUrl": "",
-      "demoUrl": "",
-      "features": [
-        "Tableau Kanban temps réel",
-        "Intégration GitHub/GitLab",
-        "Système de Roadmap",
-        "Mode sombre/clair",
-        "API publique"
+      "repoUrl": "https://github.com/Clarco-Mada-digital/gestion-projet",
+      "demoUrl": "https://clarco-mada-digital.github.io/gestion-projet/",
+      "cover": "/projects/gestion-projet-cover.jpg",
+      "gallery": [
+        "/projects/gestion-projet-02.jpg"
       ],
-      "cover": "",
-      "gallery": []
+      "features": [
+        "Kanban en glisser-déposer",
+        "Collaboration temps réel (Firebase)",
+        "Assistant IA contextuel (Nexus)",
+        "Générateur de dossiers stratégiques par IA",
+        "Exports PDF / HTML / Markdown"
+      ]
     },
     {
       "id": 3,
-      "name": "ArtSense",
-      "year": "2023",
-      "featured": false,
-      "shortDesc": "Marketplace NFT avec génération d'art par IA intégrée.",
-      "fullDesc": "ArtSense est une plateforme web3 qui combine un marketplace NFT classique avec un générateur d'art utilisant des modèles de diffusion. Les artistes peuvent créer, mint et vendre leurs œuvres. J'ai géré toute la partie front-end avec Next.js et l'intégration des smart contracts Solidity.",
+      "name": "OmniAgent",
+      "year": "2025",
+      "featured": true,
+      "shortDesc": "Assistant IA de bureau (Tauri + Rust) combinant IA locale (Ollama) et cloud (GPT-4o, Claude, Gemini), avec recherche locale RAG.",
+      "fullDesc": "OmniAgent est un assistant IA de bureau performant et personnalisable, construit avec Tauri, Rust et JavaScript. Intelligence hybride « local-first » via Ollama (confidentialité totale) et support cloud (GPT-4o, Claude 3.5, Gemini 1.5 Pro, OpenRouter) avec routage entre modèles en un clic. Recherche locale (RAG) : indexation de dossiers pour lire et analyser vos fichiers, plus un module de génération d'images. Interface élégante et intuitive.",
       "tags": [
-        "Next.js",
-        "Solidity",
-        "Web3.js",
-        "IPFS",
-        "Python"
+        "Tauri",
+        "Rust",
+        "JavaScript",
+        "Ollama",
+        "RAG"
       ],
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
-      "repoUrl": "",
+      "repoUrl": "https://github.com/Clarco-Mada-digital/omniagent",
       "demoUrl": "",
-      "features": [
-        "Génération d'art par IA",
-        "Mint NFT sur Ethereum",
-        "Wallet integré",
-        "Marketplace en temps réel",
-        "Royalties automatiques"
-      ],
       "cover": "",
-      "gallery": []
+      "gallery": [],
+      "features": [
+        "IA locale (Ollama) + cloud (GPT-4o, Claude, Gemini)",
+        "Routage intelligent entre modèles",
+        "Recherche locale RAG sur vos fichiers",
+        "Génération d'images",
+        "Application de bureau (Tauri)"
+      ]
     },
     {
       "id": 4,
-      "name": "TrackEase",
-      "year": "2022",
-      "featured": false,
-      "shortDesc": "App de tracking de livraison avec géolocalisation en direct et notifications push.",
-      "fullDesc": "TrackEase est une solution de tracking de livraison B2B2C. Les entreprises de logistique peuvent intégrer l'API pour permettre à leurs clients de suivre leurs colis en temps réel sur une carte interactive. L'application mobile a été développée en React Native, le backend en Python (FastAPI).",
+      "name": "MyProjector",
+      "year": "2024",
+      "featured": true,
+      "shortDesc": "Application de bureau (Tauri + React) de projection de paroles de chants et de versets bibliques pour cultes et événements.",
+      "fullDesc": "MyProjector est une application de bureau développée avec Tauri, React et TypeScript, conçue pour la projection de paroles (chants, recueils) et de versets bibliques pendant les services et événements. Bible intégrée avec recherche par référence, recueils de chants avec recherche plein texte, agenda/playlist, double écran (interface opérateur + écran de projection plein écran), aperçu en temps réel, mode caméra en arrière-plan et médiathèque permanente.",
       "tags": [
-        "React Native",
-        "Python",
-        "FastAPI",
-        "Redis",
-        "MapBox"
+        "Tauri",
+        "React",
+        "TypeScript",
+        "Rust"
       ],
       "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-green/30",
-      "repoUrl": "",
+      "repoUrl": "https://github.com/Brayan-Clark/myprojector",
       "demoUrl": "",
-      "features": [
-        "Carte interactive temps réel",
-        "Notifications push",
-        "Estimation d'arrivée IA",
-        "Multi-transporteurs",
-        "API REST publique"
-      ],
       "cover": "",
-      "gallery": []
+      "gallery": [],
+      "features": [
+        "Bible intégrée (recherche par référence)",
+        "Recueils de chants + recherche plein texte",
+        "Double écran (opérateur / projection)",
+        "Aperçu temps réel & mode caméra",
+        "Agenda / playlist de service"
+      ]
     },
     {
       "id": 5,
-      "name": "CloudSync",
-      "year": "2022",
-      "featured": false,
-      "shortDesc": "Outil de synchronisation de fichiers chiffrés de bout en bout entre appareils.",
-      "fullDesc": "CloudSync est une alternative open-source à Dropbox avec un chiffrement de bout en bout. Personne, pas même le serveur, ne peut lire vos fichiers. Développé en Go pour le backend et Electron pour le client desktop. Utilisation de WebRTC pour la synchronisation P2P.",
+      "name": "SolarNova",
+      "year": "2025",
+      "featured": true,
+      "shortDesc": "Site vitrine + calculateur d'énergie solaire (Astro, Tailwind, Alpine.js) avec intégration Supabase optionnelle.",
+      "fullDesc": "SolarNova est un site vitrine accompagné d'un calculateur d'énergie solaire, construit avec Astro, Tailwind CSS et Alpine.js, avec une intégration Supabase optionnelle. L'application fonctionne immédiatement sans base de données : tant que Supabase n'est pas configuré, les avis affichés sont locaux et les formulaires (avis, contact, devis) affichent un message d'information sans jamais planter. Présente des solutions solaires de la conception à l'installation.",
       "tags": [
-        "Go",
-        "Electron",
-        "WebRTC",
-        "AES-256",
-        "P2P"
+        "Astro",
+        "Tailwind CSS",
+        "Alpine.js",
+        "Supabase"
       ],
       "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30",
-      "repoUrl": "",
-      "demoUrl": "",
-      "features": [
-        "Chiffrement E2E zéro-knowledge",
-        "Synchronisation P2P",
-        "Versioning de fichiers",
-        "Client cross-platform",
-        "Open-source"
+      "repoUrl": "https://github.com/Brayan-Clark/SolarNova",
+      "demoUrl": "https://brayan-clark.github.io/SolarNova/",
+      "cover": "/projects/solarnova-cover.jpg",
+      "gallery": [
+        "/projects/solarnova-02.jpg"
       ],
-      "cover": "",
-      "gallery": []
+      "features": [
+        "Calculateur d'énergie solaire",
+        "Fonctionne sans base de données (dégradation gracieuse)",
+        "Intégration Supabase optionnelle",
+        "Avis & formulaires contact/devis",
+        "Design responsive animé"
+      ]
     },
     {
       "id": 6,
-      "name": "MediCare",
-      "year": "2021",
+      "name": "My Professor",
+      "year": "2025",
       "featured": false,
-      "shortDesc": "Téléconsultation médicale avec agenda intelligent et ordonnances numériques.",
-      "fullDesc": "MediCare est une plateforme de téléconsultation reliant patients et médecins. Visioconférence sécurisée, gestion d'agenda intelligent, partage de documents médicaux et ordonnances numériques. Développé avec Vue.js, NestJS et WebRTC. Conforme RGPD et hébergé sur des serveurs français.",
+      "shortDesc": "Plateforme d'apprentissage qui génère des cours par IA (Gemini, OpenRouter, Ollama), avec parcours personnalisés et communauté.",
+      "fullDesc": "My Professor est une plateforme d'apprentissage qui combine IA générative et création manuelle. Génération automatique de cours structurés (modules, leçons, exercices, quiz) via Google Gemini, OpenRouter ou des modèles locaux Ollama (gratuit et privé). Éditeur Markdown complet pour créer ses propres cours, parcours d'apprentissage séquentiels avec suivi de progression (badges, statistiques), et dimension communautaire (partage et import de parcours).",
       "tags": [
-        "Vue.js",
-        "NestJS",
-        "WebRTC",
         "TypeScript",
-        "RGPD"
+        "IA générative",
+        "Ollama",
+        "Docker"
       ],
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
-      "repoUrl": "",
+      "repoUrl": "https://github.com/Clarco-Mada-digital/MyP",
       "demoUrl": "",
-      "features": [
-        "Téléconsultation vidéo HD",
-        "Ordonnances numériques",
-        "Dossier médical partagé",
-        "Authentification forte",
-        "Conforme RGPD/HDS"
-      ],
       "cover": "",
-      "gallery": []
+      "gallery": [],
+      "features": [
+        "Génération de cours par IA (Gemini/OpenRouter/Ollama)",
+        "Éditeur de cours Markdown",
+        "Parcours d'apprentissage & suivi de progression",
+        "Quiz et exercices interactifs",
+        "Partage communautaire de parcours"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Freelance Suarez",
+      "year": "2024",
+      "featured": false,
+      "shortDesc": "Plateforme web (Next.js 14) de mise en relation clients ↔ freelances : projets, offres, messagerie et notation.",
+      "fullDesc": "Plateforme Freelance Suarez est une application web moderne développée avec Next.js 14 (App Router) pour mettre en relation des clients et des freelances qualifiés. Les clients publient des projets et gèrent les offres reçues ; les freelances consultent les projets disponibles, soumettent des offres et personnalisent leur profil. Recherche avancée, catégorisation des compétences, messagerie intégrée et système de notation. Backend Next.js API Routes avec Prisma et authentification NextAuth.",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Prisma",
+        "NextAuth",
+        "Tailwind CSS"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
+      "repoUrl": "https://github.com/Clarco-Mada-digital/dev_suarez",
+      "demoUrl": "",
+      "cover": "",
+      "gallery": [],
+      "features": [
+        "Publication de projets & gestion des offres",
+        "Profils freelances & soumission d'offres",
+        "Recherche avancée et catégories",
+        "Messagerie intégrée",
+        "Authentification (NextAuth) + Prisma"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Camping Store & Event Mada",
+      "year": "2025",
+      "featured": false,
+      "shortDesc": "Site vitrine (Astro + Tailwind) d'une enseigne de location de matériel de camping et d'événementiel à Antsiranana.",
+      "fullDesc": "Site web officiel de Camping Store & Event Madagascar, construit avec Astro et Tailwind CSS. Il présente les services de location de matériel de camping et d'organisation d'événements en plein air à Antsiranana. Site ultra-rapide grâce à Astro, design responsive, thème clair/sombre persistant, carte interactive de localisation, formulaire de contact fonctionnel, pages légales complètes et SEO optimisé.",
+      "tags": [
+        "Astro",
+        "Tailwind CSS",
+        "TypeScript",
+        "SEO"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
+      "repoUrl": "https://github.com/Brayan-Clark/CSE-Mada",
+      "demoUrl": "https://brayan-clark.github.io/CSE-Mada/",
+      "cover": "/projects/cse-mada-cover.jpg",
+      "gallery": [
+        "/projects/cse-mada-02.jpg"
+      ],
+      "features": [
+        "Site ultra-rapide (Astro)",
+        "Thème clair/sombre persistant",
+        "Carte interactive de localisation",
+        "Formulaire de contact",
+        "SEO optimisé"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Adventools",
+      "year": "2024",
+      "featured": false,
+      "shortDesc": "Application mobile Android tout-en-un pour l'étude biblique, le chant et la prise de notes.",
+      "fullDesc": "Adventools est une application mobile Android tout-en-un, pensée comme un compagnon numérique pour l'étude biblique, le chant et la prise de notes (texte, vocal, images). Gestion multilingue avec téléchargement de langues. Distribuée directement par fichier APK.",
+      "tags": [
+        "TypeScript",
+        "Android",
+        "Mobile"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
+      "repoUrl": "https://github.com/Brayan-Clark/adventools",
+      "demoUrl": "",
+      "cover": "",
+      "gallery": [],
+      "features": [
+        "Étude biblique",
+        "Recueils de chants",
+        "Prise de notes (texte, vocal, images)",
+        "Support multilingue",
+        "Application Android (APK)"
+      ]
     }
   ],
   "experience": [
