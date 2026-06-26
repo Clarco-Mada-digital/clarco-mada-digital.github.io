@@ -158,6 +158,25 @@ function portfolioApp() {
       this.lightboxIndex = 0;
     },
 
+    // --- Swipe tactile (mobile) ---
+    touchStartX: 0,
+    touchStartY: 0,
+    onTouchStart(e: TouchEvent) {
+      const t = e.changedTouches[0];
+      this.touchStartX = t.clientX;
+      this.touchStartY = t.clientY;
+    },
+    onTouchEnd(e: TouchEvent) {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - this.touchStartX;
+      const dy = t.clientY - this.touchStartY;
+      // Geste horizontal franc (et pas un scroll vertical) : on navigue.
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) this.nextImage();
+        else this.prevImage();
+      }
+    },
+
     openCv() {
       this.cvOpen = true;
     },

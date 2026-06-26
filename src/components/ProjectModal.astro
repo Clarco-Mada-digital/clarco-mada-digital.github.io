@@ -190,11 +190,17 @@
   </button>
 
   <!-- Image + compteur -->
-  <div class="relative flex flex-col items-center gap-3" @click.stop>
+  <div
+    class="relative flex flex-col items-center gap-3"
+    @click.stop
+    @touchstart.passive="onTouchStart($event)"
+    @touchend.passive="onTouchEnd($event)"
+  >
     <img
       :src="lightbox"
       alt="Image agrandie"
-      class="max-w-full max-h-[82vh] rounded-lg border border-lab-border"
+      draggable="false"
+      class="max-w-full max-h-[82vh] rounded-lg border border-lab-border select-none"
     />
     <div
       x-show="lightboxImages.length > 1"
