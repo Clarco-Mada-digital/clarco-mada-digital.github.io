@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin
+Disallow: /clarco-console
 
 Sitemap: /sitemap-index.xml

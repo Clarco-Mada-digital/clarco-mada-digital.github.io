@@ -34,10 +34,10 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          SITE_URL: ${{ steps.pages.outputs.origin || '' }}
-          # Si tu déploies sur un dépôt "projet" (ex: user.github.io/folio),
-          # décommente la ligne ci-dessous avec le nom EXACT du dépôt :
-          # BASE_PATH: /folio
+          # Dépôt "utilisateur" (clarco-mada-digital.github.io) → servi à la racine.
+          SITE_URL: https://clarco-mada-digital.github.io
+          # Pas de BASE_PATH nécessaire (site à la racine). Si un jour tu passes
+          # sur un dépôt "projet" (URL .../<repo>/), ajoute : BASE_PATH: /<repo>
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

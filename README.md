@@ -12,19 +12,31 @@ glitch, machine à écrire, reveal au scroll, modale projet).
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321  → le site
-                 # http://localhost:4321/admin → la console d'admin
+npm run dev      # http://localhost:4321            → le site
+                 # http://localhost:4321/clarco-console → la console d'admin
 ```
+
+## 🕵️ Accès caché à la console
+
+L'admin **n'est pas** sur `/admin` (trop prévisible) mais sur **`/clarco-console`**
+(défini dans `src/lib/config.ts`). Aucun lien visible : on y accède par un
+**easter egg** depuis le site —
+
+- **Konami Code** : `↑ ↑ ↓ ↓ ← → ← → B A`
+- ou **triple-clic rapide** sur le logo (avatar) de la sidebar.
+
+Une petite animation néon confirme puis redirige vers la console.
 
 ## ✍️ Gérer mon contenu (l'admin)
 
 Toutes les données vivent dans un seul fichier : **`src/data/content.json`**.
 
 1. Lance `npm run dev`.
-2. Ouvre **`/admin`**. Tu peux y éditer : identité, hero, stats, à propos,
-   compétences, outils, projets, parcours, contact et réseaux.
+2. Ouvre la console (`/clarco-console` ou l'easter egg). Tu peux y éditer :
+   identité, hero, stats, à propos, compétences, outils, projets (avec
+   **images** : couverture + galerie, par URL ou upload), parcours, contact.
 3. Clique **💾 Sauvegarder** : en mode dev, ça écrit **directement** dans
-   `src/data/content.json`.
+   `src/data/content.json` (et les images uploadées dans `public/projects/`).
 4. Pour **publier**, commit + `git push` → GitHub Pages se met à jour tout seul.
 
 > L'admin n'a pas d'authentification car elle ne fonctionne **qu'en local**
@@ -50,13 +62,16 @@ Le bouton **Exporter** télécharge un `content.json` ; remplace le fichier dans
 - **Déploiement GitHub Pages automatisé** (`.github/workflows/deploy.yml`).
 
 ## ☁️ Déploiement GitHub Pages
-1. Pousse le repo sur GitHub.
+Dépôt : **`clarco-mada-digital.github.io`** → site servi à la racine
+`https://clarco-mada-digital.github.io/`.
+
+1. Pousse le repo sur GitHub (branche `main`).
 2. `Settings → Pages → Build and deployment → Source : GitHub Actions`.
 3. Chaque push sur `main` build et déploie automatiquement.
 
-**Dépôt « projet »** (URL type `https://user.github.io/folio/`) : décommente
-`BASE_PATH: /folio` dans `.github/workflows/deploy.yml` (nom exact du dépôt).
-**Domaine perso** ou dépôt `user.github.io` : rien à faire.
+Comme c'est un dépôt « utilisateur » (`<nom>.github.io`), **aucun `BASE_PATH`**
+n'est nécessaire. (Pour un dépôt « projet » classique, il faudrait définir
+`BASE_PATH: /<repo>` dans `.github/workflows/deploy.yml`.)
 
 ## 🗂️ Structure
 ```
@@ -65,8 +80,9 @@ src/
   layouts/Base.astro    ← <head>, fonts, SEO, canvas/curseur
   components/           ← Sidebar, modale, sections (Home, About, …)
   scripts/              ← effects (canvas/curseur/reveal), portfolio, admin
-  pages/index.astro     ← le portfolio
-  pages/admin.astro     ← la console d'admin (locale)
+  pages/index.astro          ← le portfolio
+  pages/clarco-console.astro ← la console d'admin (locale, accès caché)
+  lib/config.ts              ← le slug secret de la console
 public/                 ← favicon, robots.txt
 _legacy/                ← l'index.html d'origine, pour référence
 ```

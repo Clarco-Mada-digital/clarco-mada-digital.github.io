@@ -123,7 +123,7 @@ function adminDevApi() {
 
 // L'URL publique du site. Modifiable via la variable d'env SITE_URL.
 // Pour GitHub Pages "projet" : mets aussi `base` (voir README).
-const SITE = process.env.SITE_URL || "https://bryan-clark.github.io";
+const SITE = process.env.SITE_URL || "https://clarco-mada-digital.github.io";
 
 // https://astro.build
 export default defineConfig({
@@ -132,8 +132,8 @@ export default defineConfig({
   trailingSlash: "ignore",
   integrations: [
     tailwind({ applyBaseStyles: false }),
-    // On exclut /admin du sitemap (page privée, locale uniquement).
-    sitemap({ filter: (page) => !page.includes("/admin") }),
+    // On exclut la console d'admin du sitemap (page privée).
+    sitemap({ filter: (page) => !page.includes("/clarco-console") }),
   ],
   vite: {
     plugins: [adminDevApi()],
