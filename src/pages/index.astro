@@ -10,6 +10,7 @@ import Contact from "../components/sections/Contact.astro";
 import ProjectModal from "../components/ProjectModal.astro";
 import CvModal from "../components/CvModal.astro";
 import CustomizePanel from "../components/CustomizePanel.astro";
+import Toasts from "../components/Toasts.astro";
 import { content } from "../lib/content";
 
 const { site, hero, contact } = content;
@@ -70,6 +71,7 @@ const bootstrap = {
     <ProjectModal />
     <CvModal />
     <CustomizePanel />
+    <Toasts />
   </div>
 
   <script

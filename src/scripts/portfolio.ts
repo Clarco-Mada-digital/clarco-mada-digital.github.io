@@ -61,6 +61,9 @@ function portfolioApp() {
     formSending: false,
     formError: "",
     form: { name: "", email: "", message: "", botcheck: "" },
+    // --- Toasts (notifications) ---
+    toasts: [] as { id: number; msg: string; type: "success" | "error" | "info" }[],
+    toastSeq: 0,
     typedText: "",
     fullText: boot.tagline,
     projects: boot.projects,
@@ -123,6 +126,16 @@ function portfolioApp() {
       this.cvOpen = true;
     },
 
+    // --- Toasts ---
+    toast(msg: string, type: "success" | "error" | "info" = "success", duration = 3200) {
+      const id = ++this.toastSeq;
+      this.toasts.push({ id, msg, type });
+      setTimeout(() => this.removeToast(id), duration);
+    },
+    removeToast(id: number) {
+      this.toasts = this.toasts.filter((t) => t.id !== id);
+    },
+
     toggleTheme() {
       this.isLight = !this.isLight;
       document.documentElement.classList.toggle("light", this.isLight);
@@ -131,6 +144,7 @@ function portfolioApp() {
       } catch {
         /* ignore */
       }
+      this.toast(this.isLight ? "Mode clair activé ☀" : "Mode sombre activé ☾", "info", 2200);
     },
 
     // --- Personnaliseur ---
@@ -148,6 +162,7 @@ function portfolioApp() {
       } catch {
         /* ignore */
       }
+      this.toast(`Police « ${f.label} » appliquée`, "info", 2000);
     },
 
     setPalette(id: string) {
@@ -166,11 +181,13 @@ function portfolioApp() {
       }
       // Prévient les effets canvas (particules) de recharger la palette.
       window.dispatchEvent(new Event("palette-change"));
+      this.toast(`Palette « ${t.label} » appliquée`, "info", 2000);
     },
 
     resetCustomize() {
       this.setFont(DEFAULT_FONT);
       this.setPalette(DEFAULT_THEME);
+      this.toast("Apparence réinitialisée", "info", 2000);
     },
 
     async generateCv(templateId: string) {
@@ -178,9 +195,10 @@ function portfolioApp() {
       this.cvBusy = templateId;
       try {
         await generateCv(boot.content, templateId, boot.base);
+        this.toast("CV généré et téléchargé ✓", "success");
       } catch (err) {
         console.error("Génération CV échouée", err);
-        alert("La génération du CV a échoué. Réessaie.");
+        this.toast("La génération du CV a échoué. Réessaie.", "error");
       } finally {
         this.cvBusy = null;
         this.cvOpen = false;
@@ -234,17 +252,23 @@ function portfolioApp() {
         }
       } catch (err) {
         this.formError = "Oups, l'envoi a échoué. Réessaie ou écris-moi directement par email.";
+        this.toast("Échec de l'envoi. Réessaie 🙏", "error");
       } finally {
         this.formSending = false;
       }
     },
 
     markSent() {
+      // Vide les champs et bascule le formulaire en état "succès".
+      this.form = { name: "", email: "", message: "", botcheck: "" };
+      this.formError = "";
       this.formSent = true;
-      setTimeout(() => {
-        this.form = { name: "", email: "", message: "", botcheck: "" };
-        this.formSent = false;
-      }, 4000);
+      this.toast("Message envoyé ! Je te réponds vite 🚀", "success", 4000);
+    },
+
+    resetContactForm() {
+      this.formSent = false;
+      this.formError = "";
     },
   };
 }
