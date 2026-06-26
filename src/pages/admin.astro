@@ -1,0 +1,404 @@
+---
+import Base from "../layouts/Base.astro";
+import { content } from "../lib/content";
+
+const base = import.meta.env.BASE_URL;
+
+// Classes réutilisées (rendues côté serveur dans les templates Alpine).
+const input =
+  "w-full bg-lab-dark border border-lab-border rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors";
+const label = "text-[11px] text-gray-500 font-mono uppercase tracking-wider mb-1 block";
+const card = "bg-lab-card border border-lab-border rounded-xl p-5";
+const miniBtn =
+  "w-7 h-7 rounded-md border border-lab-border text-gray-400 hover:text-neon-cyan hover:border-neon-cyan transition-colors flex items-center justify-center text-xs";
+const addBtn =
+  "text-xs font-mono px-3 py-1.5 rounded-md border border-dashed border-lab-border text-gray-400 hover:text-neon-cyan hover:border-neon-cyan transition-colors";
+---
+
+<Base title="Admin // Bryan Clark" noIndex={true}>
+  <div x-data="adminApp" x-cloak class="min-h-screen max-w-5xl mx-auto p-5 md:p-8">
+    <!-- En-tête -->
+    <header
+      class="sticky top-0 z-30 -mx-5 md:-mx-8 px-5 md:px-8 py-4 bg-lab-dark/85 backdrop-blur-md border-b border-lab-border mb-8"
+    >
+      <div class="flex flex-wrap items-center gap-3 justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-9 h-9 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center text-lab-dark font-extrabold"
+          >
+            ⚙
+          </div>
+          <div>
+            <div class="text-white font-bold font-mono text-sm">Console Admin</div>
+            <div class="text-[11px] font-mono flex items-center gap-1.5">
+              <template x-if="apiAvailable">
+                <span class="text-neon-green flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 bg-neon-green rounded-full animate-pulse"
+                  ></span>
+                  serveur local — sauvegarde fichier active
+                </span>
+              </template>
+              <template x-if="!apiAvailable">
+                <span class="text-yellow-500"
+                  >hors-ligne — export/import uniquement</span
+                >
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href={base} class={miniBtn + ' !w-auto px-3 gap-1'} title="Voir le site"
+            >↗ Site</a
+          >
+          <label class={addBtn + ' cursor-pointer'}>
+            Importer
+            <input type="file" accept="application/json" class="hidden" @change="importJson($event)" />
+          </label>
+          <button @click="exportJson()" class={addBtn}>Exporter</button>
+          <button
+            @click="save()"
+            :disabled="saving"
+            class="text-xs font-bold px-4 py-2 rounded-md bg-neon-cyan text-lab-dark hover:bg-white transition-colors disabled:opacity-50"
+          >
+            <span x-show="!saving">💾 Sauvegarder</span>
+            <span x-show="saving" style="display:none">Sauvegarde…</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Statut -->
+      <div
+        x-show="status"
+        style="display:none"
+        class="mt-3 text-xs font-mono px-3 py-2 rounded-md border"
+        :class="statusType === 'success' ? 'text-neon-green border-neon-green/40 bg-neon-green/5' : statusType === 'error' ? 'text-red-400 border-red-400/40 bg-red-400/5' : 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/5'"
+        x-text="status"
+      >
+      </div>
+    </header>
+
+    <!-- Chargement -->
+    <div x-show="loading" class="text-gray-500 font-mono text-sm">
+      Chargement des données…
+    </div>
+
+    <div x-show="!loading" style="display:none" class="flex flex-col md:flex-row gap-8">
+      <!-- Onglets -->
+      <nav class="md:w-44 flex md:flex-col gap-1 overflow-x-auto md:overflow-visible shrink-0">
+        <template x-for="tab in tabs" :key="tab.id">
+          <button
+            @click="activeTab = tab.id"
+            class="text-left whitespace-nowrap py-2 px-3 rounded-lg font-mono text-sm transition-colors"
+            :class="activeTab === tab.id ? 'bg-lab-card text-neon-cyan' : 'text-gray-500 hover:text-white'"
+            x-text="tab.label"
+          >
+          </button>
+        </template>
+      </nav>
+
+      <!-- Panneaux -->
+      <div class="flex-1 min-w-0 space-y-5">
+        <!-- ====== IDENTITÉ ====== -->
+        <section x-show="activeTab === 'site'" class:list={[card, 'space-y-4']}>
+          <h2 class="text-white font-bold">Identité</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class={label}>Nom complet</label><input class={input} x-model="data.site.name" /></div>
+            <div><label class={label}>Handle (~/...)</label><input class={input} x-model="data.site.handle" /></div>
+            <div><label class={label}>Initiale (logo)</label><input class={input} x-model="data.site.initials" /></div>
+            <div><label class={label}>Rôle</label><input class={input} x-model="data.site.role" /></div>
+          </div>
+          <div><label class={label}>Titre de l'onglet (SEO)</label><input class={input} x-model="data.site.titleTag" /></div>
+          <div><label class={label}>Description (SEO)</label><textarea rows="2" class={input} x-model="data.site.description"></textarea></div>
+          <div class="grid sm:grid-cols-2 gap-4 items-end">
+            <div><label class={label}>Libellé disponibilité</label><input class={input} x-model="data.site.availabilityLabel" /></div>
+            <label class="flex items-center gap-2 text-sm text-gray-300 py-2">
+              <input type="checkbox" x-model="data.site.available" class="accent-neon-cyan" /> Afficher « disponible »
+            </label>
+          </div>
+        </section>
+
+        <!-- ====== HERO ====== -->
+        <section x-show="activeTab === 'hero'" style="display:none" class:list={[card, 'space-y-4']}>
+          <h2 class="text-white font-bold">Section Hero</h2>
+          <div><label class={label}>Accroche (effet machine à écrire)</label><textarea rows="2" class={input} x-model="data.hero.tagline"></textarea></div>
+          <h3 class="text-gray-400 text-sm font-mono pt-2">Bloc code « developer.js »</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class={label}>name</label><input class={input} x-model="data.hero.code.name" /></div>
+            <div><label class={label}>role</label><input class={input} x-model="data.hero.code.role" /></div>
+            <div><label class={label}>location</label><input class={input} x-model="data.hero.code.location" /></div>
+            <div><label class={label}>passions</label><input class={input} x-model="data.hero.code.passions" /></div>
+          </div>
+          <div>
+            <label class={label}>stack</label>
+            <div class="space-y-2">
+              <template x-for="(_, i) in data.hero.code.stack" :key="i">
+                <div class="flex gap-2">
+                  <input class={input} x-model="data.hero.code.stack[i]" />
+                  <button class={miniBtn} @click="remove(data.hero.code.stack, i)">✕</button>
+                </div>
+              </template>
+            </div>
+            <button class={addBtn + ' mt-2'} @click="addString(data.hero.code.stack)">+ techno</button>
+          </div>
+        </section>
+
+        <!-- ====== STATS ====== -->
+        <section x-show="activeTab === 'stats'" style="display:none" class:list={[card, 'space-y-4']}>
+          <div class="flex items-center justify-between">
+            <h2 class="text-white font-bold">Statistiques</h2>
+            <button class={addBtn} @click="addStat()">+ Stat</button>
+          </div>
+          <template x-for="(stat, i) in data.stats" :key="i">
+            <div class="flex flex-wrap items-end gap-3 border border-lab-border rounded-lg p-3">
+              <div class="w-20"><label class={label}>Valeur</label><input class={input} x-model="stat.value" /></div>
+              <div class="flex-1 min-w-[140px]"><label class={label}>Libellé</label><input class={input} x-model="stat.label" /></div>
+              <div class="w-36">
+                <label class={label}>Couleur</label>
+                <select class={input} x-model="stat.color">
+                  <option value="neon-cyan">cyan</option>
+                  <option value="neon-purple">purple</option>
+                  <option value="neon-green">green</option>
+                  <option value="white">blanc</option>
+                </select>
+              </div>
+              <div class="flex gap-1">
+                <button class={miniBtn} @click="move(data.stats, i, -1)">↑</button>
+                <button class={miniBtn} @click="move(data.stats, i, 1)">↓</button>
+                <button class={miniBtn} @click="remove(data.stats, i)">✕</button>
+              </div>
+            </div>
+          </template>
+        </section>
+
+        <!-- ====== À PROPOS ====== -->
+        <section x-show="activeTab === 'about'" style="display:none" class:list={[card, 'space-y-5']}>
+          <h2 class="text-white font-bold">À propos</h2>
+          <div>
+            <label class={label}>Paragraphes</label>
+            <div class="space-y-2">
+              <template x-for="(_, i) in data.about.paragraphs" :key="i">
+                <div class="flex gap-2">
+                  <textarea rows="3" class={input} x-model="data.about.paragraphs[i]"></textarea>
+                  <button class={miniBtn} @click="remove(data.about.paragraphs, i)">✕</button>
+                </div>
+              </template>
+            </div>
+            <button class={addBtn + ' mt-2'} @click="addString(data.about.paragraphs)">+ paragraphe</button>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-6">
+            <div>
+              <label class={label}>Ce que je fais</label>
+              <div class="space-y-2">
+                <template x-for="(_, i) in data.about.doing" :key="i">
+                  <div class="flex gap-2">
+                    <input class={input} x-model="data.about.doing[i]" />
+                    <button class={miniBtn} @click="remove(data.about.doing, i)">✕</button>
+                  </div>
+                </template>
+              </div>
+              <button class={addBtn + ' mt-2'} @click="addString(data.about.doing)">+ ligne</button>
+            </div>
+            <div>
+              <label class={label}>Ce que je recherche</label>
+              <div class="space-y-2">
+                <template x-for="(_, i) in data.about.looking" :key="i">
+                  <div class="flex gap-2">
+                    <input class={input} x-model="data.about.looking[i]" />
+                    <button class={miniBtn} @click="remove(data.about.looking, i)">✕</button>
+                  </div>
+                </template>
+              </div>
+              <button class={addBtn + ' mt-2'} @click="addString(data.about.looking)">+ ligne</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====== COMPÉTENCES ====== -->
+        <section x-show="activeTab === 'skills'" style="display:none" class="space-y-5">
+          <div class:list={[card, 'space-y-4']}>
+            <div class="flex items-center justify-between">
+              <h2 class="text-white font-bold">Catégories de compétences</h2>
+              <button class={addBtn} @click="addSkillCategory()">+ Catégorie</button>
+            </div>
+            <template x-for="(cat, ci) in data.skills" :key="ci">
+              <div class="border border-lab-border rounded-lg p-4 space-y-3">
+                <div class="flex gap-3 items-end">
+                  <div class="w-16"><label class={label}>Icône</label><input class={input} x-model="cat.icon" /></div>
+                  <div class="flex-1"><label class={label}>Nom</label><input class={input} x-model="cat.name" /></div>
+                  <div class="flex gap-1">
+                    <button class={miniBtn} @click="move(data.skills, ci, -1)">↑</button>
+                    <button class={miniBtn} @click="move(data.skills, ci, 1)">↓</button>
+                    <button class={miniBtn} @click="remove(data.skills, ci)">✕</button>
+                  </div>
+                </div>
+                <div>
+                  <label class={label}>Technologies</label>
+                  <div class="flex flex-wrap gap-2">
+                    <template x-for="(_, ti) in cat.items" :key="ti">
+                      <div class="flex gap-1 items-center">
+                        <input class={input + ' !w-32'} x-model="cat.items[ti]" />
+                        <button class={miniBtn} @click="remove(cat.items, ti)">✕</button>
+                      </div>
+                    </template>
+                  </div>
+                  <button class={addBtn + ' mt-2'} @click="addString(cat.items)">+ techno</button>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <div class:list={[card, 'space-y-3']}>
+            <label class={label}>Outils & Workflow</label>
+            <div class="flex flex-wrap gap-2">
+              <template x-for="(_, i) in data.tools" :key="i">
+                <div class="flex gap-1 items-center">
+                  <input class={input + ' !w-40'} x-model="data.tools[i]" />
+                  <button class={miniBtn} @click="remove(data.tools, i)">✕</button>
+                </div>
+              </template>
+            </div>
+            <button class={addBtn} @click="addString(data.tools)">+ outil</button>
+          </div>
+        </section>
+
+        <!-- ====== PROJETS ====== -->
+        <section x-show="activeTab === 'projects'" style="display:none" class="space-y-5">
+          <div class="flex items-center justify-between">
+            <h2 class="text-white font-bold">Projets</h2>
+            <button class={addBtn} @click="addProject()">+ Nouveau projet</button>
+          </div>
+          <template x-for="(project, pi) in data.projects" :key="project.id">
+            <div class:list={[card, 'space-y-4']}>
+              <div class="flex items-start gap-3">
+                <div class="flex-1 grid sm:grid-cols-2 gap-4">
+                  <div><label class={label}>Nom</label><input class={input} x-model="project.name" /></div>
+                  <div><label class={label}>Année</label><input class={input} x-model="project.year" /></div>
+                </div>
+                <div class="flex gap-1 pt-5">
+                  <button class={miniBtn} @click="move(data.projects, pi, -1)">↑</button>
+                  <button class={miniBtn} @click="move(data.projects, pi, 1)">↓</button>
+                  <button class={miniBtn} @click="remove(data.projects, pi)">✕</button>
+                </div>
+              </div>
+
+              <div><label class={label}>Description courte</label><textarea rows="2" class={input} x-model="project.shortDesc"></textarea></div>
+              <div><label class={label}>Description complète (modale)</label><textarea rows="3" class={input} x-model="project.fullDesc"></textarea></div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div><label class={label}>Lien code (repo)</label><input class={input} x-model="project.repoUrl" placeholder="https://github.com/..." /></div>
+                <div><label class={label}>Lien démo</label><input class={input} x-model="project.demoUrl" placeholder="https://..." /></div>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4 items-end">
+                <div>
+                  <label class={label}>Dégradé</label>
+                  <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-md shrink-0 border border-lab-border" :class="project.gradient"></span>
+                    <select class={input} x-model="project.gradient">
+                      <template x-for="(g, gi) in gradients" :key="gi">
+                        <option :value="g" x-text="'Preset ' + (gi + 1)"></option>
+                      </template>
+                    </select>
+                  </div>
+                </div>
+                <label class="flex items-center gap-2 text-sm text-gray-300 py-2">
+                  <input type="checkbox" x-model="project.featured" class="accent-neon-cyan" /> ★ Mis en avant
+                </label>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <label class={label}>Tags (stack)</label>
+                  <div class="flex flex-wrap gap-2">
+                    <template x-for="(_, ti) in project.tags" :key="ti">
+                      <div class="flex gap-1 items-center">
+                        <input class={input + ' !w-28'} x-model="project.tags[ti]" />
+                        <button class={miniBtn} @click="remove(project.tags, ti)">✕</button>
+                      </div>
+                    </template>
+                  </div>
+                  <button class={addBtn + ' mt-2'} @click="addString(project.tags)">+ tag</button>
+                </div>
+                <div>
+                  <label class={label}>Fonctionnalités clés</label>
+                  <div class="space-y-2">
+                    <template x-for="(_, fi) in project.features" :key="fi">
+                      <div class="flex gap-2">
+                        <input class={input} x-model="project.features[fi]" />
+                        <button class={miniBtn} @click="remove(project.features, fi)">✕</button>
+                      </div>
+                    </template>
+                  </div>
+                  <button class={addBtn + ' mt-2'} @click="addString(project.features)">+ feature</button>
+                </div>
+              </div>
+            </div>
+          </template>
+        </section>
+
+        <!-- ====== PARCOURS ====== -->
+        <section x-show="activeTab === 'experience'" style="display:none" class="space-y-5">
+          <div class="flex items-center justify-between">
+            <h2 class="text-white font-bold">Parcours</h2>
+            <button class={addBtn} @click="addExperience()">+ Expérience</button>
+          </div>
+          <template x-for="(exp, ei) in data.experience" :key="exp.id">
+            <div class:list={[card, 'space-y-4']}>
+              <div class="flex items-start gap-3">
+                <div class="flex-1 grid sm:grid-cols-2 gap-4">
+                  <div><label class={label}>Poste</label><input class={input} x-model="exp.role" /></div>
+                  <div><label class={label}>Entreprise</label><input class={input} x-model="exp.company" /></div>
+                  <div><label class={label}>Période</label><input class={input} x-model="exp.period" placeholder="2023 — Présent" /></div>
+                </div>
+                <div class="flex gap-1 pt-5">
+                  <button class={miniBtn} @click="move(data.experience, ei, -1)">↑</button>
+                  <button class={miniBtn} @click="move(data.experience, ei, 1)">↓</button>
+                  <button class={miniBtn} @click="remove(data.experience, ei)">✕</button>
+                </div>
+              </div>
+              <div><label class={label}>Description</label><textarea rows="3" class={input} x-model="exp.description"></textarea></div>
+              <div>
+                <label class={label}>Technologies</label>
+                <div class="flex flex-wrap gap-2">
+                  <template x-for="(_, ti) in exp.tech" :key="ti">
+                    <div class="flex gap-1 items-center">
+                      <input class={input + ' !w-28'} x-model="exp.tech[ti]" />
+                      <button class={miniBtn} @click="remove(exp.tech, ti)">✕</button>
+                    </div>
+                  </template>
+                </div>
+                <button class={addBtn + ' mt-2'} @click="addString(exp.tech)">+ techno</button>
+              </div>
+            </div>
+          </template>
+        </section>
+
+        <!-- ====== CONTACT ====== -->
+        <section x-show="activeTab === 'contact'" style="display:none" class:list={[card, 'space-y-4']}>
+          <h2 class="text-white font-bold">Contact & réseaux</h2>
+          <div><label class={label}>Intro</label><textarea rows="2" class={input} x-model="data.contact.intro"></textarea></div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class={label}>Email</label><input class={input} x-model="data.contact.email" /></div>
+            <div><label class={label}>Localisation</label><input class={input} x-model="data.contact.location" /></div>
+            <div><label class={label}>Statut</label><input class={input} x-model="data.contact.status" /></div>
+            <div><label class={label}>Endpoint formulaire (Formspree…)</label><input class={input} x-model="data.contact.formEndpoint" placeholder="https://formspree.io/f/xxxx (option.)" /></div>
+          </div>
+          <h3 class="text-gray-400 text-sm font-mono pt-2">Réseaux (sidebar)</h3>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div><label class={label}>GitHub</label><input class={input} x-model="data.socials.github" /></div>
+            <div><label class={label}>LinkedIn</label><input class={input} x-model="data.socials.linkedin" /></div>
+            <div><label class={label}>Email (icône)</label><input class={input} x-model="data.socials.email" /></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ seed: content }}>
+    window.__ADMIN_SEED__ = seed;
+  </script>
+  <script>
+    import "../scripts/admin";
+  </script>
+</Base>

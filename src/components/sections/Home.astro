@@ -1,0 +1,120 @@
+---
+import { content } from "../../lib/content";
+
+const { site, hero, stats } = content;
+
+// Sépare le nom pour l'effet glitch (1er mot blanc + reste en dégradé).
+const parts = site.name.trim().split(/\s+/);
+const firstName = parts.shift() ?? site.name;
+const lastName = parts.join(" ");
+
+const code = hero.code;
+const stackStr = code.stack.map((s) => `'${s}'`).join(", ");
+---
+
+<section
+  x-show="activeView === 'home'"
+  x-transition:enter="transition ease-out duration-500"
+  x-transition:enter-start="opacity-0 translate-y-4"
+  x-transition:enter-end="opacity-100 translate-y-0"
+  class="max-w-5xl"
+>
+  <div
+    class="bg-lab-card border border-lab-border rounded-2xl p-8 md:p-10 mb-8 relative overflow-hidden"
+  >
+    <div
+      class="absolute top-0 right-0 w-64 h-64 bg-neon-purple/10 rounded-full blur-3xl"
+    >
+    </div>
+    <div
+      class="absolute bottom-0 left-0 w-64 h-64 bg-neon-cyan/10 rounded-full blur-3xl"
+    >
+    </div>
+
+    <div class="relative z-10">
+      <div class="font-mono text-sm text-neon-green mb-4">$ whoami</div>
+      <h1
+        class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4"
+      >
+        <span class="glitch" data-text={firstName}>{firstName}</span>
+        {
+          lastName && (
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple glow-text">
+              {" "}
+              {lastName}
+            </span>
+          )
+        }
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-400 font-light mb-8 h-16">
+        <span x-text="typedText"></span>
+      </p>
+
+      <div class="flex flex-wrap gap-4">
+        <button
+          @click="changeView('projects')"
+          class="px-6 py-3 bg-neon-cyan text-lab-dark font-bold rounded-lg hover:bg-white transition-colors flex items-center gap-2"
+        >
+          Voir mes projets
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </button>
+        <button
+          @click="changeView('contact')"
+          class="px-6 py-3 border border-lab-border text-gray-300 font-bold rounded-lg hover:border-neon-cyan hover:text-neon-cyan transition-all"
+        >
+          Me contacter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats rapides -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    {
+      stats.map((stat, i) => (
+        <div
+          class="reveal bg-lab-card border border-lab-border rounded-xl p-5 card-hover"
+          style={`transition-delay: ${i * 0.1}s`}
+        >
+          <div class={`text-3xl font-bold font-mono text-${stat.color}`}>
+            {stat.value}
+          </div>
+          <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+            {stat.label}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Aperçu code -->
+  <div
+    class="reveal bg-lab-card border border-lab-border rounded-2xl overflow-hidden"
+  >
+    <div
+      class="flex items-center gap-2 px-4 py-3 border-b border-lab-border bg-lab-dark/50"
+    >
+      <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+      <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+      <div class="w-3 h-3 rounded-full bg-green-500/70"></div>
+      <span class="ml-3 text-xs text-gray-500 font-mono">developer.js</span>
+    </div>
+    <pre
+      class="p-6 text-sm font-mono overflow-x-auto leading-relaxed"><code><span class="text-neon-purple">const</span> <span class="text-neon-cyan">developer</span> = &#123;
+  <span class="text-neon-green">name</span>: <span class="text-gray-400">'{code.name}'</span>,
+  <span class="text-neon-green">role</span>: <span class="text-gray-400">'{code.role}'</span>,
+  <span class="text-neon-green">location</span>: <span class="text-gray-400">'{code.location}'</span>,
+  <span class="text-neon-green">stack</span>: [<span class="text-gray-400">{stackStr}</span>],
+  <span class="text-neon-green">passions</span>: <span class="text-gray-400">'{code.passions}'</span>,
+  <span class="text-neon-green">available</span>: <span class="text-neon-purple">{String(code.available)}</span>
+&#125;;</code></pre>
+  </div>
+</section>

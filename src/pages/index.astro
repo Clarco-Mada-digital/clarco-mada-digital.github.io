@@ -1,0 +1,73 @@
+---
+import Base from "../layouts/Base.astro";
+import Sidebar from "../components/Sidebar.astro";
+import Home from "../components/sections/Home.astro";
+import About from "../components/sections/About.astro";
+import Skills from "../components/sections/Skills.astro";
+import Projects from "../components/sections/Projects.astro";
+import Experience from "../components/sections/Experience.astro";
+import Contact from "../components/sections/Contact.astro";
+import ProjectModal from "../components/ProjectModal.astro";
+import { content } from "../lib/content";
+
+const { site, hero, contact } = content;
+
+// Données injectées dans Alpine (modale projet + formulaire + typewriter).
+const bootstrap = {
+  projects: content.projects,
+  tagline: hero.tagline,
+  formEndpoint: contact.formEndpoint || "",
+  email: contact.email,
+};
+---
+
+<Base>
+  <div
+    x-data="portfolioApp"
+    x-cloak
+    x-effect="document.body.style.overflow = selectedProject ? 'hidden' : ''"
+    class="min-h-screen flex flex-col md:flex-row"
+  >
+    <Sidebar />
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="flex-1 p-6 md:p-12 overflow-y-auto">
+      <!-- Indicateur de navigation -->
+      <div class="font-mono text-xs text-gray-600 mb-8 flex items-center gap-2">
+        <span class="text-neon-purple">~/{site.handle}</span>
+        <span>/</span>
+        <span class="text-neon-cyan" x-text="activeView"></span>
+        <span class="cursor"></span>
+      </div>
+
+      <Home />
+      <About />
+      <Skills />
+      <Projects />
+      <Experience />
+      <Contact />
+
+      <!-- Footer mini -->
+      <footer
+        class="mt-20 pt-8 border-t border-lab-border text-center text-xs text-gray-600 font-mono"
+      >
+        <p>
+          Conçu et développé avec ❤️ par {site.name} — Astro, Alpine.js & Tailwind
+          CSS
+        </p>
+      </footer>
+    </main>
+
+    <ProjectModal />
+  </div>
+
+  <script
+    is:inline
+    define:vars={{ bootstrap }}
+  >
+    window.__PORTFOLIO__ = bootstrap;
+  </script>
+  <script>
+    import "../scripts/portfolio";
+  </script>
+</Base>

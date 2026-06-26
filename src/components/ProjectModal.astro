@@ -1,0 +1,135 @@
+---
+// Modale projet : pilotée par Alpine (selectedProject). Les données viennent
+// du tableau `projects` injecté dans le composant portfolioApp.
+---
+
+<div
+  x-show="selectedProject"
+  x-cloak
+  x-transition:enter="transition ease-out duration-300"
+  x-transition:enter-start="opacity-0"
+  x-transition:enter-end="opacity-100"
+  x-transition:leave="transition ease-in duration-200"
+  x-transition:leave-start="opacity-100"
+  x-transition:leave-end="opacity-0"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-lab-dark/80 backdrop-blur-sm"
+  @click.self="selectedProject = null"
+  @keydown.escape.window="selectedProject = null"
+  style="display: none"
+>
+  <div
+    class="bg-lab-card border border-lab-border rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+    x-show="selectedProject"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+  >
+    <template x-if="selectedProject">
+      <div>
+        <!-- Header gradient -->
+        <div
+          class="h-40 relative overflow-hidden rounded-t-2xl"
+          :class="selectedProject.gradient"
+        >
+          <div class="absolute inset-0 bg-lab-dark/30"></div>
+          <button
+            @click="selectedProject = null"
+            aria-label="Fermer"
+            class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-lab-dark/80 flex items-center justify-center text-gray-400 hover:text-white hover:bg-lab-dark transition-colors"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M18 6L6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+          <div class="absolute bottom-4 left-6">
+            <div
+              class="text-xs font-mono text-neon-cyan mb-1"
+              x-text="selectedProject.year"
+            >
+            </div>
+            <h3
+              class="text-3xl font-extrabold text-white"
+              x-text="selectedProject.name"
+            >
+            </h3>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+          <p
+            class="text-gray-400 leading-relaxed mb-6"
+            x-text="selectedProject.fullDesc"
+          >
+          </p>
+
+          <div class="mb-6">
+            <h4
+              class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
+            >
+              Fonctionnalités clés
+            </h4>
+            <ul class="space-y-1.5">
+              <template
+                x-for="feature in selectedProject.features"
+                :key="feature"
+              >
+                <li class="flex items-start gap-2 text-sm text-gray-300">
+                  <span class="text-neon-cyan mt-0.5">▸</span>
+                  <span x-text="feature"></span>
+                </li>
+              </template>
+            </ul>
+          </div>
+
+          <div class="mb-6">
+            <h4
+              class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
+            >
+              Stack technique
+            </h4>
+            <div class="flex flex-wrap gap-2">
+              <template x-for="tag in selectedProject.tags" :key="tag">
+                <span
+                  class="px-3 py-1 bg-lab-dark border border-lab-border rounded-md text-xs font-mono text-neon-cyan"
+                  x-text="tag"
+                >
+                </span>
+              </template>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <a
+              :href="selectedProject.repoUrl || '#'"
+              x-show="selectedProject.repoUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex-1 py-2.5 bg-neon-cyan text-lab-dark font-bold text-center rounded-lg text-sm hover:bg-white transition-colors"
+              >Voir le code</a
+            >
+            <a
+              :href="selectedProject.demoUrl || '#'"
+              x-show="selectedProject.demoUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex-1 py-2.5 border border-lab-border text-gray-300 font-bold text-center rounded-lg text-sm hover:border-neon-cyan hover:text-neon-cyan transition-all"
+              >Démo live</a
+            >
+            <span
+              x-show="!selectedProject.repoUrl && !selectedProject.demoUrl"
+              class="flex-1 py-2.5 text-center text-gray-600 text-sm font-mono"
+              >Liens à venir</span
+            >
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>

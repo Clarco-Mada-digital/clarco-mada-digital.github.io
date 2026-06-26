@@ -1,0 +1,49 @@
+---
+import { content } from "../../lib/content";
+const { experience } = content;
+---
+
+<section
+  x-show="activeView === 'experience'"
+  x-transition:enter="transition ease-out duration-500"
+  x-transition:enter-start="opacity-0 translate-y-4"
+  x-transition:enter-end="opacity-100 translate-y-0"
+  class="max-w-4xl"
+  style="display: none"
+>
+  <h2 class="text-4xl font-bold text-white mb-2">// Parcours</h2>
+  <p class="text-gray-500 mb-10 font-mono text-sm">getExperience()</p>
+
+  <div class="relative pl-8 border-l border-lab-border space-y-10">
+    {
+      experience.map((exp, index) => (
+        <div class="reveal relative" style={`transition-delay: ${index * 0.2}s`}>
+          {/* Point sur la timeline */}
+          <div class="absolute -left-[41px] top-1 w-4 h-4 rounded-full bg-lab-dark border-2 border-neon-cyan flex items-center justify-center">
+            <div class="w-1.5 h-1.5 rounded-full bg-neon-cyan" />
+          </div>
+
+          <div class="bg-lab-card border border-lab-border rounded-xl p-6 card-hover">
+            <div class="flex flex-wrap items-center justify-between mb-3 gap-2">
+              <h3 class="text-white font-bold text-lg">{exp.role}</h3>
+              <span class="text-xs font-mono px-3 py-1 bg-lab-dark rounded-full text-neon-cyan border border-lab-border">
+                {exp.period}
+              </span>
+            </div>
+            <p class="text-neon-purple font-mono text-sm mb-3">{exp.company}</p>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">
+              {exp.description}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {exp.tech.map((tech) => (
+                <span class="text-[10px] font-mono px-2 py-1 bg-lab-dark rounded text-gray-500 border border-lab-border">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,169 @@
+---
+import { content } from "../../lib/content";
+const { contact } = content;
+---
+
+<section
+  x-show="activeView === 'contact'"
+  x-transition:enter="transition ease-out duration-500"
+  x-transition:enter-start="opacity-0 translate-y-4"
+  x-transition:enter-end="opacity-100 translate-y-0"
+  class="max-w-4xl"
+  style="display: none"
+>
+  <h2 class="text-4xl font-bold text-white mb-2">// Contact</h2>
+  <p class="text-gray-500 mb-10 font-mono text-sm">initiateContact()</p>
+
+  <div class="grid md:grid-cols-2 gap-8">
+    <!-- Info -->
+    <div class="reveal">
+      <h3 class="text-2xl font-bold text-white mb-4">Travaillons ensemble !</h3>
+      <p class="text-gray-400 mb-8 leading-relaxed">{contact.intro}</p>
+
+      <div class="space-y-4">
+        <a
+          href={`mailto:${contact.email}`}
+          class="flex items-center gap-4 p-4 bg-lab-card border border-lab-border rounded-xl card-hover"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-neon-cyan/10 flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-neon-cyan"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              ></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider">
+              Email
+            </div>
+            <span class="text-white hover:text-neon-cyan transition-colors"
+              >{contact.email}</span
+            >
+          </div>
+        </a>
+
+        <div
+          class="flex items-center gap-4 p-4 bg-lab-card border border-lab-border rounded-xl card-hover"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-neon-purple/10 flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-neon-purple"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider">
+              Localisation
+            </div>
+            <div class="text-white">{contact.location}</div>
+          </div>
+        </div>
+
+        <div
+          class="flex items-center gap-4 p-4 bg-lab-card border border-lab-border rounded-xl card-hover"
+        >
+          <div
+            class="w-10 h-10 rounded-lg bg-neon-green/10 flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-neon-green"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider">
+              Statut
+            </div>
+            <div class="text-white flex items-center gap-2">
+              <span class="w-2 h-2 bg-neon-green rounded-full animate-pulse"
+              ></span>
+              {contact.status}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div
+      class="reveal bg-lab-card border border-lab-border rounded-2xl p-6"
+      style="transition-delay: 0.2s"
+    >
+      <form @submit.prevent="submitForm()">
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs text-gray-500 font-mono mb-1.5 block">Nom</label
+            >
+            <input
+              type="text"
+              x-model="form.name"
+              required
+              class="w-full bg-lab-dark border border-lab-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors"
+              placeholder="Jean Dupont"
+            />
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 font-mono mb-1.5 block"
+              >Email</label
+            >
+            <input
+              type="email"
+              x-model="form.email"
+              required
+              class="w-full bg-lab-dark border border-lab-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors"
+              placeholder="jean@entreprise.com"
+            />
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 font-mono mb-1.5 block"
+              >Message</label
+            >
+            <textarea
+              x-model="form.message"
+              required
+              rows="4"
+              class="w-full bg-lab-dark border border-lab-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors resize-none"
+              placeholder="Parlez-moi de votre projet..."></textarea>
+          </div>
+          <button
+            type="submit"
+            class="w-full py-3 bg-gradient-to-r from-neon-cyan to-neon-purple text-lab-dark font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+          >
+            <span x-show="!formSent">Envoyer le message</span>
+            <span x-show="formSent" style="display: none">✓ Message envoyé !</span>
+          </button>
+          <p
+            x-show="formError"
+            style="display:none"
+            class="text-xs text-red-400 text-center"
+            x-text="formError"
+          >
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

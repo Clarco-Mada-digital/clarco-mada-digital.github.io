@@ -1,0 +1,71 @@
+---
+import { content } from "../../lib/content";
+const { projects } = content;
+---
+
+<section
+  x-show="activeView === 'projects'"
+  x-transition:enter="transition ease-out duration-500"
+  x-transition:enter-start="opacity-0 translate-y-4"
+  x-transition:enter-end="opacity-100 translate-y-0"
+  class="max-w-6xl"
+  style="display: none"
+>
+  <h2 class="text-4xl font-bold text-white mb-2">// Projets</h2>
+  <p class="text-gray-500 mb-10 font-mono text-sm">getProjects(limit: 'all')</p>
+
+  {
+    projects.length === 0 && (
+      <p class="text-gray-500 font-mono text-sm">
+        Aucun projet pour le moment. Ajoute-en depuis{" "}
+        <span class="text-neon-cyan">/admin</span>.
+      </p>
+    )
+  }
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {
+      projects.map((project, index) => (
+        <div
+          @click={`openProject(${project.id})`}
+          class="reveal bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover cursor-pointer group"
+          style={`transition-delay: ${index * 0.1}s`}
+        >
+          {/* Miniature */}
+          <div class={`h-44 relative overflow-hidden ${project.gradient}`}>
+            <div class="absolute inset-0 bg-lab-dark/40" />
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="text-5xl font-extrabold text-white/20 group-hover:text-white/30 transition-colors font-mono">
+                {project.name.charAt(0)}
+              </span>
+            </div>
+            {project.featured && (
+              <div class="absolute top-3 left-3 px-2 py-1 bg-neon-cyan/90 rounded-md text-[10px] font-mono font-bold text-lab-dark">
+                ★ Featured
+              </div>
+            )}
+            <div class="absolute top-3 right-3 px-2 py-1 bg-lab-dark/80 backdrop-blur-sm rounded-md text-[10px] font-mono text-neon-cyan border border-neon-cyan/30">
+              {project.year}
+            </div>
+          </div>
+          {/* Contenu */}
+          <div class="p-5">
+            <h3 class="text-white font-bold text-lg mb-1 group-hover:text-neon-cyan transition-colors">
+              {project.name}
+            </h3>
+            <p class="text-gray-500 text-sm mb-4 line-clamp-2">
+              {project.shortDesc}
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              {project.tags.slice(0, 3).map((tag) => (
+                <span class="text-[10px] font-mono px-2 py-0.5 bg-lab-dark rounded text-gray-500 border border-lab-border">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

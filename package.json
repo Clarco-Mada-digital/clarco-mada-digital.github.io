@@ -1,0 +1,20 @@
+{
+  "name": "bryan-clark-portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Portfolio de Bryan Clark — Full-Stack & Mobile Architect. Construit avec Astro, Tailwind & Alpine.js.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.2.1",
+    "@astrojs/tailwind": "^5.1.4",
+    "alpinejs": "^3.14.8",
+    "astro": "^4.16.18",
+    "tailwindcss": "^3.4.17"
+  }
+}

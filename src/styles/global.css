@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================================================================
+   Styles repris à l'identique du portfolio d'origine (thème "lab").
+   =================================================================== */
+
+body {
+  background-color: #070a0f;
+  cursor: none; /* On cache le curseur par défaut pour le custom */
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f131a;
+}
+::-webkit-scrollbar-thumb {
+  background: #1c2230;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00f0ff;
+}
+
+.cursor::after {
+  content: "▋";
+  animation: blink 1s step-end infinite;
+  color: #00f0ff;
+  margin-left: 4px;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: #00f0ff;
+  box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.2);
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+
+/* === CURSEUR PERSONNALISÉ === */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #00f0ff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s ease;
+  mix-blend-mode: difference;
+}
+.cursor-outline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transition:
+    transform 0.2s ease-out,
+    width 0.3s ease,
+    height 0.3s ease,
+    background 0.3s ease;
+}
+.cursor-outline.hovered {
+  width: 60px;
+  height: 60px;
+  background: rgba(188, 19, 254, 0.1);
+  border-color: rgba(188, 19, 254, 0.8);
+}
+
+/* === ANIMATION REVEAL AU SCROLL === */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === EFFET GLITCH === */
+.glitch {
+  position: relative;
+  color: white;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.glitch::before {
+  left: 2px;
+  text-shadow: -1px 0 #bc13fe;
+  clip-path: inset(0 0 0 0);
+  animation: glitch-anim-1 3s infinite linear alternate-reverse;
+}
+.glitch::after {
+  left: -2px;
+  text-shadow: -1px 0 #00f0ff;
+  clip-path: inset(0 0 0 0);
+  animation: glitch-anim-2 2s infinite linear alternate-reverse;
+}
+@keyframes glitch-anim-1 {
+  0% {
+    clip-path: inset(20% 0 60% 0);
+  }
+  20% {
+    clip-path: inset(80% 0 5% 0);
+  }
+  40% {
+    clip-path: inset(40% 0 50% 0);
+  }
+  60% {
+    clip-path: inset(10% 0 75% 0);
+  }
+  80% {
+    clip-path: inset(90% 0 5% 0);
+  }
+  100% {
+    clip-path: inset(60% 0 20% 0);
+  }
+}
+@keyframes glitch-anim-2 {
+  0% {
+    clip-path: inset(70% 0 10% 0);
+  }
+  20% {
+    clip-path: inset(20% 0 60% 0);
+  }
+  40% {
+    clip-path: inset(40% 0 50% 0);
+  }
+  60% {
+    clip-path: inset(80% 0 5% 0);
+  }
+  80% {
+    clip-path: inset(10% 0 70% 0);
+  }
+  100% {
+    clip-path: inset(30% 0 40% 0);
+  }
+}
+
+/* Canvas particles */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Désactivation curseur custom sur mobile */
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+  .cursor-dot,
+  .cursor-outline {
+    display: none;
+  }
+}
+
+/* === AMÉLIORATION ACCESSIBILITÉ ===
+   Respecte le réglage système "réduire les animations". */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    cursor: auto;
+  }
+  .cursor-dot,
+  .cursor-outline,
+  #particle-canvas {
+    display: none !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .glitch::before,
+  .glitch::after {
+    animation: none !important;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}

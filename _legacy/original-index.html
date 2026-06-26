@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="fr" class="dark scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucas Moreau // Full-Stack & Mobile Architect</title>
+    <meta
+      name="description"
+      content="Portfolio de Lucas Moreau, développeur Full-Stack, Web et Mobile."
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            colors: {
+              "lab-dark": "#070a0f",
+              "lab-card": "#0f131a",
+              "lab-border": "#1c2230",
+              "neon-cyan": "#00f0ff",
+              "neon-purple": "#bc13fe",
+              "neon-green": "#00ff9d",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #070a0f;
+        cursor: none; /* On cache le curseur par défaut pour le custom */
+      }
+      .bg-grid {
+        background-image:
+          linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f131a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1c2230;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #00f0ff;
+      }
+
+      .cursor::after {
+        content: "▋";
+        animation: blink 1s step-end infinite;
+        color: #00f0ff;
+        margin-left: 4px;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      [x-cloak] {
+        display: none !important;
+      }
+
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-4px);
+        border-color: #00f0ff;
+        box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.2);
+      }
+
+      .glow-text {
+        text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+      }
+
+      /* === CURSEUR PERSONNALISÉ === */
+      .cursor-dot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 8px;
+        height: 8px;
+        background: #00f0ff;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform 0.1s ease;
+        mix-blend-mode: difference;
+      }
+      .cursor-outline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(0, 240, 255, 0.5);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transition:
+          transform 0.2s ease-out,
+          width 0.3s ease,
+          height 0.3s ease,
+          background 0.3s ease;
+      }
+      .cursor-outline.hovered {
+        width: 60px;
+        height: 60px;
+        background: rgba(188, 19, 254, 0.1);
+        border-color: rgba(188, 19, 254, 0.8);
+      }
+
+      /* === ANIMATION REVEAL AU SCROLL === */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* === EFFET GLITCH === */
+      .glitch {
+        position: relative;
+        color: white;
+      }
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .glitch::before {
+        left: 2px;
+        text-shadow: -1px 0 #bc13fe;
+        clip-path: inset(0 0 0 0);
+        animation: glitch-anim-1 3s infinite linear alternate-reverse;
+      }
+      .glitch::after {
+        left: -2px;
+        text-shadow: -1px 0 #00f0ff;
+        clip-path: inset(0 0 0 0);
+        animation: glitch-anim-2 2s infinite linear alternate-reverse;
+      }
+      @keyframes glitch-anim-1 {
+        0% {
+          clip-path: inset(20% 0 60% 0);
+        }
+        20% {
+          clip-path: inset(80% 0 5% 0);
+        }
+        40% {
+          clip-path: inset(40% 0 50% 0);
+        }
+        60% {
+          clip-path: inset(10% 0 75% 0);
+        }
+        80% {
+          clip-path: inset(90% 0 5% 0);
+        }
+        100% {
+          clip-path: inset(60% 0 20% 0);
+        }
+      }
+      @keyframes glitch-anim-2 {
+        0% {
+          clip-path: inset(70% 0 10% 0);
+        }
+        20% {
+          clip-path: inset(20% 0 60% 0);
+        }
+        40% {
+          clip-path: inset(40% 0 50% 0);
+        }
+        60% {
+          clip-path: inset(80% 0 5% 0);
+        }
+        80% {
+          clip-path: inset(10% 0 70% 0);
+        }
+        100% {
+          clip-path: inset(30% 0 40% 0);
+        }
+      }
+
+      /* Canvas particles */
+      #particle-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* Désactivation curseur custom sur mobile */
+      @media (max-width: 768px) {
+        body {
+          cursor: auto;
+        }
+        .cursor-dot,
+        .cursor-outline {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="font-sans text-gray-300 antialiased bg-grid selection:bg-neon-cyan selection:text-lab-dark"
+  >
+    <!-- Canvas pour les particules de fond -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Curseur personnalisé -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div
+      x-data="portfolioApp()"
+      x-cloak
+      x-effect="document.body.style.overflow = selectedProject ? 'hidden' : ''"
+      x-init="init()"
+      class="min-h-screen flex flex-col md:flex-row"
+    >
+      <!-- ================= SIDEBAR ================= -->
+      <aside
+        class="md:w-64 md:h-screen md:sticky top-0 border-r border-lab-border bg-lab-dark/90 backdrop-blur-md p-6 flex flex-col justify-between z-20"
+      >
+        <div>
+          <!-- Logo -->
+          <a
+            href="#"
+            @click.prevent="changeView('home')"
+            class="flex items-center gap-3 mb-12 group cursor-pointer"
+          >
+            <div
+              class="w-11 h-11 rounded-xl bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center text-lab-dark font-extrabold text-xl group-hover:rotate-6 transition-transform"
+            >
+              L
+            </div>
+            <div class="font-mono text-sm">
+              <div class="text-white font-bold tracking-wide">Lucas_Moreau</div>
+              <div class="text-neon-green text-xs flex items-center gap-1.5">
+                <span
+                  class="w-2 h-2 bg-neon-green rounded-full animate-pulse"
+                ></span>
+                Disponible
+              </div>
+            </div>
+          </a>
+
+          <!-- Navigation -->
+          <nav class="space-y-1 font-mono text-sm">
+            <template x-for="item in navItems" :key="item.id">
+              <a
+                href="#"
+                @click.prevent="changeView(item.id)"
+                class="block py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center group"
+                :class="activeView === item.id ? 'bg-lab-card text-neon-cyan shadow-inner' : 'text-gray-500 hover:text-white hover:bg-lab-card/50'"
+              >
+                <span
+                  class="mr-3 opacity-60 group-hover:opacity-100"
+                  x-text="activeView === item.id ? '▸' : '▹'"
+                ></span>
+                <span x-text="item.label"></span>
+              </a>
+            </template>
+          </nav>
+        </div>
+
+        <!-- Socials -->
+        <div class="hidden md:block mt-10">
+          <div
+            class="text-[10px] text-gray-600 uppercase tracking-[0.2em] mb-4"
+          >
+            Connect
+          </div>
+          <div class="flex gap-4">
+            <a
+              href="#"
+              class="w-9 h-9 rounded-lg border border-lab-border flex items-center justify-center text-gray-500 hover:text-neon-cyan hover:border-neon-cyan transition-all"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.2.9 2.3v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"
+                />
+              </svg>
+            </a>
+            <a
+              href="#"
+              class="w-9 h-9 rounded-lg border border-lab-border flex items-center justify-center text-gray-500 hover:text-neon-cyan hover:border-neon-cyan transition-all"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5v-9h3v9zM6.5 8.3a1.8 1.8 0 1 1 0-3.5 1.8 1.8 0 0 1 0 3.5zM19 19h-3v-4.7c0-1.1 0-2.5-1.5-2.5S13 13 13 14.2V19h-3v-9h2.9v1.3a3.1 3.1 0 0 1 2.8-1.5c3 0 3.5 2 3.5 4.5V19z"
+                />
+              </svg>
+            </a>
+            <a
+              href="#"
+              class="w-9 h-9 rounded-lg border border-lab-border flex items-center justify-center text-gray-500 hover:text-neon-cyan hover:border-neon-cyan transition-all"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </a>
+          </div>
+          <p class="text-[10px] text-gray-600 mt-6 font-mono">
+            © 2024 Lucas Moreau<br />Built with Alpine.js & Tailwind
+          </p>
+        </div>
+      </aside>
+
+      <!-- ================= MAIN CONTENT ================= -->
+      <main class="flex-1 p-6 md:p-12 overflow-y-auto">
+        <!-- Indicateur de navigation -->
+        <div
+          class="font-mono text-xs text-gray-600 mb-8 flex items-center gap-2"
+        >
+          <span class="text-neon-purple">~/lucas-moreau</span>
+          <span>/</span>
+          <span class="text-neon-cyan" x-text="activeView"></span>
+          <span class="cursor"></span>
+        </div>
+
+        <!-- ============== HOME / HERO ============== -->
+        <section
+          x-show="activeView === 'home'"
+          x-transition:enter="transition ease-out duration-500"
+          x-transition:enter-start="opacity-0 translate-y-4"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          class="max-w-5xl"
+        >
+          <div
+            class="bg-lab-card border border-lab-border rounded-2xl p-8 md:p-10 mb-8 relative overflow-hidden"
+          >
+            <div
+              class="absolute top-0 right-0 w-64 h-64 bg-neon-purple/10 rounded-full blur-3xl"
+            ></div>
+            <div
+              class="absolute bottom-0 left-0 w-64 h-64 bg-neon-cyan/10 rounded-full blur-3xl"
+            ></div>
+
+            <div class="relative z-10">
+              <div class="font-mono text-sm text-neon-green mb-4">$ whoami</div>
+              <h1
+                class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4"
+              >
+                <span class="glitch" data-text="Lucas">Lucas</span>
+                <span
+                  class="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple glow-text"
+                  >Moreau</span
+                >
+              </h1>
+              <p class="text-xl md:text-2xl text-gray-400 font-light mb-8 h-16">
+                <span x-text="typedText"></span>
+              </p>
+
+              <div class="flex flex-wrap gap-4">
+                <button
+                  @click="changeView('projects')"
+                  class="px-6 py-3 bg-neon-cyan text-lab-dark font-bold rounded-lg hover:bg-white transition-colors flex items-center gap-2"
+                >
+                  Voir mes projets
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+                <button
+                  @click="changeView('contact')"
+                  class="px-6 py-3 border border-lab-border text-gray-300 font-bold rounded-lg hover:border-neon-cyan hover:text-neon-cyan transition-all"
+                >
+                  Me contacter
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats rapides -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div
+              class="reveal bg-lab-card border border-lab-border rounded-xl p-5 card-hover"
+            >
+              <div class="text-3xl font-bold text-neon-cyan font-mono">5+</div>
+              <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+                Ans d'expérience
+              </div>
+            </div>
+            <div
+              class="reveal bg-lab-card border border-lab-border rounded-xl p-5 card-hover"
+              style="transition-delay: 0.1s"
+            >
+              <div class="text-3xl font-bold text-neon-purple font-mono">
+                40+
+              </div>
+              <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+                Projets livrés
+              </div>
+            </div>
+            <div
+              class="reveal bg-lab-card border border-lab-border rounded-xl p-5 card-hover"
+              style="transition-delay: 0.2s"
+            >
+              <div class="text-3xl font-bold text-neon-green font-mono">
+                15+
+              </div>
+              <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+                Clients satisfaits
+              </div>
+            </div>
+            <div
+              class="reveal bg-lab-card border border-lab-border rounded-xl p-5 card-hover"
+              style="transition-delay: 0.3s"
+            >
+              <div class="text-3xl font-bold text-white font-mono">∞</div>
+              <div class="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+                Cafés consommés
+              </div>
+            </div>
+          </div>
+
+          <!-- Aperçu code -->
+          <div
+            class="reveal bg-lab-card border border-lab-border rounded-2xl overflow-hidden"
+          >
+            <div
+              class="flex items-center gap-2 px-4 py-3 border-b border-lab-border bg-lab-dark/50"
+            >
+              <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500/70"></div>
+              <span class="ml-3 text-xs text-gray-500 font-mono"
+                >developer.js</span
+              >
+            </div>
+            <pre
+              class="p-6 text-sm font-mono overflow-x-auto leading-relaxed"
+            ><code><span class="text-neon-purple">const</span> <span class="text-neon-cyan">developer</span> = {
+  <span class="text-neon-green">name</span>: <span class="text-gray-400">'Lucas Moreau'</span>,
+  <span class="text-neon-green">role</span>: <span class="text-gray-400">'Full-Stack & Mobile Architect'</span>,
+  <span class="text-neon-green">location</span>: <span class="text-gray-400">'Paris, France'</span>,
+  <span class="text-neon-green">stack</span>: [<span class="text-gray-400">'React'</span>, <span class="text-gray-400">'Vue.js'</span>, <span class="text-gray-400">'Node.js'</span>, <span class="text-gray-400">'Flutter'</span>, <span class="text-gray-400">'Go'</span>],
+  <span class="text-neon-green">passions</span>: <span class="text-gray-400">'Résoudre des problèmes complexes avec du code élégant'</span>,
+  <span class="text-neon-green">available</span>: <span class="text-neon-purple">true</span>
+};</code></pre>
+          </div>
+        </section>
+
+        <!-- ============== ABOUT ============== -->
+        <section
+          x-show="activeView === 'about'"
+          x-transition:enter="transition ease-out duration-500"
+          x-transition:enter-start="opacity-0 translate-y-4"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          class="max-w-4xl"
+          style="display: none"
+        >
+          <h2 class="text-4xl font-bold text-white mb-2">// À propos</h2>
+          <p class="text-gray-500 mb-10 font-mono text-sm">getPersonalInfo()</p>
+
+          <div class="space-y-6 text-gray-400 leading-relaxed text-lg reveal">
+            <p>
+              Bonjour ! Je suis
+              <span class="text-neon-cyan font-semibold">Lucas Moreau</span>, un
+              développeur passionné basé à Paris. Depuis plus de 5 ans, je
+              transforme des idées en applications web et mobiles robustes,
+              utilisées par des milliers de personnes.
+            </p>
+            <p>
+              Mon approche est simple : un code propre, une architecture
+              réfléchie, et une obsession pour le détail. Je navigue entre le
+              front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go,
+              Python) et le mobile (Flutter, React Native).
+            </p>
+            <p>
+              Quand je ne code pas, je contribue à des projets open-source,
+              j'expérimente avec des outils d'IA, ou je explore les nouveautés
+              tech sur GitHub et HackerNews.
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6 mt-12">
+            <div
+              class="reveal bg-lab-card border border-lab-border rounded-xl p-6"
+            >
+              <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+                <span class="text-neon-cyan">⚡</span> Ce que je fais
+              </h3>
+              <ul class="space-y-2 text-gray-400 text-sm">
+                <li class="flex gap-2">
+                  <span class="text-neon-green">→</span> Architecture
+                  d'applications web SaaS
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-neon-green">→</span> Développement mobile
+                  cross-platform (Flutter)
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-neon-green">→</span> API RESTful & GraphQL
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-neon-green">→</span> Optimisation
+                  performance & SEO
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-neon-green">→</span> CI/CD & DevOps (Docker,
+                  K8s)
+                </li>
+              </ul>
+            </div>
+            <div
+              class="reveal bg-lab-card border border-lab-border rounded-xl p-6"
+              style="transition-delay: 0.2s"
+            >
+              <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+                <span class="text-neon-purple">🎯</span> Ce que je recherche
+              </h3>
+              <ul class="space-y-2 text-gray-400 text-sm">
+                <li class="flex gap-2">
+                  <span class="text-neon-purple">→</span> Des défis techniques
+                  stimulants
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-neon-purple">→</span> Une culture
+                  d'ingénierie forte
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-neon-purple">→</span> Un produit avec un
+                  impact réel
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-neon-purple">→</span> Une équipe
+                  bienveillante et ambitieuse
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-neon-purple">→</span> Autonomie et
+                  responsabilité
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============== SKILLS ============== -->
+        <section
+          x-show="activeView === 'skills'"
+          x-transition:enter="transition ease-out duration-500"
+          x-transition:enter-start="opacity-0 translate-y-4"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          class="max-w-5xl"
+          style="display: none"
+        >
+          <h2 class="text-4xl font-bold text-white mb-2">// Compétences</h2>
+          <p class="text-gray-500 mb-10 font-mono text-sm">getTechStack()</p>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            <template x-for="(category, index) in skills" :key="category.name">
+              <div
+                class="reveal bg-lab-card border border-lab-border rounded-xl p-6 card-hover"
+                :style="`transition-delay: ${index * 0.1}s`"
+              >
+                <div class="flex items-center gap-3 mb-5">
+                  <span class="text-2xl" x-text="category.icon"></span>
+                  <h3
+                    class="text-white font-bold text-lg"
+                    x-text="category.name"
+                  ></h3>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <template x-for="tech in category.items" :key="tech">
+                    <span
+                      class="px-3 py-1.5 bg-lab-dark border border-lab-border rounded-md text-xs font-mono text-gray-400 hover:text-neon-cyan hover:border-neon-cyan/50 transition-colors cursor-default"
+                      x-text="tech"
+                    ></span>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <!-- Outils & DevOps -->
+          <div
+            class="reveal mt-8 bg-lab-card border border-lab-border rounded-xl p-6"
+          >
+            <h3 class="text-white font-bold mb-4">🛠️ Outils & Workflow</h3>
+            <div
+              class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-400"
+            >
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-neon-cyan rounded-full"></span> Git &
+                GitHub
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-neon-cyan rounded-full"></span> Docker &
+                Kubernetes
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-neon-cyan rounded-full"></span> Figma
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-neon-cyan rounded-full"></span> VS Code
+                / Neovim
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-neon-cyan rounded-full"></span> Jira /
+                Notion
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-neon-cyan rounded-full"></span> AWS /
+                GCP
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-neon-cyan rounded-full"></span> Vercel /
+                Netlify
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-neon-cyan rounded-full"></span> Linux /
+                Bash
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============== PROJECTS ============== -->
+        <section
+          x-show="activeView === 'projects'"
+          x-transition:enter="transition ease-out duration-500"
+          x-transition:enter-start="opacity-0 translate-y-4"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          class="max-w-6xl"
+          style="display: none"
+        >
+          <h2 class="text-4xl font-bold text-white mb-2">// Projets</h2>
+          <p class="text-gray-500 mb-10 font-mono text-sm">
+            getProjects(limit: 'all')
+          </p>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="(project, index) in projects" :key="project.id">
+              <div
+                @click="openProject(project)"
+                class="reveal bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover cursor-pointer group"
+                :style="`transition-delay: ${index * 0.1}s`"
+              >
+                <!-- Miniature -->
+                <div
+                  class="h-44 relative overflow-hidden"
+                  :class="project.gradient"
+                >
+                  <div class="absolute inset-0 bg-lab-dark/40"></div>
+                  <div
+                    class="absolute inset-0 flex items-center justify-center"
+                  >
+                    <span
+                      class="text-5xl font-extrabold text-white/20 group-hover:text-white/30 transition-colors font-mono"
+                      x-text="project.name.charAt(0)"
+                    ></span>
+                  </div>
+                  <div
+                    class="absolute top-3 right-3 px-2 py-1 bg-lab-dark/80 backdrop-blur-sm rounded-md text-[10px] font-mono text-neon-cyan border border-neon-cyan/30"
+                    x-text="project.year"
+                  ></div>
+                </div>
+                <!-- Contenu -->
+                <div class="p-5">
+                  <h3
+                    class="text-white font-bold text-lg mb-1 group-hover:text-neon-cyan transition-colors"
+                    x-text="project.name"
+                  ></h3>
+                  <p
+                    class="text-gray-500 text-sm mb-4 line-clamp-2"
+                    x-text="project.shortDesc"
+                  ></p>
+                  <div class="flex flex-wrap gap-1.5">
+                    <template
+                      x-for="tag in project.tags.slice(0, 3)"
+                      :key="tag"
+                    >
+                      <span
+                        class="text-[10px] font-mono px-2 py-0.5 bg-lab-dark rounded text-gray-500 border border-lab-border"
+                        x-text="tag"
+                      ></span>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </section>
+
+        <!-- ============== EXPERIENCE ============== -->
+        <section
+          x-show="activeView === 'experience'"
+          x-transition:enter="transition ease-out duration-500"
+          x-transition:enter-start="opacity-0 translate-y-4"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          class="max-w-4xl"
+          style="display: none"
+        >
+          <h2 class="text-4xl font-bold text-white mb-2">// Parcours</h2>
+          <p class="text-gray-500 mb-10 font-mono text-sm">getExperience()</p>
+
+          <div class="relative pl-8 border-l border-lab-border space-y-10">
+            <template x-for="(exp, index) in experience" :key="exp.id">
+              <div
+                class="reveal relative"
+                :style="`transition-delay: ${index * 0.2}s`"
+              >
+                <!-- Point sur la timeline -->
+                <div
+                  class="absolute -left-[41px] top-1 w-4 h-4 rounded-full bg-lab-dark border-2 border-neon-cyan flex items-center justify-center"
+                >
+                  <div class="w-1.5 h-1.5 rounded-full bg-neon-cyan"></div>
+                </div>
+
+                <div
+                  class="bg-lab-card border border-lab-border rounded-xl p-6 card-hover"
+                >
+                  <div
+                    class="flex flex-wrap items-center justify-between mb-3 gap-2"
+                  >
+                    <h3
+                      class="text-white font-bold text-lg"
+                      x-text="exp.role"
+                    ></h3>
+                    <span
+                      class="text-xs font-mono px-3 py-1 bg-lab-dark rounded-full text-neon-cyan border border-lab-border"
+                      x-text="exp.period"
+                    ></span>
+                  </div>
+                  <p
+                    class="text-neon-purple font-mono text-sm mb-3"
+                    x-text="exp.company"
+                  ></p>
+                  <p
+                    class="text-gray-400 text-sm leading-relaxed mb-4"
+                    x-text="exp.description"
+                  ></p>
+                  <div class="flex flex-wrap gap-2">
+                    <template x-for="tech in exp.tech" :key="tech">
+                      <span
+                        class="text-[10px] font-mono px-2 py-1 bg-lab-dark rounded text-gray-500 border border-lab-border"
+                        x-text="tech"
+                      ></span>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </section>
+
+        <!-- ============== CONTACT ============== -->
+        <section
+          x-show="activeView === 'contact'"
+          x-transition:enter="transition ease-out duration-500"
+          x-transition:enter-start="opacity-0 translate-y-4"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          class="max-w-4xl"
+          style="display: none"
+        >
+          <h2 class="text-4xl font-bold text-white mb-2">// Contact</h2>
+          <p class="text-gray-500 mb-10 font-mono text-sm">initiateContact()</p>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Info -->
+            <div class="reveal">
+              <h3 class="text-2xl font-bold text-white mb-4">
+                Travaillons ensemble !
+              </h3>
+              <p class="text-gray-400 mb-8 leading-relaxed">
+                Je suis actuellement ouvert à de nouvelles opportunités. Que ce
+                soit pour un CDI, du freelancing ou juste échanger sur un
+                projet, n'hésitez pas à me contacter.
+              </p>
+
+              <div class="space-y-4">
+                <div
+                  class="flex items-center gap-4 p-4 bg-lab-card border border-lab-border rounded-xl card-hover"
+                >
+                  <div
+                    class="w-10 h-10 rounded-lg bg-neon-cyan/10 flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-5 h-5 text-neon-cyan"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                      />
+                      <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">
+                      Email
+                    </div>
+                    <a
+                      href="mailto:lucas.moreau@dev.fr"
+                      class="text-white hover:text-neon-cyan transition-colors"
+                      >lucas.moreau@dev.fr</a
+                    >
+                  </div>
+                </div>
+
+                <div
+                  class="flex items-center gap-4 p-4 bg-lab-card border border-lab-border rounded-xl card-hover"
+                >
+                  <div
+                    class="w-10 h-10 rounded-lg bg-neon-purple/10 flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-5 h-5 text-neon-purple"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                      />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">
+                      Localisation
+                    </div>
+                    <div class="text-white">Paris, France (Remote OK)</div>
+                  </div>
+                </div>
+
+                <div
+                  class="flex items-center gap-4 p-4 bg-lab-card border border-lab-border rounded-xl card-hover"
+                >
+                  <div
+                    class="w-10 h-10 rounded-lg bg-neon-green/10 flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-5 h-5 text-neon-green"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">
+                      Statut
+                    </div>
+                    <div class="text-white flex items-center gap-2">
+                      <span
+                        class="w-2 h-2 bg-neon-green rounded-full animate-pulse"
+                      ></span>
+                      Disponible immédiatement
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulaire -->
+            <div
+              class="reveal bg-lab-card border border-lab-border rounded-2xl p-6"
+              style="transition-delay: 0.2s"
+            >
+              <form @submit.prevent="submitForm()">
+                <div class="space-y-4">
+                  <div>
+                    <label class="text-xs text-gray-500 font-mono mb-1.5 block"
+                      >Nom</label
+                    >
+                    <input
+                      type="text"
+                      x-model="form.name"
+                      required
+                      class="w-full bg-lab-dark border border-lab-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors"
+                      placeholder="Jean Dupont"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs text-gray-500 font-mono mb-1.5 block"
+                      >Email</label
+                    >
+                    <input
+                      type="email"
+                      x-model="form.email"
+                      required
+                      class="w-full bg-lab-dark border border-lab-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors"
+                      placeholder="jean@entreprise.com"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs text-gray-500 font-mono mb-1.5 block"
+                      >Message</label
+                    >
+                    <textarea
+                      x-model="form.message"
+                      required
+                      rows="4"
+                      class="w-full bg-lab-dark border border-lab-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors resize-none"
+                      placeholder="Parlez-moi de votre projet..."
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    class="w-full py-3 bg-gradient-to-r from-neon-cyan to-neon-purple text-lab-dark font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                  >
+                    <span x-show="!formSent">Envoyer le message</span>
+                    <span x-show="formSent" style="display: none"
+                      >✓ Message envoyé !</span
+                    >
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer mini -->
+        <footer
+          class="mt-20 pt-8 border-t border-lab-border text-center text-xs text-gray-600 font-mono"
+        >
+          <p>
+            Conçu et développé avec ❤️ par Lucas Moreau — Alpine.js & Tailwind
+            CSS
+          </p>
+        </footer>
+      </main>
+
+      <!-- ================= MODALE PROJET ================= -->
+      <div
+        x-show="selectedProject"
+        x-cloak
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-lab-dark/80 backdrop-blur-sm"
+        @click.self="selectedProject = null"
+        @keydown.escape.window="selectedProject = null"
+        style="display: none"
+      >
+        <div
+          class="bg-lab-card border border-lab-border rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          x-show="selectedProject"
+          x-transition:enter="transition ease-out duration-300"
+          x-transition:enter-start="opacity-0 scale-95"
+          x-transition:enter-end="opacity-100 scale-100"
+        >
+          <template x-if="selectedProject">
+            <div>
+              <!-- Header gradient -->
+              <div
+                class="h-40 relative overflow-hidden rounded-t-2xl"
+                :class="selectedProject.gradient"
+              >
+                <div class="absolute inset-0 bg-lab-dark/30"></div>
+                <button
+                  @click="selectedProject = null"
+                  class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-lab-dark/80 flex items-center justify-center text-gray-400 hover:text-white hover:bg-lab-dark transition-colors"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+                <div class="absolute bottom-4 left-6">
+                  <div
+                    class="text-xs font-mono text-neon-cyan mb-1"
+                    x-text="selectedProject.year"
+                  ></div>
+                  <h3
+                    class="text-3xl font-extrabold text-white"
+                    x-text="selectedProject.name"
+                  ></h3>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="p-6">
+                <p
+                  class="text-gray-400 leading-relaxed mb-6"
+                  x-text="selectedProject.fullDesc"
+                ></p>
+
+                <div class="mb-6">
+                  <h4
+                    class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
+                  >
+                    Fonctionnalités clés
+                  </h4>
+                  <ul class="space-y-1.5">
+                    <template
+                      x-for="feature in selectedProject.features"
+                      :key="feature"
+                    >
+                      <li class="flex items-start gap-2 text-sm text-gray-300">
+                        <span class="text-neon-cyan mt-0.5">▸</span>
+                        <span x-text="feature"></span>
+                      </li>
+                    </template>
+                  </ul>
+                </div>
+
+                <div class="mb-6">
+                  <h4
+                    class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
+                  >
+                    Stack technique
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    <template x-for="tag in selectedProject.tags" :key="tag">
+                      <span
+                        class="px-3 py-1 bg-lab-dark border border-lab-border rounded-md text-xs font-mono text-neon-cyan"
+                        x-text="tag"
+                      ></span>
+                    </template>
+                  </div>
+                </div>
+
+                <div class="flex gap-3">
+                  <a
+                    href="#"
+                    class="flex-1 py-2.5 bg-neon-cyan text-lab-dark font-bold text-center rounded-lg text-sm hover:bg-white transition-colors"
+                    >Voir le code</a
+                  >
+                  <a
+                    href="#"
+                    class="flex-1 py-2.5 border border-lab-border text-gray-300 font-bold text-center rounded-lg text-sm hover:border-neon-cyan hover:text-neon-cyan transition-all"
+                    >Démo live</a
+                  >
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ALPINE.JS DATA & SCRIPTS ================= -->
+    <script>
+      function portfolioApp() {
+        return {
+          activeView: "home",
+          selectedProject: null,
+          formSent: false,
+          form: { name: "", email: "", message: "" },
+          typedText: "",
+          fullText:
+            "Full-Stack & Mobile Architect. Je conçois des applications performantes, élégantes et scalables.",
+
+          navItems: [
+            { id: "home", label: "Accueil" },
+            { id: "about", label: "À propos" },
+            { id: "skills", label: "Compétences" },
+            { id: "projects", label: "Projets" },
+            { id: "experience", label: "Parcours" },
+            { id: "contact", label: "Contact" },
+          ],
+
+          skills: [
+            {
+              name: "Frontend",
+              icon: "🎨",
+              items: [
+                "React",
+                "Vue.js",
+                "Next.js",
+                "Nuxt.js",
+                "TypeScript",
+                "Tailwind CSS",
+                "Alpine.js",
+                "Three.js",
+              ],
+            },
+            {
+              name: "Backend",
+              icon: "⚙️",
+              items: [
+                "Node.js",
+                "Express",
+                "NestJS",
+                "Go",
+                "Python",
+                "PostgreSQL",
+                "MongoDB",
+                "Redis",
+                "GraphQL",
+              ],
+            },
+            {
+              name: "Mobile & Autres",
+              icon: "📱",
+              items: [
+                "Flutter",
+                "React Native",
+                "Dart",
+                "Swift",
+                "Kotlin",
+                "PWA",
+                "Electron",
+              ],
+            },
+          ],
+
+          projects: [
+            {
+              id: 1,
+              name: "NeoBank",
+              year: "2024",
+              shortDesc:
+                "Application bancaire mobile avec gestion en temps réel et IA pour les prédictions de budget.",
+              fullDesc:
+                "NeoBank est une fintech mobile complète développée avec Flutter. L'application permet aux utilisateurs de gérer leurs comptes, suivre leurs dépenses en temps réel, et utilise le machine learning pour prédire les budgets futurs. J'ai conçu l'architecture backend en Go et l'API GraphQL qui sert l'application.",
+              tags: ["Flutter", "Go", "GraphQL", "PostgreSQL", "AWS"],
+              gradient: "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
+              features: [
+                "Authentification biométrique",
+                "Transactions en temps réel",
+                "Prédictions IA du budget",
+                "Export PDF des relevés",
+                "Mode hors-ligne",
+              ],
+            },
+            {
+              id: 2,
+              name: "DevFlow",
+              year: "2023",
+              shortDesc:
+                "Plateforme SaaS de gestion de projets pour équipes de développement agiles.",
+              fullDesc:
+                "DevFlow est un SaaS B2B pensé pour les équipes tech. C'est un mix entre Jira et Linear, avec un focus sur la vélocité et l'expérience développeur. Tableau Kanban, roadmaps, intégrations GitHub/GitLab, et un système de commentaires en temps réel. Le tout propulsé par React, Node.js et WebSocket.",
+              tags: ["React", "Node.js", "WebSocket", "Docker", "K8s"],
+              gradient:
+                "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
+              features: [
+                "Tableau Kanban temps réel",
+                "Intégration GitHub/GitLab",
+                "Système de Roadmap",
+                "Mode sombre/clair",
+                "API publique",
+              ],
+            },
+            {
+              id: 3,
+              name: "ArtSense",
+              year: "2023",
+              shortDesc:
+                "Marketplace NFT avec génération d'art par IA intégrée.",
+              fullDesc:
+                "ArtSense est une plateforme web3 qui combine un marketplace NFT classique avec un générateur d'art utilisant des modèles de diffusion. Les artistes peuvent créer, mint et vendre leurs œuvres. J'ai géré toute la partie front-end avec Next.js et l'intégration des smart contracts Solidity.",
+              tags: ["Next.js", "Solidity", "Web3.js", "IPFS", "Python"],
+              gradient: "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
+              features: [
+                "Génération d'art par IA",
+                "Mint NFT sur Ethereum",
+                "Wallet integré",
+                "Marketplace en temps réel",
+                "Royalties automatiques",
+              ],
+            },
+            {
+              id: 4,
+              name: "TrackEase",
+              year: "2022",
+              shortDesc:
+                "App de tracking de livraison avec géolocalisation en direct et notifications push.",
+              fullDesc:
+                "TrackEase est une solution de tracking de livraison B2B2C. Les entreprises de logistique peuvent intégrer l'API pour permettre à leurs clients de suivre leurs colis en temps réel sur une carte interactive. L'application mobile a été développée en React Native, le backend en Python (FastAPI).",
+              tags: ["React Native", "Python", "FastAPI", "Redis", "MapBox"],
+              gradient: "bg-gradient-to-br from-neon-cyan/30 to-neon-green/30",
+              features: [
+                "Carte interactive temps réel",
+                "Notifications push",
+                "Estimation d'arrivée IA",
+                "Multi-transporteurs",
+                "API REST publique",
+              ],
+            },
+            {
+              id: 5,
+              name: "CloudSync",
+              year: "2022",
+              shortDesc:
+                "Outil de synchronisation de fichiers chiffrés de bout en bout entre appareils.",
+              fullDesc:
+                "CloudSync est une alternative open-source à Dropbox avec un chiffrement de bout en bout. Personne, pas même le serveur, ne peut lire vos fichiers. Développé en Go pour le backend et Electron pour le client desktop. Utilisation de WebRTC pour la synchronisation P2P.",
+              tags: ["Go", "Electron", "WebRTC", "AES-256", "P2P"],
+              gradient: "bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30",
+              features: [
+                "Chiffrement E2E zéro-knowledge",
+                "Synchronisation P2P",
+                "Versioning de fichiers",
+                "Client cross-platform",
+                "Open-source",
+              ],
+            },
+            {
+              id: 6,
+              name: "MediCare",
+              year: "2021",
+              shortDesc:
+                "Téléconsultation médicale avec agenda intelligent et ordonnances numériques.",
+              fullDesc:
+                "MediCare est une plateforme de téléconsultation reliant patients et médecins. Visioconférence sécurisée, gestion d'agenda intelligent, partage de documents médicaux et ordonnances numériques. Développé avec Vue.js, NestJS et WebRTC. Conforme RGPD et hébergé sur des serveurs français.",
+              tags: ["Vue.js", "NestJS", "WebRTC", "TypeScript", "RGPD"],
+              gradient:
+                "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
+              features: [
+                "Téléconsultation vidéo HD",
+                "Ordonnances numériques",
+                "Dossier médical partagé",
+                "Authentification forte",
+                "Conforme RGPD/HDS",
+              ],
+            },
+          ],
+
+          experience: [
+            {
+              id: 1,
+              role: "Lead Developer & Co-fondateur",
+              company: "DevFlow (Startup)",
+              period: "2023 — Présent",
+              description:
+                "Conception et développement d'un SaaS de gestion de projets pour équipes tech. Architecture microservices, management d'une équipe de 3 développeurs, levée de fonds de 500k€.",
+              tech: ["React", "Node.js", "PostgreSQL", "Docker", "AWS"],
+            },
+            {
+              id: 2,
+              role: "Senior Full-Stack Developer",
+              company: "Nebula Tech",
+              period: "2021 — 2023",
+              description:
+                "Développement de plateformes web à fort traffic (2M+ utilisateurs). Migration d'une architecture monolithique vers microservices. Optimisation des performances (Core Web Vitals).",
+              tech: ["Next.js", "Go", "GraphQL", "Kubernetes", "GCP"],
+            },
+            {
+              id: 3,
+              role: "Mobile & Web Developer",
+              company: "Pixel Studio",
+              period: "2019 — 2021",
+              description:
+                "Création d'applications mobiles et web pour divers clients (Fintech, E-commerce, Santé). Mise en place de CI/CD et de process de tests automatisés.",
+              tech: ["Flutter", "React", "Node.js", "Firebase"],
+            },
+            {
+              id: 4,
+              role: "Développeur Junior",
+              company: "WebAgency Lyon",
+              period: "2018 — 2019",
+              description:
+                "Développement de sites vitrines et e-commerce sous WordPress et Shopify. Premiers pas en React et Node.js. Sensibilisation aux bonnes pratiques de développement.",
+              tech: ["PHP", "JavaScript", "React", "MySQL"],
+            },
+          ],
+
+          init() {
+            this.typeWriter();
+            this.initScrollReveal();
+            this.initCustomCursor();
+            this.initParticles();
+          },
+
+          typeWriter() {
+            let i = 0;
+            const interval = setInterval(() => {
+              if (i < this.fullText.length) {
+                this.typedText += this.fullText.charAt(i);
+                i++;
+              } else {
+                clearInterval(interval);
+              }
+            }, 30);
+          },
+
+          initScrollReveal() {
+            const observer = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                  }
+                });
+              },
+              { threshold: 0.1 },
+            );
+
+            // On observe les éléments qui apparaissent
+            this.$nextTick(() => {
+              document.querySelectorAll(".reveal").forEach((el) => {
+                observer.observe(el);
+              });
+            });
+          },
+
+          initCustomCursor() {
+            const dot = document.querySelector(".cursor-dot");
+            const outline = document.querySelector(".cursor-outline");
+
+            if (!dot || !outline) return;
+
+            window.addEventListener("mousemove", (e) => {
+              dot.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
+              outline.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+            });
+
+            document
+              .querySelectorAll("a, button, .card-hover, input, textarea")
+              .forEach((el) => {
+                el.addEventListener("mouseover", () =>
+                  outline.classList.add("hovered"),
+                );
+                el.addEventListener("mouseout", () =>
+                  outline.classList.remove("hovered"),
+                );
+              });
+          },
+
+          initParticles() {
+            const canvas = document.getElementById("particle-canvas");
+            const ctx = canvas.getContext("2d");
+            let particles = [];
+            let mouse = { x: null, y: null, radius: 150 };
+
+            window.addEventListener("resize", () => {
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+              this.createParticles();
+            });
+
+            window.addEventListener("mousemove", (e) => {
+              mouse.x = e.clientX;
+              mouse.y = e.clientY;
+            });
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            // Création des particules
+            const createParticles = () => {
+              particles = [];
+              const count = (window.innerWidth * window.innerHeight) / 15000;
+              for (let i = 0; i < count; i++) {
+                particles.push({
+                  x: Math.random() * canvas.width,
+                  y: Math.random() * canvas.height,
+                  vx: (Math.random() - 0.5) * 0.5,
+                  vy: (Math.random() - 0.5) * 0.5,
+                  size: Math.random() * 2 + 0.5,
+                });
+              }
+            };
+            this.createParticles = createParticles;
+            createParticles();
+
+            // Animation des particules
+            const animate = () => {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+              particles.forEach((p1, index) => {
+                p1.x += p1.vx;
+                p1.y += p1.vy;
+
+                if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1;
+                if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1;
+
+                ctx.fillStyle = "rgba(0, 240, 255, 0.4)";
+                ctx.beginPath();
+                ctx.arc(p1.x, p1.y, p1.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Connexion entre particules
+                for (let j = index + 1; j < particles.length; j++) {
+                  const p2 = particles[j];
+                  const dx = p1.x - p2.x;
+                  const dy = p1.y - p2.y;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+
+                  if (dist < 100) {
+                    ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 + (1 - dist / 100) * 0.2})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                  }
+                }
+
+                // Interaction avec la souris
+                if (mouse.x) {
+                  const dx = p1.x - mouse.x;
+                  const dy = p1.y - mouse.y;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+
+                  if (dist < mouse.radius) {
+                    ctx.strokeStyle = `rgba(188, 19, 254, ${(1 - dist / mouse.radius) * 0.5})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.stroke();
+                  }
+                }
+              });
+              requestAnimationFrame(animate);
+            };
+            animate();
+          },
+
+          changeView(view) {
+            this.activeView = view;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            // Réinitialiser les reveals pour la nouvelle vue
+            this.$nextTick(() => {
+              document.querySelectorAll(".reveal").forEach((el) => {
+                el.classList.remove("visible");
+              });
+              setTimeout(() => this.initScrollReveal(), 100);
+            });
+          },
+
+          openProject(project) {
+            this.selectedProject = project;
+          },
+
+          submitForm() {
+            this.formSent = true;
+            setTimeout(() => {
+              this.form = { name: "", email: "", message: "" };
+              this.formSent = false;
+            }, 3000);
+          },
+        };
+      }
+    </script>
+  </body>
+</html>

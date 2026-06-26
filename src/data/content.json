@@ -1,0 +1,346 @@
+{
+  "site": {
+    "name": "Bryan Clark",
+    "handle": "bryan_clark",
+    "initials": "BC",
+    "role": "Full-Stack & Mobile Architect",
+    "titleTag": "Bryan Clark // Full-Stack & Mobile Architect",
+    "description": "Portfolio de Bryan Clark, développeur Full-Stack, Web et Mobile.",
+    "available": true,
+    "availabilityLabel": "Disponible"
+  },
+  "hero": {
+    "tagline": "Full-Stack & Mobile Architect. Je conçois des applications performantes, élégantes et scalables.",
+    "code": {
+      "name": "Bryan Clark",
+      "role": "Full-Stack & Mobile Architect",
+      "location": "Paris, France",
+      "stack": [
+        "React",
+        "Vue.js",
+        "Node.js",
+        "Flutter",
+        "Go"
+      ],
+      "passions": "Résoudre des problèmes complexes avec du code élégant",
+      "available": true
+    }
+  },
+  "stats": [
+    {
+      "value": "5+",
+      "label": "Ans d'expérience",
+      "color": "neon-cyan"
+    },
+    {
+      "value": "40+",
+      "label": "Projets livrés",
+      "color": "neon-purple"
+    },
+    {
+      "value": "15+",
+      "label": "Clients satisfaits",
+      "color": "neon-green"
+    },
+    {
+      "value": "∞",
+      "label": "Cafés consommés",
+      "color": "white"
+    }
+  ],
+  "about": {
+    "paragraphs": [
+      "Bonjour ! Je suis Bryan Clark, un développeur passionné basé à Paris. Depuis plus de 5 ans, je transforme des idées en applications web et mobiles robustes, utilisées par des milliers de personnes.",
+      "Mon approche est simple : un code propre, une architecture réfléchie, et une obsession pour le détail. Je navigue entre le front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go, Python) et le mobile (Flutter, React Native).",
+      "Quand je ne code pas, je contribue à des projets open-source, j'expérimente avec des outils d'IA, ou j'explore les nouveautés tech sur GitHub et HackerNews."
+    ],
+    "doing": [
+      "Architecture d'applications web SaaS",
+      "Développement mobile cross-platform (Flutter)",
+      "API RESTful & GraphQL",
+      "Optimisation performance & SEO",
+      "CI/CD & DevOps (Docker, K8s)"
+    ],
+    "looking": [
+      "Des défis techniques stimulants",
+      "Une culture d'ingénierie forte",
+      "Un produit avec un impact réel",
+      "Une équipe bienveillante et ambitieuse",
+      "Autonomie et responsabilité"
+    ]
+  },
+  "skills": [
+    {
+      "name": "Frontend",
+      "icon": "🎨",
+      "items": [
+        "React",
+        "Vue.js",
+        "Next.js",
+        "Nuxt.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Alpine.js",
+        "Three.js"
+      ]
+    },
+    {
+      "name": "Backend",
+      "icon": "⚙️",
+      "items": [
+        "Node.js",
+        "Express",
+        "NestJS",
+        "Go",
+        "Python",
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "GraphQL"
+      ]
+    },
+    {
+      "name": "Mobile & Autres",
+      "icon": "📱",
+      "items": [
+        "Flutter",
+        "React Native",
+        "Dart",
+        "Swift",
+        "Kotlin",
+        "PWA",
+        "Electron"
+      ]
+    }
+  ],
+  "tools": [
+    "Git & GitHub",
+    "Docker & Kubernetes",
+    "Figma",
+    "VS Code / Neovim",
+    "Jira / Notion",
+    "AWS / GCP",
+    "Vercel / Netlify",
+    "Linux / Bash"
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "NeoBank",
+      "year": "2024",
+      "featured": true,
+      "shortDesc": "Application bancaire mobile avec gestion en temps réel et IA pour les prédictions de budget.",
+      "fullDesc": "NeoBank est une fintech mobile complète développée avec Flutter. L'application permet aux utilisateurs de gérer leurs comptes, suivre leurs dépenses en temps réel, et utilise le machine learning pour prédire les budgets futurs. J'ai conçu l'architecture backend en Go et l'API GraphQL qui sert l'application.",
+      "tags": [
+        "Flutter",
+        "Go",
+        "GraphQL",
+        "PostgreSQL",
+        "AWS"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "features": [
+        "Authentification biométrique",
+        "Transactions en temps réel",
+        "Prédictions IA du budget",
+        "Export PDF des relevés",
+        "Mode hors-ligne"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "DevFlow",
+      "year": "2023",
+      "featured": true,
+      "shortDesc": "Plateforme SaaS de gestion de projets pour équipes de développement agiles.",
+      "fullDesc": "DevFlow est un SaaS B2B pensé pour les équipes tech. C'est un mix entre Jira et Linear, avec un focus sur la vélocité et l'expérience développeur. Tableau Kanban, roadmaps, intégrations GitHub/GitLab, et un système de commentaires en temps réel. Le tout propulsé par React, Node.js et WebSocket.",
+      "tags": [
+        "React",
+        "Node.js",
+        "WebSocket",
+        "Docker",
+        "K8s"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "features": [
+        "Tableau Kanban temps réel",
+        "Intégration GitHub/GitLab",
+        "Système de Roadmap",
+        "Mode sombre/clair",
+        "API publique"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ArtSense",
+      "year": "2023",
+      "featured": false,
+      "shortDesc": "Marketplace NFT avec génération d'art par IA intégrée.",
+      "fullDesc": "ArtSense est une plateforme web3 qui combine un marketplace NFT classique avec un générateur d'art utilisant des modèles de diffusion. Les artistes peuvent créer, mint et vendre leurs œuvres. J'ai géré toute la partie front-end avec Next.js et l'intégration des smart contracts Solidity.",
+      "tags": [
+        "Next.js",
+        "Solidity",
+        "Web3.js",
+        "IPFS",
+        "Python"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "features": [
+        "Génération d'art par IA",
+        "Mint NFT sur Ethereum",
+        "Wallet integré",
+        "Marketplace en temps réel",
+        "Royalties automatiques"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "TrackEase",
+      "year": "2022",
+      "featured": false,
+      "shortDesc": "App de tracking de livraison avec géolocalisation en direct et notifications push.",
+      "fullDesc": "TrackEase est une solution de tracking de livraison B2B2C. Les entreprises de logistique peuvent intégrer l'API pour permettre à leurs clients de suivre leurs colis en temps réel sur une carte interactive. L'application mobile a été développée en React Native, le backend en Python (FastAPI).",
+      "tags": [
+        "React Native",
+        "Python",
+        "FastAPI",
+        "Redis",
+        "MapBox"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-green/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "features": [
+        "Carte interactive temps réel",
+        "Notifications push",
+        "Estimation d'arrivée IA",
+        "Multi-transporteurs",
+        "API REST publique"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "CloudSync",
+      "year": "2022",
+      "featured": false,
+      "shortDesc": "Outil de synchronisation de fichiers chiffrés de bout en bout entre appareils.",
+      "fullDesc": "CloudSync est une alternative open-source à Dropbox avec un chiffrement de bout en bout. Personne, pas même le serveur, ne peut lire vos fichiers. Développé en Go pour le backend et Electron pour le client desktop. Utilisation de WebRTC pour la synchronisation P2P.",
+      "tags": [
+        "Go",
+        "Electron",
+        "WebRTC",
+        "AES-256",
+        "P2P"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "features": [
+        "Chiffrement E2E zéro-knowledge",
+        "Synchronisation P2P",
+        "Versioning de fichiers",
+        "Client cross-platform",
+        "Open-source"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "MediCare",
+      "year": "2021",
+      "featured": false,
+      "shortDesc": "Téléconsultation médicale avec agenda intelligent et ordonnances numériques.",
+      "fullDesc": "MediCare est une plateforme de téléconsultation reliant patients et médecins. Visioconférence sécurisée, gestion d'agenda intelligent, partage de documents médicaux et ordonnances numériques. Développé avec Vue.js, NestJS et WebRTC. Conforme RGPD et hébergé sur des serveurs français.",
+      "tags": [
+        "Vue.js",
+        "NestJS",
+        "WebRTC",
+        "TypeScript",
+        "RGPD"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "features": [
+        "Téléconsultation vidéo HD",
+        "Ordonnances numériques",
+        "Dossier médical partagé",
+        "Authentification forte",
+        "Conforme RGPD/HDS"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "id": 1,
+      "role": "Lead Developer & Co-fondateur",
+      "company": "DevFlow (Startup)",
+      "period": "2023 — Présent",
+      "description": "Conception et développement d'un SaaS de gestion de projets pour équipes tech. Architecture microservices, management d'une équipe de 3 développeurs, levée de fonds de 500k€.",
+      "tech": [
+        "React",
+        "Node.js",
+        "PostgreSQL",
+        "Docker",
+        "AWS"
+      ]
+    },
+    {
+      "id": 2,
+      "role": "Senior Full-Stack Developer",
+      "company": "Nebula Tech",
+      "period": "2021 — 2023",
+      "description": "Développement de plateformes web à fort traffic (2M+ utilisateurs). Migration d'une architecture monolithique vers microservices. Optimisation des performances (Core Web Vitals).",
+      "tech": [
+        "Next.js",
+        "Go",
+        "GraphQL",
+        "Kubernetes",
+        "GCP"
+      ]
+    },
+    {
+      "id": 3,
+      "role": "Mobile & Web Developer",
+      "company": "Pixel Studio",
+      "period": "2019 — 2021",
+      "description": "Création d'applications mobiles et web pour divers clients (Fintech, E-commerce, Santé). Mise en place de CI/CD et de process de tests automatisés.",
+      "tech": [
+        "Flutter",
+        "React",
+        "Node.js",
+        "Firebase"
+      ]
+    },
+    {
+      "id": 4,
+      "role": "Développeur Junior",
+      "company": "WebAgency Lyon",
+      "period": "2018 — 2019",
+      "description": "Développement de sites vitrines et e-commerce sous WordPress et Shopify. Premiers pas en React et Node.js. Sensibilisation aux bonnes pratiques de développement.",
+      "tech": [
+        "PHP",
+        "JavaScript",
+        "React",
+        "MySQL"
+      ]
+    }
+  ],
+  "contact": {
+    "intro": "Je suis actuellement ouvert à de nouvelles opportunités. Que ce soit pour un CDI, du freelancing ou juste échanger sur un projet, n'hésitez pas à me contacter.",
+    "email": "bryan.clark@example.com",
+    "location": "Paris, France (Remote OK)",
+    "status": "Disponible immédiatement",
+    "formEndpoint": ""
+  },
+  "socials": {
+    "github": "https://github.com/",
+    "linkedin": "https://www.linkedin.com/",
+    "email": "bryan.clark@example.com"
+  }
+}
