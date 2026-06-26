@@ -1,6 +1,8 @@
 ---
 import { content } from "../../lib/content";
+import { assetUrl } from "../../lib/url";
 const { projects } = content;
+const base = import.meta.env.BASE_URL;
 ---
 
 <section
@@ -33,12 +35,22 @@ const { projects } = content;
         >
           {/* Miniature */}
           <div class={`h-44 relative overflow-hidden ${project.gradient}`}>
+            {project.cover && (
+              <img
+                src={assetUrl(project.cover, base)}
+                alt={`Couverture du projet ${project.name}`}
+                loading="lazy"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            )}
             <div class="absolute inset-0 bg-lab-dark/40" />
-            <div class="absolute inset-0 flex items-center justify-center">
-              <span class="text-5xl font-extrabold text-white/20 group-hover:text-white/30 transition-colors font-mono">
-                {project.name.charAt(0)}
-              </span>
-            </div>
+            {!project.cover && (
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-5xl font-extrabold text-white/20 group-hover:text-white/30 transition-colors font-mono">
+                  {project.name.charAt(0)}
+                </span>
+              </div>
+            )}
             {project.featured && (
               <div class="absolute top-3 left-3 px-2 py-1 bg-neon-cyan/90 rounded-md text-[10px] font-mono font-bold text-lab-dark">
                 ★ Featured

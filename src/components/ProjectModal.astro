@@ -31,6 +31,12 @@
           class="h-40 relative overflow-hidden rounded-t-2xl"
           :class="selectedProject.gradient"
         >
+          <img
+            x-show="selectedProject.cover"
+            :src="asset(selectedProject.cover)"
+            :alt="'Couverture du projet ' + selectedProject.name"
+            class="absolute inset-0 w-full h-full object-cover"
+          />
           <div class="absolute inset-0 bg-lab-dark/30"></div>
           <button
             @click="selectedProject = null"
@@ -88,6 +94,36 @@
             </ul>
           </div>
 
+          <div
+            class="mb-6"
+            x-show="selectedProject.gallery && selectedProject.gallery.length"
+          >
+            <h4
+              class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
+            >
+              Galerie
+            </h4>
+            <div class="grid grid-cols-3 gap-2">
+              <template
+                x-for="(img, gi) in selectedProject.gallery"
+                :key="gi"
+              >
+                <button
+                  type="button"
+                  @click="openImage(asset(img))"
+                  class="block group/g"
+                >
+                  <img
+                    :src="asset(img)"
+                    loading="lazy"
+                    alt="Aperçu du projet"
+                    class="w-full h-20 object-cover rounded-md border border-lab-border group-hover/g:border-neon-cyan transition-colors"
+                  />
+                </button>
+              </template>
+            </div>
+          </div>
+
           <div class="mb-6">
             <h4
               class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
@@ -132,4 +168,21 @@
       </div>
     </template>
   </div>
+</div>
+
+<!-- Lightbox : agrandit une image de la galerie -->
+<div
+  x-show="lightbox"
+  x-cloak
+  x-transition.opacity
+  @click="lightbox = null"
+  @keydown.escape.window="lightbox = null"
+  class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-lab-dark/90 backdrop-blur-sm cursor-zoom-out"
+  style="display: none"
+>
+  <img
+    :src="lightbox"
+    alt="Image agrandie"
+    class="max-w-full max-h-[90vh] rounded-lg border border-lab-border"
+  />
 </div>

@@ -23,6 +23,10 @@ export interface Project {
   gradient: string;
   repoUrl?: string;
   demoUrl?: string;
+  /** Image de couverture (URL externe ou chemin local type /projects/foo.jpg). */
+  cover?: string;
+  /** Images de démo affichées dans la modale. */
+  gallery?: string[];
   features: string[];
 }
 

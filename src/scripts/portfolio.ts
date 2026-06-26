@@ -1,5 +1,6 @@
 import Alpine from "alpinejs";
 import { refreshReveal } from "./effects";
+import { assetUrl } from "../lib/url";
 import type { Project } from "../lib/content";
 
 interface PortfolioBootstrap {
@@ -7,6 +8,7 @@ interface PortfolioBootstrap {
   tagline: string;
   formEndpoint: string;
   email: string;
+  base: string;
 }
 
 declare global {
@@ -22,11 +24,13 @@ function portfolioApp() {
     tagline: "",
     formEndpoint: "",
     email: "",
+    base: "/",
   };
 
   return {
     activeView: "home",
     selectedProject: null as Project | null,
+    lightbox: null as string | null,
     formSent: false,
     formError: "",
     form: { name: "", email: "", message: "" },
@@ -69,6 +73,15 @@ function portfolioApp() {
 
     openProject(id: number) {
       this.selectedProject = this.projects.find((p) => p.id === id) ?? null;
+    },
+
+    /** Résout une image (URL externe ou chemin local + base path). */
+    asset(path: string | undefined) {
+      return assetUrl(path, boot.base);
+    },
+
+    openImage(src: string) {
+      this.lightbox = src;
     },
 
     async submitForm() {

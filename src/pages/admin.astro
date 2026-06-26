@@ -290,6 +290,70 @@ const addBtn =
                 <div><label class={label}>Lien démo</label><input class={input} x-model="project.demoUrl" placeholder="https://..." /></div>
               </div>
 
+              <!-- Images -->
+              <div class="border-t border-lab-border pt-4 space-y-4">
+                <!-- Couverture -->
+                <div>
+                  <label class={label}>Image de couverture</label>
+                  <div class="flex items-start gap-3">
+                    <div
+                      class="w-24 h-16 rounded-md border border-lab-border shrink-0 bg-lab-dark overflow-hidden flex items-center justify-center"
+                      :class="!project.cover && project.gradient"
+                    >
+                      <template x-if="project.cover">
+                        <img :src="asset(project.cover)" alt="" class="w-full h-full object-cover" />
+                      </template>
+                      <template x-if="!project.cover">
+                        <span class="text-[10px] text-gray-600 font-mono">aucune</span>
+                      </template>
+                    </div>
+                    <div class="flex-1 space-y-2">
+                      <input class={input} x-model="project.cover" placeholder="URL ou /projects/mon-image.jpg" />
+                      <div class="flex gap-2">
+                        <label class={addBtn + ' cursor-pointer'}>
+                          ⬆ Uploader
+                          <input type="file" accept="image/*" class="hidden" @change="uploadCover($event, project)" />
+                        </label>
+                        <button x-show="project.cover" class={miniBtn + ' !w-auto px-2'} @click="project.cover = ''">retirer</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Galerie démo -->
+                <div>
+                  <label class={label}>Galerie démo</label>
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    <template x-for="(_, gi) in project.gallery" :key="gi">
+                      <div class="relative group/img">
+                        <img :src="asset(project.gallery[gi])" alt="" class="w-20 h-14 object-cover rounded-md border border-lab-border" />
+                        <button
+                          class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-lab-dark border border-lab-border text-gray-300 hover:text-red-400 hover:border-red-400 text-xs flex items-center justify-center"
+                          @click="remove(project.gallery, gi)"
+                          title="Supprimer"
+                        >✕</button>
+                      </div>
+                    </template>
+                  </div>
+                  <div class="flex flex-wrap gap-2 items-center">
+                    <label class={addBtn + ' cursor-pointer'}>
+                      ⬆ Ajouter des images
+                      <input type="file" accept="image/*" multiple class="hidden" @change="uploadGallery($event, project)" />
+                    </label>
+                    <button class={addBtn} @click="addString(project.gallery)">+ via URL</button>
+                  </div>
+                  <!-- Édition des URLs de galerie -->
+                  <div class="space-y-2 mt-2" x-show="project.gallery.length">
+                    <template x-for="(_, gi) in project.gallery" :key="'u' + gi">
+                      <div class="flex gap-2">
+                        <input class={input} x-model="project.gallery[gi]" placeholder="URL ou /projects/demo.jpg" />
+                        <button class={miniBtn} @click="remove(project.gallery, gi)">✕</button>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </div>
+
               <div class="grid sm:grid-cols-2 gap-4 items-end">
                 <div>
                   <label class={label}>Dégradé</label>

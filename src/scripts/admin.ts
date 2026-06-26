@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 import type { Content, Project } from "../lib/content";
 import { GRADIENT_PRESETS } from "../lib/content";
+import { assetUrl } from "../lib/url";
 
 declare global {
   interface Window {
@@ -23,6 +24,8 @@ function emptyProject(id: number): Project {
     gradient: GRADIENT_PRESETS[0],
     repoUrl: "",
     demoUrl: "",
+    cover: "",
+    gallery: [],
     features: [],
   };
 }
@@ -71,7 +74,20 @@ function adminApp() {
           /* ignore */
         }
       }
+      this.normalizeProjects();
       this.loading = false;
+    },
+
+    /** Garantit que chaque projet a bien cover/gallery (anciennes données). */
+    normalizeProjects() {
+      for (const p of this.data.projects) {
+        if (typeof p.cover !== "string") p.cover = "";
+        if (!Array.isArray(p.gallery)) p.gallery = [];
+      }
+    },
+
+    asset(path: string | undefined) {
+      return assetUrl(path, import.meta.env.BASE_URL);
     },
 
     flash(msg: string, type: "info" | "success" | "error" = "info") {
@@ -159,6 +175,61 @@ function adminApp() {
     addProject() {
       this.data.projects.unshift(emptyProject(this.nextId(this.data.projects)));
       this.flash("Projet ajouté en tête de liste.", "info");
+    },
+
+    fileToDataUrl(file: File): Promise<string> {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    },
+
+    /** Upload une image vers public/projects/ (dev only) → renvoie le chemin. */
+    async uploadImage(file: File): Promise<string | null> {
+      if (!this.apiAvailable) {
+        this.flash(
+          "L'upload de fichier nécessite le serveur local (npm run dev). Tu peux sinon coller une URL d'image.",
+          "error",
+        );
+        return null;
+      }
+      try {
+        const dataUrl = await this.fileToDataUrl(file);
+        const res = await fetch("/api/admin/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: file.name, dataUrl }),
+        });
+        const out = await res.json();
+        if (!res.ok || !out.ok) throw new Error(out.error || "Échec de l'upload");
+        this.flash("✓ Image ajoutée dans public/projects/.", "success");
+        return out.path as string;
+      } catch (err) {
+        this.flash("Upload : " + (err as Error).message, "error");
+        return null;
+      }
+    },
+
+    async uploadCover(event: Event, project: Project) {
+      const input = event.target as HTMLInputElement;
+      const file = input.files?.[0];
+      input.value = "";
+      if (!file) return;
+      const path = await this.uploadImage(file);
+      if (path) project.cover = path;
+    },
+
+    async uploadGallery(event: Event, project: Project) {
+      const input = event.target as HTMLInputElement;
+      const files = Array.from(input.files ?? []);
+      input.value = "";
+      if (!project.gallery) project.gallery = [];
+      for (const file of files) {
+        const path = await this.uploadImage(file);
+        if (path) project.gallery.push(path);
+      }
     },
 
     // ---- Compétences ----
