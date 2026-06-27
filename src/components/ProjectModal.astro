@@ -196,12 +196,17 @@
     @touchstart.passive="onTouchStart($event)"
     @touchend.passive="onTouchEnd($event)"
   >
-    <img
-      :src="lightbox"
-      alt="Image agrandie"
-      draggable="false"
-      class="max-w-full max-h-[82vh] rounded-lg border border-lab-border select-none"
-    />
+    <!-- L'image est remontée à chaque changement d'index (:key) : l'animation
+         CSS (slide directionnel) se rejoue à chaque navigation. -->
+    <template x-for="src in [lightbox]" :key="lightboxIndex">
+      <img
+        :src="src"
+        alt="Image agrandie"
+        draggable="false"
+        :class="slideDir === 'prev' ? 'lb-slide-left' : 'lb-slide-right'"
+        class="max-w-full max-h-[82vh] rounded-lg border border-lab-border select-none"
+      />
+    </template>
     <div
       x-show="lightboxImages.length > 1"
       class="px-3 py-1 rounded-full bg-lab-card/80 border border-lab-border text-xs font-mono text-gray-300"
@@ -235,3 +240,39 @@
     </svg>
   </button>
 </div>
+
+<style>
+  /* Animation de slide à chaque changement d'image dans la lightbox. */
+  .lb-slide-right {
+    animation: lbSlideRight 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .lb-slide-left {
+    animation: lbSlideLeft 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes lbSlideRight {
+    from {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes lbSlideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lb-slide-right,
+    .lb-slide-left {
+      animation: none;
+    }
+  }
+</style>

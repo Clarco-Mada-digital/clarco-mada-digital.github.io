@@ -1,0 +1,139 @@
+---
+import Base from "../layouts/Base.astro";
+import { content } from "../lib/content";
+
+const { site, socials } = content;
+const base = import.meta.env.BASE_URL;
+---
+
+<Base title={`404 — Page introuvable // ${site.name}`} noIndex>
+  <main
+    class="min-h-screen flex flex-col items-center justify-center px-6 py-16 text-center"
+  >
+    <!-- Code 404 géant en glitch -->
+    <div class="relative select-none" aria-hidden="true">
+      <h1
+        class="glitch text-[28vw] sm:text-[180px] font-bold leading-none tracking-tighter text-white"
+        data-text="404"
+      >
+        404
+      </h1>
+    </div>
+
+    <!-- Fenêtre terminal -->
+    <div
+      class="mt-4 w-full max-w-md bg-lab-card border border-lab-border rounded-xl overflow-hidden text-left shadow-xl shadow-neon-cyan/5"
+    >
+      <div
+        class="flex items-center gap-2 px-4 py-2.5 border-b border-lab-border bg-lab-dark/50"
+      >
+        <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+        <span class="w-3 h-3 rounded-full bg-neon-green/80"></span>
+        <span class="ml-2 font-mono text-xs text-gray-500">~/{site.handle}</span>
+      </div>
+      <div class="p-4 font-mono text-sm space-y-1.5">
+        <p class="text-gray-400">
+          <span class="text-neon-purple">$</span> cd
+          <span class="text-neon-cyan break-all" id="reqPath">page-demandee</span>
+        </p>
+        <p class="text-red-400">
+          bash: cd: ressource introuvable —
+          <span class="text-gray-500">error 404</span>
+        </p>
+        <p class="text-gray-400">
+          <span class="text-neon-purple">$</span>
+          <span class="text-gray-300">cette page n'existe pas ou a été déplacée.</span><span
+            class="cursor"></span>
+        </p>
+      </div>
+    </div>
+
+    <p class="mt-7 text-gray-500 max-w-sm">
+      On dirait que tu t'es perdu dans le labo. Reviens à l'accueil pour continuer
+      l'exploration.
+    </p>
+
+    <!-- Actions -->
+    <div class="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4">
+      <a
+        href={base}
+        class="px-6 py-3 bg-gradient-to-r from-neon-cyan to-neon-purple text-lab-dark font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        Retour à l'accueil
+      </a>
+      <a
+        href={`mailto:${socials.email}`}
+        class="px-6 py-3 border border-lab-border text-gray-300 font-bold rounded-lg hover:border-neon-cyan hover:text-neon-cyan transition-all flex items-center justify-center gap-2"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        Me signaler le souci
+      </a>
+    </div>
+  </main>
+
+  <!-- Affiche le vrai chemin demandé (résolu côté client) -->
+  <script is:inline>
+    (function () {
+      var el = document.getElementById("reqPath");
+      if (el) el.textContent = window.location.pathname || "page-demandee";
+    })();
+  </script>
+
+  <style>
+    /* Effet glitch sur le 404 */
+    .glitch {
+      position: relative;
+      text-shadow:
+        0 0 30px rgb(var(--neon-cyan) / 0.35),
+        0 0 60px rgb(var(--neon-purple) / 0.2);
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .glitch::before {
+      color: rgb(var(--neon-cyan));
+      animation: glitch-x 2.6s infinite linear alternate-reverse;
+      clip-path: inset(0 0 55% 0);
+    }
+    .glitch::after {
+      color: rgb(var(--neon-purple));
+      animation: glitch-x 3.4s infinite linear alternate-reverse;
+      clip-path: inset(55% 0 0 0);
+    }
+    @keyframes glitch-x {
+      0% { transform: translateX(-3px); }
+      25% { transform: translateX(3px); }
+      50% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+      100% { transform: translateX(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .glitch::before,
+      .glitch::after { animation: none; }
+    }
+  </style>
+</Base>

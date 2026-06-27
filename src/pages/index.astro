@@ -41,25 +41,28 @@ const bootstrap = {
     <Sidebar />
 
     <!-- ================= MAIN CONTENT ================= -->
-    <main class="flex-1 p-6 md:p-12 overflow-y-auto">
-      <!-- Indicateur de navigation -->
-      <div class="font-mono text-xs text-gray-600 mb-8 flex items-center gap-2">
-        <span class="text-neon-purple">~/{site.handle}</span>
-        <span>/</span>
-        <span class="text-neon-cyan" x-text="activeView"></span>
-        <span class="cursor"></span>
+    <main class="flex-1 p-6 md:p-12 overflow-y-auto flex flex-col min-h-screen">
+      <!-- Zone de contenu : grandit pour pousser le footer en bas -->
+      <div class="flex-1">
+        <!-- Indicateur de navigation -->
+        <div class="font-mono text-xs text-gray-600 mb-8 flex items-center gap-2">
+          <span class="text-neon-purple">~/{site.handle}</span>
+          <span>/</span>
+          <span class="text-neon-cyan" x-text="activeView"></span>
+          <span class="cursor"></span>
+        </div>
+
+        <Home />
+        <About />
+        <Skills />
+        <Projects />
+        <Experience />
+        <Contact />
       </div>
 
-      <Home />
-      <About />
-      <Skills />
-      <Projects />
-      <Experience />
-      <Contact />
-
-      <!-- Footer mini -->
+      <!-- Footer mini : toujours collé en bas (mt-auto) -->
       <footer
-        class="mt-20 pt-8 border-t border-lab-border text-center text-xs text-gray-600 font-mono"
+        class="mt-auto pt-8 border-t border-lab-border text-center text-xs text-gray-600 font-mono"
       >
         <p>
           Conçu et développé avec ❤️ par {site.name} — Astro, Alpine.js & Tailwind
