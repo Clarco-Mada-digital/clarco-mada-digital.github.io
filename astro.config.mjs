@@ -3,6 +3,7 @@ import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import matter from "gray-matter";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -18,10 +19,11 @@ import path from "node:path";
 function adminDevApi() {
   const dataFile = fileURLToPath(new URL("./src/data/content.json", import.meta.url));
   const publicDir = fileURLToPath(new URL("./public/", import.meta.url));
+  const blogDir = fileURLToPath(new URL("./src/content/blog/", import.meta.url));
 
   const MAX_UPLOAD = 10 * 1024 * 1024; // 10 Mo
   // Dossiers de destination autorisés (anti path-traversal).
-  const ALLOWED_DIRS = new Set(["projects", "cv", "profile"]);
+  const ALLOWED_DIRS = new Set(["projects", "cv", "profile", "blog"]);
   const EXT_BY_MIME = {
     "image/png": "png",
     "image/jpeg": "jpg",
@@ -107,6 +109,68 @@ function adminDevApi() {
     res.end(JSON.stringify({ ok: true, path: publicPath }));
   }
 
+  // --- Articles de blog (fichiers Markdown dans src/content/blog/) ---
+  async function handleBlog(req, res) {
+    await fs.mkdir(blogDir, { recursive: true });
+
+    if (req.method === "GET") {
+      const files = (await fs.readdir(blogDir)).filter((f) => f.endsWith(".md"));
+      const posts = [];
+      for (const f of files) {
+        const raw = await fs.readFile(path.join(blogDir, f), "utf-8");
+        const { data, content } = matter(raw);
+        // La date peut être un objet Date : on la normalise en YYYY-MM-DD.
+        const date =
+          data.date instanceof Date
+            ? data.date.toISOString().slice(0, 10)
+            : String(data.date ?? "");
+        posts.push({
+          slug: f.replace(/\.md$/, ""),
+          data: { ...data, date, tags: data.tags ?? [] },
+          body: content.replace(/^\n+/, ""),
+        });
+      }
+      res.statusCode = 200;
+      res.end(JSON.stringify(posts));
+      return;
+    }
+
+    if (req.method === "POST" || req.method === "PUT") {
+      const { slug, originalSlug, data, body } = JSON.parse(await readBody(req));
+      const safe = slugify(slug || data?.title || "article");
+      const fm = {
+        title: data?.title ?? "",
+        description: data?.description ?? "",
+        date: data?.date || new Date().toISOString().slice(0, 10),
+        tags: Array.isArray(data?.tags) ? data.tags : [],
+        draft: Boolean(data?.draft),
+      };
+      if (data?.cover) fm.cover = data.cover;
+      const md = matter.stringify((body ?? "").trim() + "\n", fm);
+      await fs.writeFile(path.join(blogDir, safe + ".md"), md, "utf-8");
+      // Renommage : supprime l'ancien fichier si le slug a changé.
+      const oldSafe = slugify(originalSlug || "");
+      if (oldSafe && oldSafe !== safe) {
+        await fs.rm(path.join(blogDir, oldSafe + ".md"), { force: true });
+      }
+      res.statusCode = 200;
+      res.end(JSON.stringify({ ok: true, slug: safe }));
+      return;
+    }
+
+    if (req.method === "DELETE") {
+      const url = new URL(req.url, "http://localhost");
+      const slug = slugify(url.searchParams.get("slug") || "");
+      if (slug) await fs.rm(path.join(blogDir, slug + ".md"), { force: true });
+      res.statusCode = 200;
+      res.end(JSON.stringify({ ok: true }));
+      return;
+    }
+
+    res.statusCode = 405;
+    res.end(JSON.stringify({ ok: false, error: "Méthode non autorisée" }));
+  }
+
   return {
     name: "portfolio-admin-dev-api",
     apply: "serve",
@@ -117,6 +181,7 @@ function adminDevApi() {
         try {
           if (req.url.startsWith("/api/admin/content")) return await handleContent(req, res);
           if (req.url.startsWith("/api/admin/upload")) return await handleUpload(req, res);
+          if (req.url.startsWith("/api/admin/blog")) return await handleBlog(req, res);
           res.statusCode = 404;
           res.end(JSON.stringify({ ok: false, error: "Route inconnue" }));
         } catch (err) {

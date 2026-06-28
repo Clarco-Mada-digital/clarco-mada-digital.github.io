@@ -16,7 +16,7 @@ const addBtn =
 ---
 
 <Base title="Admin // Bryan Clark" noIndex={true}>
-  <div x-data="adminApp" x-cloak class="min-h-screen max-w-5xl mx-auto p-5 md:p-8">
+  <div x-data="adminApp" x-cloak class="min-h-screen max-w-7xl mx-auto p-5 md:p-8">
     <!-- Garde-fou d'accès (soft) -->
     <div
       x-show="!unlocked"
@@ -577,6 +577,118 @@ const addBtn =
                       title="Aperçu de la démo"
                     ></iframe>
                   </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </section>
+
+        <!-- ====== ARTICLES (BLOG) ====== -->
+        <section x-show="activeTab === 'blog'" style="display:none" class="space-y-5">
+          <template x-if="!apiAvailable">
+            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-yellow-200 text-sm">
+              L'édition d'articles nécessite le serveur local (<span class="font-mono">npm run dev</span>).
+              En ligne, les articles s'éditent en local puis se publient via <span class="font-mono">git push</span>.
+            </div>
+          </template>
+
+          <!-- Liste des articles -->
+          <template x-if="!editingPost">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h2 class="text-white font-bold">Articles <span class="text-gray-600 text-sm font-mono" x-text="'(' + posts.length + ')'"></span></h2>
+                <button class={addBtn} @click="newPost()" :disabled="!apiAvailable">+ Nouvel article</button>
+              </div>
+              <template x-if="posts.length === 0">
+                <p class="text-gray-500 text-sm font-mono">Aucun article. Crée le premier !</p>
+              </template>
+              <template x-for="post in posts" :key="post.slug">
+                <div class:list={[card, 'flex items-center gap-4']}>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2">
+                      <span class="text-white font-bold truncate" x-text="post.data.title"></span>
+                      <span x-show="post.data.draft" class="px-1.5 py-0.5 rounded bg-yellow-300/10 border border-yellow-300/30 text-yellow-300 text-[10px] font-mono">brouillon</span>
+                    </div>
+                    <div class="text-gray-500 text-xs font-mono mt-1" x-text="post.data.date + ' · /blog/' + post.slug"></div>
+                  </div>
+                  <button class={miniBtn} @click="editPost(post)" title="Modifier">✎</button>
+                  <button class={miniBtn} @click="deletePost(post.slug)" title="Supprimer">✕</button>
+                </div>
+              </template>
+            </div>
+          </template>
+
+          <!-- Éditeur d'article -->
+          <template x-if="editingPost">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h2 class="text-white font-bold" x-text="postDraft.originalSlug ? 'Modifier l’article' : 'Nouvel article'"></h2>
+                <div class="flex gap-2">
+                  <button class={miniBtn + ' !w-auto px-3'} @click="cancelPost()">Annuler</button>
+                  <button class={addBtn} @click="savePost()" :disabled="postBusy">💾 Enregistrer</button>
+                </div>
+              </div>
+
+              <div class="grid lg:grid-cols-2 gap-4">
+                <!-- Colonne gauche : métadonnées + markdown -->
+                <div class="space-y-3">
+                  <div><label class={label}>Titre</label><input class={input} x-model="postDraft.title" /></div>
+                  <div>
+                    <label class={label}>Slug (URL)</label>
+                    <div class="flex items-center gap-2 text-xs font-mono text-gray-500">
+                      <span>/blog/</span>
+                      <input class={input} x-model="postDraft.slug" :placeholder="postSlug" />
+                    </div>
+                    <p class="text-[11px] text-gray-600 mt-1">Laisse vide pour générer depuis le titre : <span class="text-neon-cyan" x-text="postSlug"></span></p>
+                  </div>
+                  <div><label class={label}>Description</label><textarea rows="2" class={input} x-model="postDraft.description"></textarea></div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div><label class={label}>Date</label><input type="date" class={input} x-model="postDraft.date" /></div>
+                    <div class="flex items-end pb-1">
+                      <label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                        <input type="checkbox" x-model="postDraft.draft" class="accent-neon-cyan" />
+                        Brouillon
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <label class={label}>Tags</label>
+                    <div class="flex flex-wrap gap-2">
+                      <template x-for="(_, ti) in postDraft.tags" :key="ti">
+                        <div class="flex gap-1 items-center">
+                          <input class={input + ' !w-28'} x-model="postDraft.tags[ti]" />
+                          <button class={miniBtn} @click="remove(postDraft.tags, ti)">✕</button>
+                        </div>
+                      </template>
+                    </div>
+                    <button class={addBtn + ' mt-2'} @click="addString(postDraft.tags)">+ tag</button>
+                  </div>
+                  <div>
+                    <label class={label}>Couverture</label>
+                    <div class="flex items-center gap-3">
+                      <template x-if="postDraft.cover">
+                        <img :src="asset(postDraft.cover)" alt="" class="w-24 h-14 object-cover rounded border border-lab-border" />
+                      </template>
+                      <label class={miniBtn + ' !w-auto px-3 cursor-pointer'}>
+                        📁
+                        <input type="file" accept="image/*" class="hidden" @change="uploadPostCover($event)" />
+                      </label>
+                      <input class={input} x-model="postDraft.cover" placeholder="/blog/cover.webp ou URL" />
+                    </div>
+                  </div>
+                  <div>
+                    <label class={label}>Contenu (Markdown)</label>
+                    <textarea rows="16" spellcheck="false" class={input + ' font-mono !text-xs leading-relaxed'} x-model="postDraft.body"></textarea>
+                  </div>
+                </div>
+
+                <!-- Colonne droite : aperçu live (sticky pendant le scroll) -->
+                <div class="lg:sticky lg:top-24 self-start">
+                  <label class={label}>Aperçu</label>
+                  <div class="bg-lab-dark border border-lab-border rounded-lg p-5 h-[640px] lg:h-[calc(100vh-11rem)] overflow-auto">
+                    <article class="prose-lab" x-html="postPreviewHtml"></article>
+                  </div>
+                  <p class="text-[11px] text-gray-600 mt-2">Aperçu approximatif — le rendu final (code coloré, maths) apparaît sur le site publié.</p>
                 </div>
               </div>
             </div>

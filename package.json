@@ -21,6 +21,7 @@
     "alpinejs": "^3.14.8",
     "astro": "^4.16.18",
     "katex": "^0.17.0",
+    "marked": "^18.0.5",
     "pdfmake": "^0.2.23",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",

@@ -3,6 +3,34 @@ import type { Content, Project, Lab } from "../lib/content";
 import { GRADIENT_PRESETS } from "../lib/content";
 import { assetUrl } from "../lib/url";
 import { buildLabSrcdoc } from "../lib/labs";
+import { marked } from "marked";
+
+interface BlogPostDraft {
+  originalSlug: string;
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  tags: string[];
+  draft: boolean;
+  cover: string;
+  body: string;
+}
+interface BlogPost {
+  slug: string;
+  data: { title: string; description: string; date: string; tags: string[]; draft?: boolean; cover?: string };
+  body: string;
+}
+
+function slugifyTitle(s: string): string {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+}
 
 declare global {
   interface Window {
@@ -72,6 +100,21 @@ function adminApp() {
     // Filtres de recherche (listes nombreuses)
     projectQuery: "",
     labQuery: "",
+    // --- Articles de blog ---
+    posts: [] as BlogPost[],
+    editingPost: false,
+    postBusy: false,
+    postDraft: {
+      originalSlug: "",
+      slug: "",
+      title: "",
+      description: "",
+      date: "",
+      tags: [],
+      draft: false,
+      cover: "",
+      body: "",
+    } as BlogPostDraft,
     /** Un texte contient-il la recherche (insensible casse/accents) ? */
     matches(haystack: string, query: string): boolean {
       const q = query.trim().toLowerCase();
@@ -89,6 +132,7 @@ function adminApp() {
       { id: "skills", label: "Compétences" },
       { id: "projects", label: "Projets" },
       { id: "labs", label: "Labs" },
+      { id: "blog", label: "Articles" },
       { id: "experience", label: "Parcours" },
       { id: "contact", label: "Contact" },
     ],
@@ -127,6 +171,7 @@ function adminApp() {
         if (!l.demo) l.demo = { html: "", css: "", js: "" };
       }
       if (!this.data.analytics) this.data.analytics = { cloudflareToken: "" };
+      await this.refreshPosts();
       this.loading = false;
     },
 
@@ -239,7 +284,7 @@ function adminApp() {
     },
 
     /** Upload un fichier vers public/<dir>/ (dev only) → renvoie le chemin. */
-    async uploadFile(file: File, dir: "projects" | "cv" | "profile" = "projects"): Promise<string | null> {
+    async uploadFile(file: File, dir: "projects" | "cv" | "profile" | "blog" = "projects"): Promise<string | null> {
       if (!this.apiAvailable) {
         this.flash(
           "L'upload de fichier nécessite le serveur local (npm run dev). Tu peux sinon coller une URL.",
@@ -338,6 +383,116 @@ function adminApp() {
     /** Document iframe pour l'aperçu live d'un labo dans l'admin. */
     labPreview(lab: Lab): string {
       return buildLabSrcdoc(lab.demo);
+    },
+
+    // ---- Articles de blog (fichiers .md via l'API dev) ----
+    async refreshPosts() {
+      if (!this.apiAvailable) return;
+      try {
+        const res = await fetch("/api/admin/blog");
+        if (res.ok) this.posts = await res.json();
+      } catch {
+        /* ignore */
+      }
+    },
+    newPost() {
+      this.postDraft = {
+        originalSlug: "",
+        slug: "",
+        title: "",
+        description: "",
+        date: new Date().toISOString().slice(0, 10),
+        tags: [],
+        draft: true,
+        cover: "",
+        body: "# Mon titre\n\nÉcris ton article en **Markdown**…\n",
+      };
+      this.editingPost = true;
+    },
+    editPost(post: BlogPost) {
+      this.postDraft = {
+        originalSlug: post.slug,
+        slug: post.slug,
+        title: post.data.title ?? "",
+        description: post.data.description ?? "",
+        date: post.data.date ?? "",
+        tags: [...(post.data.tags ?? [])],
+        draft: Boolean(post.data.draft),
+        cover: post.data.cover ?? "",
+        body: post.body ?? "",
+      };
+      this.editingPost = true;
+    },
+    cancelPost() {
+      this.editingPost = false;
+    },
+    /** Slug effectif (saisi ou dérivé du titre). */
+    get postSlug(): string {
+      return slugifyTitle(this.postDraft.slug || this.postDraft.title);
+    },
+    /** Aperçu Markdown → HTML (rendu approximatif ; le site final ajoute Shiki/KaTeX). */
+    get postPreviewHtml(): string {
+      return marked.parse(this.postDraft.body || "", { async: false }) as string;
+    },
+    async savePost() {
+      if (!this.apiAvailable) {
+        this.flash("L'édition d'articles nécessite le serveur local (npm run dev).", "error");
+        return;
+      }
+      if (!this.postDraft.title.trim()) {
+        this.flash("Donne un titre à l'article.", "error");
+        return;
+      }
+      this.postBusy = true;
+      try {
+        const res = await fetch("/api/admin/blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug: this.postSlug,
+            originalSlug: this.postDraft.originalSlug,
+            data: {
+              title: this.postDraft.title,
+              description: this.postDraft.description,
+              date: this.postDraft.date,
+              tags: this.postDraft.tags,
+              draft: this.postDraft.draft,
+              cover: this.postDraft.cover,
+            },
+            body: this.postDraft.body,
+          }),
+        });
+        const out = await res.json();
+        if (!res.ok || !out.ok) throw new Error(out.error || "Échec");
+        this.flash("✓ Article enregistré — pense à git push pour publier.", "success");
+        this.editingPost = false;
+        await this.refreshPosts();
+      } catch (err) {
+        this.flash("Erreur : " + (err as Error).message, "error");
+      } finally {
+        this.postBusy = false;
+      }
+    },
+    async deletePost(slug: string) {
+      if (!confirm("Supprimer définitivement cet article ?")) return;
+      try {
+        const res = await fetch("/api/admin/blog?slug=" + encodeURIComponent(slug), {
+          method: "DELETE",
+        });
+        if (!res.ok) throw new Error("Échec");
+        this.flash("Article supprimé.", "info");
+        await this.refreshPosts();
+      } catch (err) {
+        this.flash("Erreur : " + (err as Error).message, "error");
+      }
+    },
+    async uploadPostCover(event: Event) {
+      const input = event.target as HTMLInputElement;
+      const file = input.files?.[0];
+      input.value = "";
+      if (!file) return;
+      const path = await this.uploadFile(file, "blog");
+      if (path) this.postDraft.cover = path;
     },
 
     // ---- Stats ----
