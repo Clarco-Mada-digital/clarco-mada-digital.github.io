@@ -4,6 +4,11 @@ import { GRADIENT_PRESETS } from "../lib/content";
 import { assetUrl } from "../lib/url";
 import { buildLabSrcdoc } from "../lib/labs";
 import { marked } from "marked";
+import markedKatex from "marked-katex-extension";
+
+// Active le rendu des maths ($…$ et $$…$$) dans l'aperçu Markdown.
+// nonStandard : tokenise les maths AVANT le markdown (préserve les _ du LaTeX).
+marked.use(markedKatex({ throwOnError: false, nonStandard: true }));
 
 interface BlogPostDraft {
   originalSlug: string;

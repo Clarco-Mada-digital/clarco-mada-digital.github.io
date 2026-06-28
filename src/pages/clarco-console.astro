@@ -1,4 +1,5 @@
 ---
+import "katex/dist/katex.min.css"; // styles des maths dans l'aperçu d'article
 import Base from "../layouts/Base.astro";
 import { content } from "../lib/content";
 
@@ -688,7 +689,7 @@ const addBtn =
                   <div class="bg-lab-dark border border-lab-border rounded-lg p-5 h-[640px] lg:h-[calc(100vh-11rem)] overflow-auto">
                     <article class="prose-lab" x-html="postPreviewHtml"></article>
                   </div>
-                  <p class="text-[11px] text-gray-600 mt-2">Aperçu approximatif — le rendu final (code coloré, maths) apparaît sur le site publié.</p>
+                  <p class="text-[11px] text-gray-600 mt-2">Aperçu fidèle (maths incluses). La coloration syntaxique du code apparaît sur le site publié.</p>
                 </div>
               </div>
             </div>
