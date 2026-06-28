@@ -19,11 +19,12 @@ import { content } from "../lib/content";
 const { site, hero, contact } = content;
 
 // Données injectées dans Alpine (modale projet + formulaire + typewriter).
-// Clé Web3Forms : priorité au champ admin (content.json), sinon secret GitHub.
-// On privilégie l'admin pour que la clé soit gérable sans toucher au code/secret.
-// NB : sur un site statique, la valeur finit de toute façon dans le JS livré
-// (clé publique par conception).
-const web3formsKey = contact.web3formsKey || process.env.WEB3FORMS_KEY || "";
+// Clé Web3Forms : priorité au SECRET GitHub (hors du dépôt), sinon champ admin
+// (content.json) en repli local. On garde la clé hors du code source : un fork
+// n'hérite pas de la clé. NB : elle reste visible dans le JS livré du site en
+// ligne (clé publique par conception) — la vraie protection est la restriction
+// de domaine côté Web3Forms.
+const web3formsKey = process.env.WEB3FORMS_KEY || contact.web3formsKey || "";
 
 const bootstrap = {
   projects: content.projects,

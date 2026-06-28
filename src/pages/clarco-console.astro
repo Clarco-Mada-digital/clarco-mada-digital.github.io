@@ -748,9 +748,8 @@ const addBtn =
             <label class={label}>Clé Web3Forms (recevoir les messages par email — gratuit)</label>
             <input class={input} x-model="data.contact.web3formsKey" placeholder="Ex: 1a2b3c4d-...." />
             <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
-              Va sur <span class="text-neon-cyan">web3forms.com</span>, entre ton email, reçois une clé d'accès et colle-la ici.
-              Les soumissions du formulaire t'arriveront alors par email, <span class="text-neon-green">sans serveur</span>.
-              Prioritaire sur Formspree ; sans aucune des deux, le formulaire ouvre le client mail du visiteur.
+              En production, c'est le <span class="text-neon-cyan">secret GitHub WEB3FORMS_KEY</span> qui est utilisé (hors du dépôt).
+              Ce champ sert de repli (ex. dev local). Sans clé ni Formspree, le formulaire ouvre le client mail du visiteur.
             </p>
           </div>
           <h3 class="text-gray-400 text-sm font-mono pt-2">Réseaux (sidebar)</h3>
@@ -765,8 +764,8 @@ const addBtn =
             <label class={label}>Token Cloudflare Web Analytics (gratuit, sans cookies)</label>
             <input class={input} x-model="data.analytics.cloudflareToken" placeholder="Ex: 1a2b3c4d5e6f..." />
             <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
-              Dashboard Cloudflare → <span class="text-neon-cyan">Analytics &amp; Logs → Web Analytics → Add a site</span>,
-              entre l'URL de ce site, puis colle ici le token fourni.
+              En production, c'est le <span class="text-neon-cyan">secret GitHub CF_ANALYTICS_TOKEN</span> qui est utilisé (hors du dépôt).
+              Token depuis Cloudflare → Analytics &amp; Logs → Web Analytics → Add a site.
               Les stats ne se chargent qu'<span class="text-neon-green">en production</span> (pas en local).
             </p>
           </div>

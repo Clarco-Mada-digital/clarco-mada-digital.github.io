@@ -39,10 +39,13 @@ jobs:
           # Pas de BASE_PATH nécessaire (site à la racine). Si un jour tu passes
           # sur un dépôt "projet" (URL .../<repo>/), ajoute : BASE_PATH: /<repo>
           #
-          # Clé Web3Forms via secret GitHub (Settings > Secrets > Actions) :
-          # ajoute un secret nommé WEB3FORMS_KEY. La clé n'est PAS dans le repo
-          # (mais reste visible dans le JS livré : clé publique par conception).
+          # Clés via secrets GitHub (Settings > Secrets and variables > Actions) :
+          # WEB3FORMS_KEY (formulaire de contact) et CF_ANALYTICS_TOKEN
+          # (Cloudflare Web Analytics). Hors du dépôt : un fork n'hérite pas des
+          # clés (elles restent toutefois visibles dans le code livré du site —
+          # clés publiques par conception).
           WEB3FORMS_KEY: ${{ secrets.WEB3FORMS_KEY }}
+          CF_ANALYTICS_TOKEN: ${{ secrets.CF_ANALYTICS_TOKEN }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
