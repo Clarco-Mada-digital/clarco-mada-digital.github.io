@@ -12,6 +12,17 @@ declare global {
 
 const API = "/api/admin/content";
 const BACKUP_KEY = "portfolio-admin-backup";
+const GATE_KEY = "portfolio-admin-unlocked";
+// SHA-256 de la phrase d'accès (par défaut "abc-dev-2026"). Pour la changer :
+// node -e "console.log(require('crypto').createHash('sha256').update('TA_PHRASE').digest('hex'))"
+// NB : garde-fou « soft » côté client (les données sont de toute façon publiques
+// dans le build) — ça décourage l'accès, ce n'est pas une sécurité forte.
+const GATE_HASH = "69bc61cc81190cf96062259bf8dc878c146bd2d22a09076db2c84ed80a784728";
+
+async function sha256Hex(text: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 function emptyProject(id: number): Project {
   return {
@@ -39,6 +50,25 @@ function adminApp() {
     status: "",
     statusType: "info" as "info" | "success" | "error",
     activeTab: "site",
+    // Garde-fou d'accès (soft) à la console
+    unlocked: false,
+    gateInput: "",
+    gateError: false,
+    async tryUnlock() {
+      const hash = await sha256Hex(this.gateInput);
+      if (hash === GATE_HASH) {
+        this.unlocked = true;
+        this.gateError = false;
+        this.gateInput = "";
+        try {
+          sessionStorage.setItem(GATE_KEY, "1");
+        } catch {
+          /* ignore */
+        }
+      } else {
+        this.gateError = true;
+      }
+    },
     // Filtres de recherche (listes nombreuses)
     projectQuery: "",
     labQuery: "",
@@ -64,6 +94,12 @@ function adminApp() {
     ],
 
     async init() {
+      // Déverrouillage mémorisé pour la session.
+      try {
+        if (sessionStorage.getItem(GATE_KEY) === "1") this.unlocked = true;
+      } catch {
+        /* ignore */
+      }
       // Seed = données actuelles intégrées au build (fonctionne même sans API).
       this.data = structuredClone(window.__ADMIN_SEED__);
       try {

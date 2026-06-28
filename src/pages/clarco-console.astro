@@ -17,8 +17,49 @@ const addBtn =
 
 <Base title="Admin // Bryan Clark" noIndex={true}>
   <div x-data="adminApp" x-cloak class="min-h-screen max-w-5xl mx-auto p-5 md:p-8">
+    <!-- Garde-fou d'accès (soft) -->
+    <div
+      x-show="!unlocked"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-lab-dark"
+    >
+      <form
+        @submit.prevent="tryUnlock()"
+        class="w-full max-w-sm bg-lab-card border border-lab-border rounded-2xl p-6 space-y-4"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center text-lab-dark text-lg"
+          >
+            🔒
+          </div>
+          <div>
+            <div class="text-white font-bold">Console privée</div>
+            <div class="text-gray-500 text-xs font-mono">Accès réservé</div>
+          </div>
+        </div>
+        <input
+          type="password"
+          x-model="gateInput"
+          @input="gateError = false"
+          placeholder="Phrase d'accès"
+          autocomplete="current-password"
+          class={input}
+        />
+        <p x-show="gateError" style="display:none" class="text-red-400 text-xs font-mono">
+          Phrase incorrecte.
+        </p>
+        <button
+          type="submit"
+          class="w-full py-2.5 rounded-lg bg-neon-cyan text-lab-dark font-bold text-sm hover:bg-white transition-colors"
+        >
+          Déverrouiller
+        </button>
+      </form>
+    </div>
+
     <!-- En-tête -->
     <header
+      x-show="unlocked"
       class="sticky top-0 z-30 -mx-5 md:-mx-8 px-5 md:px-8 py-4 bg-lab-dark/85 backdrop-blur-md border-b border-lab-border mb-8"
     >
       <div class="flex flex-wrap items-center gap-3 justify-between">
@@ -79,11 +120,11 @@ const addBtn =
     </header>
 
     <!-- Chargement -->
-    <div x-show="loading" class="text-gray-500 font-mono text-sm">
+    <div x-show="unlocked && loading" class="text-gray-500 font-mono text-sm">
       Chargement des données…
     </div>
 
-    <div x-show="!loading" style="display:none" class="flex flex-col md:flex-row gap-8">
+    <div x-show="unlocked && !loading" style="display:none" class="flex flex-col md:flex-row gap-8">
       <!-- Onglets -->
       <nav class="md:w-44 flex md:flex-col gap-1 overflow-x-auto md:overflow-visible shrink-0">
         <template x-for="tab in tabs" :key="tab.id">
