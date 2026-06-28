@@ -2,17 +2,15 @@
 // Polices auto-hébergées (woff2 dans le build, aucune requête externe).
 // Plusieurs familles : le visiteur peut changer de combinaison (le navigateur
 // ne télécharge que la police réellement utilisée).
+// 3 paires de polices proposées dans le panneau « Personnaliser ».
+// (unicode-range fait que le navigateur ne télécharge que le sous-ensemble
+// latin de la police active — les autres subsets ne transitent jamais.)
 import "@fontsource-variable/space-grotesk/index.css";
 import "@fontsource/space-mono/400.css";
 import "@fontsource/space-mono/700.css";
 import "@fontsource-variable/sora/index.css";
 import "@fontsource-variable/jetbrains-mono/index.css";
 import "@fontsource-variable/inter/index.css";
-import "@fontsource/chakra-petch/400.css";
-import "@fontsource/chakra-petch/700.css";
-import "@fontsource/ibm-plex-mono/400.css";
-import "@fontsource/ibm-plex-mono/700.css";
-import "katex/dist/katex.min.css";
 import "../styles/global.css";
 import { content } from "../lib/content";
 
