@@ -39,6 +39,21 @@ export interface Experience {
   tech: string[];
 }
 
+/** Expérimentation / projet "extra" affiché dans la section Labs. */
+export interface Lab {
+  id: number;
+  title: string;
+  /** Une phrase : ce que j'ai testé + ce que j'ai appris. */
+  tagline: string;
+  /** État du labo : pilote le badge couleur. */
+  status: "wip" | "done" | "idea";
+  tags: string[];
+  /** Lien démo / CodePen / repo (optionnel). */
+  url?: string;
+  /** Émoji d'illustration (optionnel). */
+  emoji?: string;
+}
+
 export interface Content {
   site: {
     name: string;
@@ -74,6 +89,7 @@ export interface Content {
   skills: SkillCategory[];
   tools: string[];
   projects: Project[];
+  labs: Lab[];
   experience: Experience[];
   contact: {
     intro: string;

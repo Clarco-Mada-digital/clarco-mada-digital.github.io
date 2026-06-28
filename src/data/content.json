@@ -455,5 +455,44 @@
     "github": "https://github.com/clarco-mada-digital",
     "linkedin": "https://www.linkedin.com/brayan-clarck/",
     "email": "brayanraherinandrasana@gmail.com"
-  }
+  },
+  "labs": [
+    {
+      "id": 1,
+      "title": "Générateur de palettes néon",
+      "tagline": "J'ai testé la génération de dégradés CSS aléatoires en HSL — appris à contraster automatiquement le texte.",
+      "status": "done",
+      "tags": [
+        "CSS",
+        "TypeScript"
+      ],
+      "url": "",
+      "emoji": "🎨"
+    },
+    {
+      "id": 2,
+      "title": "Mini-jeu Canvas",
+      "tagline": "Petit jeu d'arcade en <canvas> pour explorer la boucle de rendu et la détection de collisions.",
+      "status": "wip",
+      "tags": [
+        "Canvas",
+        "JavaScript",
+        "Jeu"
+      ],
+      "url": "",
+      "emoji": "🕹️"
+    },
+    {
+      "id": 3,
+      "title": "Commande vocale (Web Speech API)",
+      "tagline": "Prototype de navigation à la voix dans le navigateur — appris les limites de reconnaissance hors-ligne.",
+      "status": "idea",
+      "tags": [
+        "Web API",
+        "Accessibilité"
+      ],
+      "url": "",
+      "emoji": "🎙️"
+    }
+  ]
 }

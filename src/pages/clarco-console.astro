@@ -444,6 +444,59 @@ const addBtn =
           </template>
         </section>
 
+        <!-- ====== LABS ====== -->
+        <section x-show="activeTab === 'labs'" style="display:none" class="space-y-5">
+          <div class="flex items-center justify-between">
+            <h2 class="text-white font-bold">Labs</h2>
+            <button class={addBtn} @click="addLab()">+ Nouveau labo</button>
+          </div>
+          <p class="text-gray-500 text-xs font-mono">
+            Prototypes, tests d'API, mini-projets et idées en vrac.
+          </p>
+          <template x-for="(lab, li) in data.labs" :key="lab.id">
+            <div class:list={[card, 'space-y-4']}>
+              <div class="flex items-start gap-3">
+                <div class="flex-1 grid sm:grid-cols-4 gap-4">
+                  <div class="sm:col-span-1"><label class={label}>Émoji</label><input class={input} x-model="lab.emoji" placeholder="🔬" /></div>
+                  <div class="sm:col-span-3"><label class={label}>Titre</label><input class={input} x-model="lab.title" /></div>
+                </div>
+                <div class="flex gap-1 pt-5">
+                  <button class={miniBtn} @click="move(data.labs, li, -1)">↑</button>
+                  <button class={miniBtn} @click="move(data.labs, li, 1)">↓</button>
+                  <button class={miniBtn} @click="remove(data.labs, li)">✕</button>
+                </div>
+              </div>
+              <div>
+                <label class={label}>Phrase (ce que j'ai testé + appris)</label>
+                <textarea rows="2" class={input} x-model="lab.tagline"></textarea>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class={label}>Statut</label>
+                  <select class={input} x-model="lab.status">
+                    <option value="idea">💡 Idée</option>
+                    <option value="wip">🧪 En cours</option>
+                    <option value="done">✅ Terminé</option>
+                  </select>
+                </div>
+                <div><label class={label}>Lien (démo / repo)</label><input class={input} x-model="lab.url" placeholder="https://..." /></div>
+              </div>
+              <div>
+                <label class={label}>Tags</label>
+                <div class="flex flex-wrap gap-2">
+                  <template x-for="(_, ti) in lab.tags" :key="ti">
+                    <div class="flex gap-1 items-center">
+                      <input class={input + ' !w-28'} x-model="lab.tags[ti]" />
+                      <button class={miniBtn} @click="remove(lab.tags, ti)">✕</button>
+                    </div>
+                  </template>
+                </div>
+                <button class={addBtn + ' mt-2'} @click="addString(lab.tags)">+ tag</button>
+              </div>
+            </div>
+          </template>
+        </section>
+
         <!-- ====== PARCOURS ====== -->
         <section x-show="activeTab === 'experience'" style="display:none" class="space-y-5">
           <div class="flex items-center justify-between">

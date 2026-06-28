@@ -1,0 +1,84 @@
+---
+import { content } from "../../lib/content";
+const { labs } = content;
+
+// Métadonnées d'affichage par statut (badge + couleur néon).
+const STATUS: Record<string, { label: string; cls: string }> = {
+  done: { label: "✅ Terminé", cls: "text-neon-green border-neon-green/30 bg-neon-green/10" },
+  wip: { label: "🧪 En cours", cls: "text-yellow-300 border-yellow-300/30 bg-yellow-300/10" },
+  idea: { label: "💡 Idée", cls: "text-neon-purple border-neon-purple/30 bg-neon-purple/10" },
+};
+---
+
+<section
+  x-show="activeView === 'labs'"
+  x-transition:enter="transition ease-out duration-500"
+  x-transition:enter-start="opacity-0 translate-y-4"
+  x-transition:enter-end="opacity-100 translate-y-0"
+  class="max-w-6xl"
+  style="display: none"
+>
+  <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">// Labs</h2>
+  <p class="text-gray-500 mb-3 font-mono text-sm">runExperiments()</p>
+  <p class="text-gray-400 mb-10 max-w-2xl leading-relaxed">
+    Mon bac à sable : prototypes, tests d'API, mini-projets et idées en vrac.
+    Pas toujours fini, toujours pour apprendre. 🧪
+  </p>
+
+  {
+    labs.length === 0 && (
+      <p class="text-gray-500 font-mono text-sm">
+        Aucune expérimentation pour le moment. À venir…
+      </p>
+    )
+  }
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {
+      labs.map((lab, index) => {
+        const meta = STATUS[lab.status] ?? STATUS.idea;
+        const Tag = lab.url ? "a" : "div";
+        const linkProps = lab.url
+          ? { href: lab.url, target: "_blank", rel: "noopener noreferrer" }
+          : {};
+        return (
+          <Tag
+            {...linkProps}
+            class={`reveal group relative flex flex-col bg-lab-card border border-lab-border rounded-xl p-5 card-hover ${lab.url ? "cursor-pointer" : ""}`}
+            style={`transition-delay: ${index * 0.08}s`}
+          >
+            <div class="flex items-start justify-between mb-3">
+              <span class="text-3xl leading-none">{lab.emoji || "🔬"}</span>
+              <span
+                class={`px-2 py-0.5 rounded-md text-[10px] font-mono border ${meta.cls}`}
+              >
+                {meta.label}
+              </span>
+            </div>
+            <h3 class="text-white font-bold text-lg mb-2 group-hover:text-neon-cyan transition-colors">
+              {lab.title}
+            </h3>
+            <p class="text-gray-500 text-sm leading-relaxed mb-4 flex-1">
+              {lab.tagline}
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              {lab.tags.map((tag) => (
+                <span class="text-[10px] font-mono px-2 py-0.5 bg-lab-dark rounded text-gray-500 border border-lab-border">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            {lab.url && (
+              <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-mono text-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity">
+                Voir
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M7 17 17 7M7 7h10v10" />
+                </svg>
+              </span>
+            )}
+          </Tag>
+        );
+      })
+    }
+  </div>
+</section>

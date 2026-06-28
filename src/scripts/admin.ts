@@ -1,5 +1,5 @@
 import Alpine from "alpinejs";
-import type { Content, Project } from "../lib/content";
+import type { Content, Project, Lab } from "../lib/content";
 import { GRADIENT_PRESETS } from "../lib/content";
 import { assetUrl } from "../lib/url";
 
@@ -48,6 +48,7 @@ function adminApp() {
       { id: "about", label: "À propos" },
       { id: "skills", label: "Compétences" },
       { id: "projects", label: "Projets" },
+      { id: "labs", label: "Labs" },
       { id: "experience", label: "Parcours" },
       { id: "contact", label: "Contact" },
     ],
@@ -75,6 +76,7 @@ function adminApp() {
         }
       }
       this.normalizeProjects();
+      if (!Array.isArray(this.data.labs)) this.data.labs = [];
       this.loading = false;
     },
 
@@ -265,6 +267,21 @@ function adminApp() {
         description: "",
         tech: [],
       });
+    },
+
+    // ---- Labs ----
+    addLab() {
+      const lab: Lab = {
+        id: this.nextId(this.data.labs),
+        title: "Nouvelle expérimentation",
+        tagline: "",
+        status: "idea",
+        tags: [],
+        url: "",
+        emoji: "🔬",
+      };
+      this.data.labs.unshift(lab);
+      this.flash("Labo ajouté en tête de liste.", "info");
     },
 
     // ---- Stats ----
