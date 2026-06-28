@@ -17,7 +17,7 @@ interface Command {
   id: string;
   label: string;
   icon: string;
-  type: "view" | "cv" | "customize" | "theme" | "link" | "project" | "lab";
+  type: "view" | "cv" | "customize" | "theme" | "link" | "href" | "project" | "lab";
   arg?: string | number;
   keywords?: string;
 }
@@ -160,6 +160,7 @@ function portfolioApp() {
           keywords: n.id,
         });
       }
+      cmds.push({ id: "blog", label: "Lire le blog", icon: "📝", type: "href", arg: boot.base + "blog", keywords: "blog articles notes écrits" });
       cmds.push({ id: "cv", label: "Générer mon CV", icon: "📄", type: "cv", keywords: "cv pdf resume curriculum" });
       cmds.push({ id: "customize", label: "Personnaliser l'apparence", icon: "🎨", type: "customize", keywords: "theme couleur police palette personnaliser" });
       cmds.push({
@@ -214,6 +215,9 @@ function portfolioApp() {
           break;
         case "link":
           window.open(cmd.arg as string, "_blank", "noopener");
+          break;
+        case "href":
+          window.location.href = cmd.arg as string;
           break;
         case "project":
           this.openProject(cmd.arg as number);

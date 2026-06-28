@@ -1,0 +1,91 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { content } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+type Props = { post: CollectionEntry<"blog"> };
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const { site } = content;
+const base = import.meta.env.BASE_URL;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+const readingTime = Math.max(1, Math.round(post.body.split(/\s+/).length / 200));
+---
+
+<Base title={`${post.data.title} // ${site.name}`} description={post.data.description}>
+  <!-- Barre supérieure -->
+  <header
+    class="sticky top-0 z-30 bg-lab-dark/90 backdrop-blur-md border-b border-lab-border"
+  >
+    <div class="max-w-3xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+      <a href={base} class="flex items-center gap-2.5 group">
+        <div
+          class="w-9 h-9 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center text-lab-dark font-extrabold"
+        >
+          {site.initials}
+        </div>
+        <span class="font-mono text-sm text-white group-hover:text-neon-cyan transition-colors">
+          {site.handle}
+        </span>
+      </a>
+      <a
+        href={`${base}blog`}
+        class="text-sm font-mono text-gray-400 hover:text-neon-cyan transition-colors"
+      >
+        ← Blog
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-5 sm:px-8 py-12">
+    <article>
+      <!-- En-tête de l'article -->
+      <div class="mb-10 pb-8 border-b border-lab-border">
+        <div class="flex items-center gap-3 text-xs font-mono text-gray-500 mb-4">
+          <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
+          <span>·</span>
+          <span>{readingTime} min de lecture</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-4">
+          {post.data.title}
+        </h1>
+        <p class="text-lg text-gray-400 leading-relaxed mb-5">{post.data.description}</p>
+        <div class="flex flex-wrap gap-1.5">
+          {
+            post.data.tags.map((tag) => (
+              <span class="text-[10px] font-mono px-2 py-0.5 bg-lab-dark rounded text-neon-cyan border border-neon-cyan/20">
+                {tag}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Corps Markdown -->
+      <div class="prose-lab">
+        <Content />
+      </div>
+    </article>
+
+    <!-- Pied : retour -->
+    <div class="mt-12 pt-8 border-t border-lab-border">
+      <a
+        href={`${base}blog`}
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-lab-border text-gray-300 font-mono text-sm hover:border-neon-cyan hover:text-neon-cyan transition-all"
+      >
+        ← Tous les articles
+      </a>
+    </div>
+  </main>
+</Base>

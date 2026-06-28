@@ -442,3 +442,110 @@ body,
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================
+   Prose « lab » : mise en forme des articles de blog (Markdown)
+   ============================================================ */
+.prose-lab {
+  color: #cbd5e1;
+  line-height: 1.75;
+  font-size: 1.0625rem;
+}
+.prose-lab > * + * {
+  margin-top: 1.25em;
+}
+.prose-lab h2,
+.prose-lab h3 {
+  color: #fff;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+.prose-lab h2 {
+  font-size: 1.6rem;
+}
+.prose-lab h2::before {
+  content: "// ";
+  color: rgb(var(--neon-cyan));
+  font-family: var(--font-mono), monospace;
+}
+.prose-lab h3 {
+  font-size: 1.25rem;
+}
+.prose-lab a {
+  color: rgb(var(--neon-cyan));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.prose-lab a:hover {
+  color: #fff;
+}
+.prose-lab strong {
+  color: #fff;
+  font-weight: 700;
+}
+.prose-lab ul,
+.prose-lab ol {
+  padding-left: 1.4em;
+}
+.prose-lab ul {
+  list-style: none;
+}
+.prose-lab ul > li {
+  position: relative;
+}
+.prose-lab ul > li::before {
+  content: "▸";
+  position: absolute;
+  left: -1.3em;
+  color: rgb(var(--neon-cyan));
+}
+.prose-lab ol {
+  list-style: decimal;
+}
+.prose-lab li {
+  margin-top: 0.4em;
+}
+.prose-lab blockquote {
+  border-left: 3px solid rgb(var(--neon-purple));
+  padding: 0.25em 0 0.25em 1.1em;
+  color: #94a3b8;
+  font-style: italic;
+}
+/* Code inline */
+.prose-lab :not(pre) > code {
+  background: #0f131a;
+  border: 1px solid #1c2230;
+  border-radius: 6px;
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
+  font-family: var(--font-mono), monospace;
+  color: rgb(var(--neon-cyan));
+}
+/* Bloc de code */
+.prose-lab pre {
+  background: #05070b;
+  border: 1px solid #1c2230;
+  border-radius: 12px;
+  padding: 1.1em 1.25em;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.prose-lab pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #e2e8f0;
+}
+.prose-lab img {
+  border-radius: 12px;
+  border: 1px solid #1c2230;
+}
+.prose-lab hr {
+  border: 0;
+  border-top: 1px solid #1c2230;
+  margin: 2.5em 0;
+}

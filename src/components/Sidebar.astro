@@ -4,6 +4,7 @@ import { NAV_ITEMS } from "../lib/nav";
 
 const { site, socials } = content;
 const year = new Date().getFullYear();
+const base = import.meta.env.BASE_URL;
 ---
 
 <!-- ============ BARRE MOBILE (haut) ============ -->
@@ -115,6 +116,13 @@ const year = new Date().getFullYear();
         </a>
       ))
     }
+    <a
+      href={`${base}blog`}
+      class="py-3 px-4 rounded-lg transition-all flex items-center gap-3 text-gray-400 hover:text-white hover:bg-lab-card/50"
+    >
+      <span class="opacity-60">▹</span>
+      <span>Blog ↗</span>
+    </a>
 
     <div class="flex items-center justify-between pt-4 mt-3 border-t border-lab-border">
       <button
@@ -249,6 +257,13 @@ const year = new Date().getFullYear();
           </a>
         ))
       }
+      <a
+        href={`${base}blog`}
+        class="block py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center group text-gray-500 hover:text-white hover:bg-lab-card/50"
+      >
+        <span class="mr-3 opacity-60 group-hover:opacity-100">▹</span>
+        <span>Blog ↗</span>
+      </a>
     </nav>
 
     <!-- Recherche rapide (palette ⌘K) -->
