@@ -26,9 +26,27 @@ export const FONT_PAIRINGS: FontPairing[] = [
     mono: "'JetBrains Mono Variable', monospace",
   },
   {
+    id: "cyber",
+    label: "Cyber",
+    sans: "'Chakra Petch', system-ui, sans-serif",
+    mono: "'IBM Plex Mono', monospace",
+  },
+  {
     id: "classic",
     label: "Classique",
     sans: "'Inter Variable', system-ui, sans-serif",
+    mono: "'JetBrains Mono Variable', monospace",
+  },
+  {
+    id: "modern",
+    label: "Modern",
+    sans: "'Outfit Variable', system-ui, sans-serif",
+    mono: "'Fira Code Variable', monospace",
+  },
+  {
+    id: "soft",
+    label: "Soft",
+    sans: "'Manrope Variable', system-ui, sans-serif",
     mono: "'JetBrains Mono Variable', monospace",
   },
 ];
