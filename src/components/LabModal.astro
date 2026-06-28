@@ -18,7 +18,7 @@
   style="display: none"
 >
   <div
-    class="bg-lab-card border border-lab-border rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden"
+    class="bg-lab-card border border-lab-border rounded-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden"
     x-show="selectedLab"
     x-transition:enter="transition ease-out duration-300"
     x-transition:enter-start="opacity-0 scale-95"
@@ -57,14 +57,32 @@
 
         <!-- Contenu des onglets -->
         <div class="flex-1 min-h-0 overflow-hidden">
-          <!-- Résultat : iframe live (reste monté pour ne pas relancer la démo) -->
-          <div x-show="labTab === 'result'" class="h-[60vh] bg-lab-dark">
-            <iframe
-              :title="'Démo : ' + selectedLab.title"
-              sandbox="allow-scripts"
-              :srcdoc="labSrcdoc"
-              class="w-full h-full block"
-            ></iframe>
+          <!-- Résultat : iframe live + sélecteur de viewport -->
+          <div x-show="labTab === 'result'" class="h-[60vh] flex flex-col bg-lab-dark">
+            <div
+              class="flex items-center justify-center gap-1 py-1.5 border-b border-lab-border bg-lab-dark/60"
+            >
+              <template
+                x-for="vp in [['fit','↔ Ajusté'],['desktop','💻 Bureau'],['mobile','📱 Mobile']]"
+                :key="vp[0]"
+              >
+                <button
+                  @click="labViewport = vp[0]"
+                  class="px-2.5 py-1 text-[11px] font-mono rounded-md transition-colors"
+                  :class="labViewport === vp[0] ? 'text-neon-cyan bg-lab-card border border-lab-border' : 'text-gray-500 hover:text-gray-300'"
+                  x-text="vp[1]"
+                ></button>
+              </template>
+            </div>
+            <div class="flex-1 min-h-0 overflow-auto flex justify-center">
+              <iframe
+                :title="'Démo : ' + selectedLab.title"
+                sandbox="allow-scripts"
+                :srcdoc="labSrcdoc"
+                class="h-full block bg-lab-dark"
+                :style="labViewport === 'mobile' ? 'width:390px;flex:none' : labViewport === 'desktop' ? 'width:1280px;flex:none' : 'width:100%'"
+              ></iframe>
+            </div>
           </div>
 
           <!-- Code -->

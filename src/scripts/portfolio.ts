@@ -62,6 +62,7 @@ function portfolioApp() {
     labs: (boot.content?.labs ?? []) as Lab[],
     selectedLab: null as Lab | null,
     labTab: "result" as "result" | "html" | "css" | "js",
+    labViewport: "fit" as "fit" | "desktop" | "mobile",
     lightbox: null as string | null,
     lightboxImages: [] as string[],
     lightboxIndex: 0,
@@ -233,6 +234,7 @@ function portfolioApp() {
     openLab(id: number) {
       this.selectedLab = this.labs.find((l) => l.id === id) ?? null;
       this.labTab = "result";
+      this.labViewport = "fit";
     },
     closeLab() {
       this.selectedLab = null;

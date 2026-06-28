@@ -44,25 +44,29 @@ const STATUS: Record<string, { label: string; cls: string }> = {
             class="reveal group relative flex flex-col bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover"
             style={`transition-delay: ${index * 0.08}s`}
           >
-            {/* Aperçu live (iframe sandboxé) ou bloc emoji */}
+            {/* Aperçu live : la démo est rendue en « écran bureau » (1280px) puis
+                réduite, pour montrer la mise en page complète même en miniature. */}
             {demo ? (
-              <div class="relative h-44 bg-lab-dark border-b border-lab-border overflow-hidden">
+              <button
+                type="button"
+                @click={`openLab(${lab.id})`}
+                aria-label="Agrandir la démo"
+                class="lab-thumb relative block w-full bg-lab-dark border-b border-lab-border overflow-hidden group/p"
+              >
                 <iframe
                   title={`Démo : ${lab.title}`}
                   sandbox="allow-scripts"
                   loading="lazy"
+                  tabindex="-1"
                   srcdoc={buildLabSrcdoc(lab.demo)}
-                  class="w-full h-full block"
+                  class="lab-thumb-frame pointer-events-none"
                 />
-                <button
-                  type="button"
-                  @click={`openLab(${lab.id})`}
-                  aria-label="Agrandir la démo"
-                  class="absolute top-2 right-2 px-2 py-1 rounded-md bg-lab-dark/80 backdrop-blur-sm border border-lab-border text-[10px] font-mono text-neon-cyan hover:border-neon-cyan transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
-                >
-                  ⛶ Agrandir
-                </button>
-              </div>
+                <span class="absolute inset-0 flex items-center justify-center bg-lab-dark/0 group-hover/p:bg-lab-dark/50 transition-colors">
+                  <span class="px-2.5 py-1 rounded-md bg-lab-dark/80 border border-neon-cyan/40 text-[11px] font-mono text-neon-cyan opacity-0 group-hover/p:opacity-100 transition-opacity">
+                    ⛶ Agrandir
+                  </span>
+                </span>
+              </button>
             ) : (
               <div class="h-44 flex items-center justify-center bg-lab-dark border-b border-lab-border">
                 <span class="text-5xl">{lab.emoji || "🔬"}</span>
@@ -120,3 +124,35 @@ const STATUS: Record<string, { label: string; cls: string }> = {
     }
   </div>
 </section>
+
+<style>
+  /* Miniature « bureau » : l'iframe est rendue en 1280×720 puis réduite à la
+     largeur de la carte (facteur calculé en JS). La mise en page complète
+     reste visible quelle que soit la taille de la carte. */
+  .lab-thumb {
+    aspect-ratio: 16 / 9;
+  }
+  .lab-thumb-frame {
+    width: 1280px;
+    height: 720px;
+    border: 0;
+    display: block;
+    transform: scale(0.28);
+    transform-origin: top left;
+  }
+</style>
+
+<script>
+  // Ajuste l'échelle des miniatures à la largeur réelle de chaque carte.
+  function fitLabThumbs() {
+    document.querySelectorAll(".lab-thumb").forEach((thumb) => {
+      const frame = thumb.querySelector(".lab-thumb-frame") as HTMLElement | null;
+      const w = (thumb as HTMLElement).clientWidth;
+      if (frame && w > 0) frame.style.transform = `scale(${w / 1280})`;
+    });
+  }
+  const ro = new ResizeObserver(fitLabThumbs);
+  document.querySelectorAll(".lab-thumb").forEach((t) => ro.observe(t));
+  window.addEventListener("load", fitLabThumbs);
+  document.addEventListener("astro:after-swap", fitLabThumbs);
+</script>
