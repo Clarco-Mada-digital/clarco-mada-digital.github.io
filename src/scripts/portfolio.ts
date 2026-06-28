@@ -53,6 +53,8 @@ function portfolioApp() {
   return {
     activeView: "home",
     mobileMenuOpen: false,
+    // Filtre de la liste de projets par tag ("" = tous)
+    projectTag: "",
     // --- Palette de commandes (⌘K) ---
     paletteOpen: false,
     paletteQuery: "",

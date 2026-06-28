@@ -3,6 +3,8 @@ import { content } from "../../lib/content";
 import { assetUrl } from "../../lib/url";
 const { projects } = content;
 const base = import.meta.env.BASE_URL;
+// Tags uniques pour le filtre (triés).
+const allTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
 ---
 
 <section
@@ -14,7 +16,31 @@ const base = import.meta.env.BASE_URL;
   style="display: none"
 >
   <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">// Projets</h2>
-  <p class="text-gray-500 mb-10 font-mono text-sm">getProjects(limit: 'all')</p>
+  <p class="text-gray-500 mb-6 font-mono text-sm">getProjects(limit: 'all')</p>
+
+  {/* Filtre par tag */}
+  {
+    allTags.length > 1 && (
+      <div class="flex flex-wrap gap-2 mb-8">
+        <button
+          @click="projectTag = ''"
+          class="px-3 py-1 rounded-full text-xs font-mono border transition-colors"
+          :class="projectTag === '' ? 'border-neon-cyan text-neon-cyan bg-neon-cyan/10' : 'border-lab-border text-gray-500 hover:text-gray-300'"
+        >
+          Tous
+        </button>
+        {allTags.map((tag) => (
+          <button
+            @click={`projectTag = '${tag}'`}
+            class="px-3 py-1 rounded-full text-xs font-mono border transition-colors"
+            :class={`projectTag === '${tag}' ? 'border-neon-cyan text-neon-cyan bg-neon-cyan/10' : 'border-lab-border text-gray-500 hover:text-gray-300'`}
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+    )
+  }
 
   {
     projects.length === 0 && (
@@ -30,6 +56,7 @@ const base = import.meta.env.BASE_URL;
       projects.map((project, index) => (
         <div
           @click={`openProject(${project.id})`}
+          x-show={`projectTag === '' || ${JSON.stringify(project.tags)}.includes(projectTag)`}
           class="reveal bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover cursor-pointer group"
           style={`transition-delay: ${index * 0.1}s`}
         >

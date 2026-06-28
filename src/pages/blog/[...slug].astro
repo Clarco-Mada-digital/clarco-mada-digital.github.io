@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import { content } from "../../lib/content";
+import { assetUrl } from "../../lib/url";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -50,6 +51,17 @@ const readingTime = Math.max(1, Math.round(post.body.split(/\s+/).length / 200))
 
   <main class="max-w-3xl mx-auto px-5 sm:px-8 py-12">
     <article>
+      {/* Couverture */}
+      {
+        post.data.cover && (
+          <img
+            src={assetUrl(post.data.cover, base)}
+            alt={`Couverture : ${post.data.title}`}
+            class="w-full aspect-[1200/630] object-cover rounded-2xl border border-lab-border mb-8"
+          />
+        )
+      }
+
       <!-- En-tête de l'article -->
       <div class="mb-10 pb-8 border-b border-lab-border">
         <div class="flex items-center gap-3 text-xs font-mono text-gray-500 mb-4">

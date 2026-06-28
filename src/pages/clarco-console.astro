@@ -308,11 +308,17 @@ const addBtn =
         <!-- ====== PROJETS ====== -->
         <section x-show="activeTab === 'projects'" style="display:none" class="space-y-5">
           <div class="flex items-center justify-between">
-            <h2 class="text-white font-bold">Projets</h2>
+            <h2 class="text-white font-bold">Projets <span class="text-gray-600 text-sm font-mono" x-text="'(' + data.projects.length + ')'"></span></h2>
             <button class={addBtn} @click="addProject()">+ Nouveau projet</button>
           </div>
+          <input
+            type="search"
+            x-model="projectQuery"
+            placeholder="Rechercher un projet par nom…"
+            class={input + ' !max-w-sm'}
+          />
           <template x-for="(project, pi) in data.projects" :key="project.id">
-            <div class:list={[card, 'space-y-4']}>
+            <div class:list={[card, 'space-y-4']} x-show="matches(project.name, projectQuery)">
               <div class="flex items-start gap-3">
                 <div class="flex-1 grid sm:grid-cols-2 gap-4">
                   <div><label class={label}>Nom</label><input class={input} x-model="project.name" /></div>
@@ -447,14 +453,20 @@ const addBtn =
         <!-- ====== LABS ====== -->
         <section x-show="activeTab === 'labs'" style="display:none" class="space-y-5">
           <div class="flex items-center justify-between">
-            <h2 class="text-white font-bold">Labs</h2>
+            <h2 class="text-white font-bold">Labs <span class="text-gray-600 text-sm font-mono" x-text="'(' + data.labs.length + ')'"></span></h2>
             <button class={addBtn} @click="addLab()">+ Nouveau labo</button>
           </div>
           <p class="text-gray-500 text-xs font-mono">
             Prototypes, tests d'API, mini-projets et idées en vrac.
           </p>
+          <input
+            type="search"
+            x-model="labQuery"
+            placeholder="Rechercher un labo par titre…"
+            class={input + ' !max-w-sm'}
+          />
           <template x-for="(lab, li) in data.labs" :key="lab.id">
-            <div class:list={[card, 'space-y-4']}>
+            <div class:list={[card, 'space-y-4']} x-show="matches(lab.title, labQuery)">
               <div class="flex items-start gap-3">
                 <div class="flex-1 grid sm:grid-cols-4 gap-4">
                   <div class="sm:col-span-1"><label class={label}>Émoji</label><input class={input} x-model="lab.emoji" placeholder="🔬" /></div>

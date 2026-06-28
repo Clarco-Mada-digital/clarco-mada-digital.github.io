@@ -39,6 +39,15 @@ function adminApp() {
     status: "",
     statusType: "info" as "info" | "success" | "error",
     activeTab: "site",
+    // Filtres de recherche (listes nombreuses)
+    projectQuery: "",
+    labQuery: "",
+    /** Un texte contient-il la recherche (insensible casse/accents) ? */
+    matches(haystack: string, query: string): boolean {
+      const q = query.trim().toLowerCase();
+      if (!q) return true;
+      return (haystack || "").toLowerCase().includes(q);
+    },
     data: null as unknown as Content,
     gradients: GRADIENT_PRESETS as readonly string[],
 

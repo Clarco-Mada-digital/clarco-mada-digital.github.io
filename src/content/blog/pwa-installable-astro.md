@@ -3,6 +3,7 @@ title: "Rendre un site Astro installable et hors-ligne"
 description: "Transformer un site statique en PWA : manifest, service worker et stratégie de cache, le tout sans framework lourd."
 date: 2026-06-26
 tags: ["PWA", "Astro", "Service Worker"]
+cover: /blog/cover-pwa.png
 ---
 
 Une **PWA** (Progressive Web App) permet d'installer un site comme une vraie application et de le consulter même sans connexion. Voici comment je l'ai ajouté à ce portfolio, sans dépendance externe.

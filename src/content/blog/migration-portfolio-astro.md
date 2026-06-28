@@ -3,6 +3,7 @@ title: "Pourquoi j'ai migré mon portfolio vers Astro"
 description: "D'un fichier HTML unique à une architecture Astro + Alpine + Tailwind : ce que j'ai gagné en performance, en maintenabilité et en plaisir de dev."
 date: 2026-06-20
 tags: ["Astro", "Performance", "Web"]
+cover: /blog/cover-astro.png
 ---
 
 Mon portfolio a longtemps vécu dans un **seul fichier HTML** de plusieurs milliers de lignes. Ça marchait… jusqu'au jour où ajouter une simple section devenait un casse-tête. J'ai donc tout repensé autour d'**Astro**.
@@ -33,5 +34,19 @@ const stack = {
   hosting: "GitHub Pages",
 };
 ```
+
+## Avant / après
+
+| Critère | Fichier unique | Astro |
+| --- | --- | --- |
+| JS envoyé | tout, toujours | le strict nécessaire |
+| Maintenance | pénible | par composants |
+| Temps de build | aucun | quelques secondes |
+
+Côté perf, on cherche à minimiser le temps de rendu perçu. Si $n$ est le nombre de composants interactifs, le coût JS devient proportionnel à $n$ réellement utilisés, et non au site entier :
+
+$$
+\text{coût}_{JS} = \sum_{i=1}^{n} \text{island}_i
+$$
 
 Résultat : un site **plus rapide**, **plus simple à faire évoluer**, et surtout un code dont je suis fier. La prochaine étape ? Continuer à expérimenter — c'est tout l'esprit de la section *Labs*.

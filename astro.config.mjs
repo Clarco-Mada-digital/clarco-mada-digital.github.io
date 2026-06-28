@@ -1,6 +1,8 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -135,6 +137,12 @@ export default defineConfig({
   site: SITE,
   base: process.env.BASE_PATH || "/",
   trailingSlash: "ignore",
+  markdown: {
+    // Coloration syntaxique (Shiki) + support des maths (KaTeX).
+    shikiConfig: { theme: "night-owl", wrap: false },
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeKatex],
+  },
   integrations: [
     tailwind({ applyBaseStyles: false }),
     // On exclut la console d'admin du sitemap (page privée).

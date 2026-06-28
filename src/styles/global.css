@@ -524,9 +524,8 @@ body,
   font-family: var(--font-mono), monospace;
   color: rgb(var(--neon-cyan));
 }
-/* Bloc de code */
+/* Bloc de code (Shiki applique les couleurs de tokens en inline) */
 .prose-lab pre {
-  background: #05070b;
   border: 1px solid #1c2230;
   border-radius: 12px;
   padding: 1.1em 1.25em;
@@ -534,11 +533,38 @@ body,
   font-size: 0.875rem;
   line-height: 1.6;
 }
+/* On force le fond sur celui du thème (les tokens restent colorés). */
+.prose-lab pre.astro-code {
+  background-color: #05070b !important;
+}
 .prose-lab pre code {
   background: none;
   border: 0;
   padding: 0;
-  color: #e2e8f0;
+  font-family: var(--font-mono), monospace;
+}
+/* Tableaux (GFM) */
+.prose-lab table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.prose-lab th,
+.prose-lab td {
+  border: 1px solid #1c2230;
+  padding: 0.5em 0.8em;
+  text-align: left;
+}
+.prose-lab th {
+  background: #0f131a;
+  color: #fff;
+  font-weight: 700;
+}
+/* Maths KaTeX : défilement horizontal des formules longues */
+.prose-lab .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5em 0;
 }
 .prose-lab img {
   border-radius: 12px;
