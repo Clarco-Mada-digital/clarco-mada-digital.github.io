@@ -32,6 +32,12 @@ const site = Astro.site ?? new URL(Astro.url.origin);
 const canonical = new URL(Astro.url.pathname, site);
 const ogImage = new URL(`${base}og-image.png`, site).href;
 
+// Cloudflare Web Analytics : token public (env prioritaire, sinon admin).
+// Chargé seulement en build de production pour ne pas polluer les stats en dev.
+const cfToken =
+  process.env.CF_ANALYTICS_TOKEN || content.analytics?.cloudflareToken || "";
+const enableAnalytics = import.meta.env.PROD && Boolean(cfToken);
+
 // Données structurées (SEO) : décrit la personne pour les moteurs de recherche.
 const personLd = {
   "@context": "https://schema.org",
@@ -161,5 +167,17 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
     <script>
       import "../scripts/effects";
     </script>
+
+    {/* Cloudflare Web Analytics (sans cookies, RGPD-friendly) */}
+    {
+      enableAnalytics && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token": "${cfToken}"}`}
+        />
+      )
+    }
   </body>
 </html>

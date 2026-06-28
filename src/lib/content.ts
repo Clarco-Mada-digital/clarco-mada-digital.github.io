@@ -113,6 +113,11 @@ export interface Content {
     linkedin: string;
     email: string;
   };
+  /** Analytics (optionnel). */
+  analytics?: {
+    /** Token Cloudflare Web Analytics (beacon JS). Public par conception. */
+    cloudflareToken?: string;
+  };
 }
 
 export const content = data as Content;

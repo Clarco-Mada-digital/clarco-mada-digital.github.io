@@ -593,6 +593,17 @@ const addBtn =
             <div><label class={label}>LinkedIn</label><input class={input} x-model="data.socials.linkedin" /></div>
             <div><label class={label}>Email (icône)</label><input class={input} x-model="data.socials.email" /></div>
           </div>
+
+          <h3 class="text-gray-400 text-sm font-mono pt-2">Statistiques de visite</h3>
+          <div class="bg-lab-dark border border-lab-border rounded-lg p-4">
+            <label class={label}>Token Cloudflare Web Analytics (gratuit, sans cookies)</label>
+            <input class={input} x-model="data.analytics.cloudflareToken" placeholder="Ex: 1a2b3c4d5e6f..." />
+            <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
+              Dashboard Cloudflare → <span class="text-neon-cyan">Analytics &amp; Logs → Web Analytics → Add a site</span>,
+              entre l'URL de ce site, puis colle ici le token fourni.
+              Les stats ne se chargent qu'<span class="text-neon-green">en production</span> (pas en local).
+            </p>
+          </div>
         </section>
       </div>
     </div>

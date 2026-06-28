@@ -81,6 +81,7 @@ function adminApp() {
       for (const l of this.data.labs) {
         if (!l.demo) l.demo = { html: "", css: "", js: "" };
       }
+      if (!this.data.analytics) this.data.analytics = { cloudflareToken: "" };
       this.loading = false;
     },
 
