@@ -120,6 +120,14 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
 
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <meta name="theme-color" content="#070a0f" />
+
+    <!-- PWA : installable + hors-ligne -->
+    <link rel="manifest" href={`${base}manifest.webmanifest`} />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Bryan Clark" />
   </head>
 
   <body
@@ -179,5 +187,19 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
         />
       )
     }
+
+    {/* Enregistrement du service worker (PWA) — production uniquement */}
+    <script
+      is:inline
+      define:vars={{ swPath: `${base}sw.js`, swScope: base, enableSw: import.meta.env.PROD }}
+    >
+      if (enableSw && "serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register(swPath, { scope: swScope })
+            .catch(function () {});
+        });
+      }
+    </script>
   </body>
 </html>
