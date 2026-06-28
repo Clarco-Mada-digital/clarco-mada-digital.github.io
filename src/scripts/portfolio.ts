@@ -9,7 +9,8 @@ import {
   DEFAULT_THEME,
   STORAGE,
 } from "../lib/customize";
-import type { Project, Content } from "../lib/content";
+import type { Project, Content, Lab } from "../lib/content";
+import { buildLabSrcdoc } from "../lib/labs";
 
 interface PortfolioBootstrap {
   projects: Project[];
@@ -43,6 +44,10 @@ function portfolioApp() {
     activeView: "home",
     mobileMenuOpen: false,
     selectedProject: null as Project | null,
+    // --- Modal Labs (démo agrandie + onglets code) ---
+    labs: (boot.content?.labs ?? []) as Lab[],
+    selectedLab: null as Lab | null,
+    labTab: "result" as "result" | "html" | "css" | "js",
     lightbox: null as string | null,
     lightboxImages: [] as string[],
     lightboxIndex: 0,
@@ -117,6 +122,19 @@ function portfolioApp() {
 
     openProject(id: number) {
       this.selectedProject = this.projects.find((p) => p.id === id) ?? null;
+    },
+
+    // --- Labs ---
+    openLab(id: number) {
+      this.selectedLab = this.labs.find((l) => l.id === id) ?? null;
+      this.labTab = "result";
+    },
+    closeLab() {
+      this.selectedLab = null;
+    },
+    /** Document complet de la démo, pour le srcdoc de l'iframe agrandi. */
+    get labSrcdoc(): string {
+      return this.selectedLab ? buildLabSrcdoc(this.selectedLab.demo) : "";
     },
 
     /** Résout une image (URL externe ou chemin local + base path). */

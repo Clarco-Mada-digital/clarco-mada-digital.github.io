@@ -460,39 +460,54 @@
     {
       "id": 1,
       "title": "Générateur de palettes néon",
-      "tagline": "J'ai testé la génération de dégradés CSS aléatoires en HSL — appris à contraster automatiquement le texte.",
+      "tagline": "J'ai testé la génération de dégradés HSL aléatoires harmonieux — clique pour générer ta palette.",
       "status": "done",
       "tags": [
         "CSS",
-        "TypeScript"
+        "JavaScript"
       ],
       "url": "",
-      "emoji": "🎨"
+      "emoji": "🎨",
+      "demo": {
+        "html": "<div class=\"sw\" id=\"sw\"></div>\n<button id=\"gen\">🎲 Générer</button>\n<code id=\"code\"></code>",
+        "css": "body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;height:100vh;padding:20px}\n.sw{width:100%;max-width:320px;height:120px;border-radius:16px;border:1px solid rgba(255,255,255,.12);transition:background .3s}\nbutton{background:#0b0f17;color:#22d3ee;border:1px solid #22d3ee;padding:9px 18px;border-radius:10px;font:600 14px system-ui;cursor:pointer;transition:.2s}\nbutton:hover{background:#22d3ee;color:#04212a}\ncode{font:12px monospace;color:#64748b}",
+        "js": "const sw=document.getElementById('sw'),code=document.getElementById('code');\nconst r=()=>Math.floor(Math.random()*360);\nfunction gen(){const a=r(),b=(a+90+Math.floor(Math.random()*120))%360;const g=`linear-gradient(135deg,hsl(${a} 90% 60%),hsl(${b} 90% 60%))`;sw.style.background=g;code.textContent=g;}\ndocument.getElementById('gen').onclick=gen;gen();"
+      }
     },
     {
       "id": 2,
-      "title": "Mini-jeu Canvas",
-      "tagline": "Petit jeu d'arcade en <canvas> pour explorer la boucle de rendu et la détection de collisions.",
-      "status": "wip",
+      "title": "Mini-jeu Canvas — Réflexe",
+      "tagline": "Petit jeu en <canvas> pour explorer la boucle de rendu et la détection de clic. Attrape les cibles !",
+      "status": "done",
       "tags": [
         "Canvas",
         "JavaScript",
         "Jeu"
       ],
       "url": "",
-      "emoji": "🕹️"
+      "emoji": "🕹️",
+      "demo": {
+        "html": "<canvas id=\"c\"></canvas>\n<div id=\"hud\">Score : 0</div>",
+        "css": "html,body{height:100%;overflow:hidden}\ncanvas{width:100%;height:100%;display:block;cursor:crosshair}\n#hud{position:fixed;top:10px;left:12px;font:700 15px monospace;color:#22d3ee}",
+        "js": "const c=document.getElementById('c'),x=c.getContext('2d'),hud=document.getElementById('hud');\nlet W,H,t,score=0;\nfunction size(){W=c.width=c.clientWidth;H=c.height=c.clientHeight;}\nfunction spawn(){t={x:30+Math.random()*(W-60),y:30+Math.random()*(H-60),r:20};}\nfunction loop(){x.clearRect(0,0,W,H);const g=x.createRadialGradient(t.x,t.y,2,t.x,t.y,t.r);g.addColorStop(0,'#a855f7');g.addColorStop(1,'#22d3ee');x.fillStyle=g;x.beginPath();x.arc(t.x,t.y,t.r,0,7);x.fill();requestAnimationFrame(loop);}\nc.onclick=e=>{const b=c.getBoundingClientRect();if(Math.hypot(e.clientX-b.left-t.x,e.clientY-b.top-t.y)<t.r+8){score++;hud.textContent='Score : '+score;spawn();}};\naddEventListener('resize',()=>{size();spawn();});size();spawn();loop();"
+      }
     },
     {
       "id": 3,
-      "title": "Commande vocale (Web Speech API)",
-      "tagline": "Prototype de navigation à la voix dans le navigateur — appris les limites de reconnaissance hors-ligne.",
-      "status": "idea",
+      "title": "Pluie Matrix",
+      "tagline": "Effet « digital rain » à la Matrix en canvas — un classique pour jouer avec le rendu et la traînée.",
+      "status": "done",
       "tags": [
-        "Web API",
-        "Accessibilité"
+        "Canvas",
+        "Animation"
       ],
       "url": "",
-      "emoji": "🎙️"
+      "emoji": "🟩",
+      "demo": {
+        "html": "<canvas id=\"m\"></canvas>",
+        "css": "html,body{height:100%;margin:0;overflow:hidden;background:#070a0f}\ncanvas{display:block}",
+        "js": "const c=document.getElementById('m'),x=c.getContext('2d');\nlet W,H,cols,y;\nfunction init(){W=c.width=innerWidth;H=c.height=innerHeight;cols=Math.floor(W/14);y=Array(cols).fill(0);}\nfunction draw(){x.fillStyle='rgba(7,10,15,.08)';x.fillRect(0,0,W,H);x.fillStyle='#22e39a';x.font='14px monospace';for(let i=0;i<cols;i++){const ch=String.fromCharCode(0x30a0+Math.random()*96);x.fillText(ch,i*14,y[i]*14);if(y[i]*14>H&&Math.random()>.975)y[i]=0;y[i]++;}}\ninit();addEventListener('resize',init);setInterval(draw,50);"
+      }
     }
   ]
 }

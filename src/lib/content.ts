@@ -52,6 +52,12 @@ export interface Lab {
   url?: string;
   /** Émoji d'illustration (optionnel). */
   emoji?: string;
+  /** Démo live exécutée dans un iframe sandboxé (façon CodePen). */
+  demo?: {
+    html?: string;
+    css?: string;
+    js?: string;
+  };
 }
 
 export interface Content {

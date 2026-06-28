@@ -1,5 +1,6 @@
 ---
 import { content } from "../../lib/content";
+import { buildLabSrcdoc, hasDemo } from "../../lib/labs";
 const { labs } = content;
 
 // Métadonnées d'affichage par statut (badge + couleur néon).
@@ -22,7 +23,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
   <p class="text-gray-500 mb-3 font-mono text-sm">runExperiments()</p>
   <p class="text-gray-400 mb-10 max-w-2xl leading-relaxed">
     Mon bac à sable : prototypes, tests d'API, mini-projets et idées en vrac.
-    Pas toujours fini, toujours pour apprendre. 🧪
+    Chaque démo tourne <span class="text-neon-cyan">en vrai</span>, directement ci-dessous. 🧪
   </p>
 
   {
@@ -37,46 +38,83 @@ const STATUS: Record<string, { label: string; cls: string }> = {
     {
       labs.map((lab, index) => {
         const meta = STATUS[lab.status] ?? STATUS.idea;
-        const Tag = lab.url ? "a" : "div";
-        const linkProps = lab.url
-          ? { href: lab.url, target: "_blank", rel: "noopener noreferrer" }
-          : {};
+        const demo = hasDemo(lab);
         return (
-          <Tag
-            {...linkProps}
-            class={`reveal group relative flex flex-col bg-lab-card border border-lab-border rounded-xl p-5 card-hover ${lab.url ? "cursor-pointer" : ""}`}
+          <div
+            class="reveal group relative flex flex-col bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover"
             style={`transition-delay: ${index * 0.08}s`}
           >
-            <div class="flex items-start justify-between mb-3">
-              <span class="text-3xl leading-none">{lab.emoji || "🔬"}</span>
-              <span
-                class={`px-2 py-0.5 rounded-md text-[10px] font-mono border ${meta.cls}`}
-              >
-                {meta.label}
-              </span>
-            </div>
-            <h3 class="text-white font-bold text-lg mb-2 group-hover:text-neon-cyan transition-colors">
-              {lab.title}
-            </h3>
-            <p class="text-gray-500 text-sm leading-relaxed mb-4 flex-1">
-              {lab.tagline}
-            </p>
-            <div class="flex flex-wrap gap-1.5">
-              {lab.tags.map((tag) => (
-                <span class="text-[10px] font-mono px-2 py-0.5 bg-lab-dark rounded text-gray-500 border border-lab-border">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            {lab.url && (
-              <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-mono text-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity">
-                Voir
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M7 17 17 7M7 7h10v10" />
-                </svg>
-              </span>
+            {/* Aperçu live (iframe sandboxé) ou bloc emoji */}
+            {demo ? (
+              <div class="relative h-44 bg-lab-dark border-b border-lab-border overflow-hidden">
+                <iframe
+                  title={`Démo : ${lab.title}`}
+                  sandbox="allow-scripts"
+                  loading="lazy"
+                  srcdoc={buildLabSrcdoc(lab.demo)}
+                  class="w-full h-full block"
+                />
+                <button
+                  type="button"
+                  @click={`openLab(${lab.id})`}
+                  aria-label="Agrandir la démo"
+                  class="absolute top-2 right-2 px-2 py-1 rounded-md bg-lab-dark/80 backdrop-blur-sm border border-lab-border text-[10px] font-mono text-neon-cyan hover:border-neon-cyan transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                >
+                  ⛶ Agrandir
+                </button>
+              </div>
+            ) : (
+              <div class="h-44 flex items-center justify-center bg-lab-dark border-b border-lab-border">
+                <span class="text-5xl">{lab.emoji || "🔬"}</span>
+              </div>
             )}
-          </Tag>
+
+            {/* Contenu */}
+            <div class="flex flex-col flex-1 p-5">
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <h3 class="text-white font-bold text-lg leading-tight">
+                  <span class="mr-1">{lab.emoji}</span>
+                  {lab.title}
+                </h3>
+                <span
+                  class={`shrink-0 px-2 py-0.5 rounded-md text-[10px] font-mono border ${meta.cls}`}
+                >
+                  {meta.label}
+                </span>
+              </div>
+              <p class="text-gray-500 text-sm leading-relaxed mb-4 flex-1">
+                {lab.tagline}
+              </p>
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                {lab.tags.map((tag) => (
+                  <span class="text-[10px] font-mono px-2 py-0.5 bg-lab-dark rounded text-gray-500 border border-lab-border">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div class="flex gap-2 mt-auto">
+                {demo && (
+                  <button
+                    type="button"
+                    @click={`openLab(${lab.id})`}
+                    class="flex-1 py-2 rounded-lg bg-lab-dark border border-lab-border text-xs font-mono text-neon-cyan hover:border-neon-cyan transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    ▶ Voir le code
+                  </button>
+                )}
+                {lab.url && (
+                  <a
+                    href={lab.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex-1 py-2 rounded-lg bg-lab-dark border border-lab-border text-xs font-mono text-gray-400 hover:text-neon-cyan hover:border-neon-cyan transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    Lien ↗
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
         );
       })
     }

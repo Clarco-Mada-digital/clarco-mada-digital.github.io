@@ -2,6 +2,7 @@ import Alpine from "alpinejs";
 import type { Content, Project, Lab } from "../lib/content";
 import { GRADIENT_PRESETS } from "../lib/content";
 import { assetUrl } from "../lib/url";
+import { buildLabSrcdoc } from "../lib/labs";
 
 declare global {
   interface Window {
@@ -77,6 +78,9 @@ function adminApp() {
       }
       this.normalizeProjects();
       if (!Array.isArray(this.data.labs)) this.data.labs = [];
+      for (const l of this.data.labs) {
+        if (!l.demo) l.demo = { html: "", css: "", js: "" };
+      }
       this.loading = false;
     },
 
@@ -279,9 +283,15 @@ function adminApp() {
         tags: [],
         url: "",
         emoji: "🔬",
+        demo: { html: "", css: "", js: "" },
       };
       this.data.labs.unshift(lab);
       this.flash("Labo ajouté en tête de liste.", "info");
+    },
+
+    /** Document iframe pour l'aperçu live d'un labo dans l'admin. */
+    labPreview(lab: Lab): string {
+      return buildLabSrcdoc(lab.demo);
     },
 
     // ---- Stats ----

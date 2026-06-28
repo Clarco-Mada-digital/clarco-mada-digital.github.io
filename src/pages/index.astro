@@ -9,6 +9,7 @@ import Labs from "../components/sections/Labs.astro";
 import Experience from "../components/sections/Experience.astro";
 import Contact from "../components/sections/Contact.astro";
 import ProjectModal from "../components/ProjectModal.astro";
+import LabModal from "../components/LabModal.astro";
 import CvModal from "../components/CvModal.astro";
 import CustomizePanel from "../components/CustomizePanel.astro";
 import Toasts from "../components/Toasts.astro";
@@ -36,7 +37,7 @@ const bootstrap = {
 <Base>
   <div
     x-data="portfolioApp"
-    x-effect="document.body.style.overflow = (selectedProject || mobileMenuOpen) ? 'hidden' : ''"
+    x-effect="document.body.style.overflow = (selectedProject || selectedLab || mobileMenuOpen) ? 'hidden' : ''"
     class="min-h-screen flex flex-col md:flex-row"
   >
     <Sidebar />
@@ -74,6 +75,7 @@ const bootstrap = {
     </main>
 
     <ProjectModal />
+    <LabModal />
     <CvModal />
     <CustomizePanel />
     <Toasts />
