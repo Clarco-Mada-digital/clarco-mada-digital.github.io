@@ -57,6 +57,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
                   title={`Démo : ${lab.title}`}
                   sandbox="allow-scripts"
                   loading="lazy"
+                decoding="async"
                   tabindex="-1"
                   srcdoc={buildLabSrcdoc(lab.demo)}
                   class="lab-thumb-frame pointer-events-none"

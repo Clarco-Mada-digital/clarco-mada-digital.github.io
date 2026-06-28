@@ -3,7 +3,7 @@ title: "Pourquoi j'ai migré mon portfolio vers Astro"
 description: "D'un fichier HTML unique à une architecture Astro + Alpine + Tailwind : ce que j'ai gagné en performance, en maintenabilité et en plaisir de dev."
 date: 2026-06-20
 tags: ["Astro", "Performance", "Web"]
-cover: /blog/cover-astro.png
+cover: /blog/cover-astro.webp
 ---
 
 Mon portfolio a longtemps vécu dans un **seul fichier HTML** de plusieurs milliers de lignes. Ça marchait… jusqu'au jour où ajouter une simple section devenait un casse-tête. J'ai donc tout repensé autour d'**Astro**.

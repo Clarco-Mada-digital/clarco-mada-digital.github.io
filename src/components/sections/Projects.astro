@@ -67,6 +67,7 @@ const allTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
                 src={assetUrl(project.cover, base)}
                 alt={`Couverture du projet ${project.name}`}
                 loading="lazy"
+                decoding="async"
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             )}
