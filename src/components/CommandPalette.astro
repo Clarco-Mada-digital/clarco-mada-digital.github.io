@@ -1,0 +1,86 @@
+---
+// Palette de commandes (⌘K / Ctrl+K). Pilotée par Alpine (paletteOpen,
+// paletteQuery, paletteResults, runPaletteAt, movePalette).
+---
+
+<div
+  x-show="paletteOpen"
+  x-cloak
+  x-transition:enter="transition ease-out duration-200"
+  x-transition:enter-start="opacity-0"
+  x-transition:enter-end="opacity-100"
+  x-transition:leave="transition ease-in duration-150"
+  x-transition:leave-start="opacity-100"
+  x-transition:leave-end="opacity-0"
+  @click.self="closePalette()"
+  @keydown.escape.window="closePalette()"
+  class="fixed inset-0 z-[70] flex items-start justify-center p-4 pt-[12vh] bg-lab-dark/80 backdrop-blur-sm"
+  style="display: none"
+>
+  <div
+    x-show="paletteOpen"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+    x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+    x-effect="paletteOpen && $nextTick(() => $refs.search && $refs.search.focus())"
+    class="w-full max-w-xl bg-lab-card border border-lab-border rounded-2xl shadow-2xl shadow-neon-cyan/10 overflow-hidden"
+  >
+    <!-- Champ de recherche -->
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-lab-border">
+      <span class="text-neon-cyan font-mono text-sm shrink-0">›</span>
+      <input
+        x-ref="search"
+        x-model="paletteQuery"
+        @input="paletteIndex = 0"
+        @keydown.down.prevent="movePalette(1)"
+        @keydown.up.prevent="movePalette(-1)"
+        @keydown.enter.prevent="runPaletteAt(paletteIndex)"
+        type="text"
+        placeholder="Rechercher une page, un projet, une action…"
+        class="flex-1 bg-transparent text-white placeholder-gray-600 text-sm focus:outline-none"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <kbd class="hidden sm:block text-[10px] font-mono text-gray-600 border border-lab-border rounded px-1.5 py-0.5">esc</kbd>
+    </div>
+
+    <!-- Résultats -->
+    <div class="max-h-[50vh] overflow-y-auto py-2">
+      <template x-if="paletteResults.length === 0">
+        <p class="px-4 py-6 text-center text-gray-600 text-sm font-mono">
+          Aucun résultat pour « <span x-text="paletteQuery"></span> »
+        </p>
+      </template>
+
+      <template x-for="(cmd, i) in paletteResults" :key="cmd.id">
+        <button
+          type="button"
+          @click="runPaletteAt(i)"
+          @mouseenter="paletteIndex = i"
+          class="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors"
+          :class="paletteIndex === i ? 'bg-lab-dark text-white' : 'text-gray-400'"
+        >
+          <span
+            class="w-7 h-7 shrink-0 rounded-md bg-lab-dark border border-lab-border flex items-center justify-center text-sm"
+            :class="paletteIndex === i ? 'border-neon-cyan/40' : ''"
+            x-text="cmd.icon"
+          ></span>
+          <span class="flex-1 text-sm truncate" x-text="cmd.label"></span>
+          <span
+            x-show="paletteIndex === i"
+            class="text-[10px] font-mono text-neon-cyan shrink-0"
+          >↵</span>
+        </button>
+      </template>
+    </div>
+
+    <!-- Pied : aides clavier -->
+    <div
+      class="flex items-center gap-4 px-4 py-2 border-t border-lab-border text-[10px] font-mono text-gray-600"
+    >
+      <span><span class="text-gray-400">↑↓</span> naviguer</span>
+      <span><span class="text-gray-400">↵</span> ouvrir</span>
+      <span><span class="text-gray-400">esc</span> fermer</span>
+    </div>
+  </div>
+</div>

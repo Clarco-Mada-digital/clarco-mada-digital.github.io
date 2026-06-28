@@ -11,6 +11,16 @@ import {
 } from "../lib/customize";
 import type { Project, Content, Lab } from "../lib/content";
 import { buildLabSrcdoc } from "../lib/labs";
+import { NAV_ITEMS } from "../lib/nav";
+
+interface Command {
+  id: string;
+  label: string;
+  icon: string;
+  type: "view" | "cv" | "customize" | "theme" | "link" | "project" | "lab";
+  arg?: string | number;
+  keywords?: string;
+}
 
 interface PortfolioBootstrap {
   projects: Project[];
@@ -43,6 +53,10 @@ function portfolioApp() {
   return {
     activeView: "home",
     mobileMenuOpen: false,
+    // --- Palette de commandes (⌘K) ---
+    paletteOpen: false,
+    paletteQuery: "",
+    paletteIndex: 0,
     selectedProject: null as Project | null,
     // --- Modal Labs (démo agrandie + onglets code) ---
     labs: (boot.content?.labs ?? []) as Lab[],
@@ -122,6 +136,93 @@ function portfolioApp() {
 
     openProject(id: number) {
       this.selectedProject = this.projects.find((p) => p.id === id) ?? null;
+    },
+
+    // --- Palette de commandes (⌘K) ---
+    togglePalette() {
+      this.paletteOpen = !this.paletteOpen;
+      this.paletteQuery = "";
+      this.paletteIndex = 0;
+    },
+    closePalette() {
+      this.paletteOpen = false;
+    },
+    /** Toutes les commandes disponibles (vues, actions, projets, labos, liens). */
+    get paletteCommands(): Command[] {
+      const cmds: Command[] = [];
+      for (const n of NAV_ITEMS) {
+        cmds.push({
+          id: "view-" + n.id,
+          label: "Aller : " + n.label,
+          icon: "→",
+          type: "view",
+          arg: n.id,
+          keywords: n.id,
+        });
+      }
+      cmds.push({ id: "cv", label: "Générer mon CV", icon: "📄", type: "cv", keywords: "cv pdf resume curriculum" });
+      cmds.push({ id: "customize", label: "Personnaliser l'apparence", icon: "🎨", type: "customize", keywords: "theme couleur police palette personnaliser" });
+      cmds.push({
+        id: "theme",
+        label: this.isLight ? "Passer en mode sombre" : "Passer en mode clair",
+        icon: "🌓",
+        type: "theme",
+        keywords: "theme dark light sombre clair mode",
+      });
+      const s = boot.content?.socials;
+      if (s?.github) cmds.push({ id: "gh", label: "Ouvrir GitHub", icon: "↗", type: "link", arg: s.github, keywords: "github code repo" });
+      if (s?.linkedin) cmds.push({ id: "li", label: "Ouvrir LinkedIn", icon: "↗", type: "link", arg: s.linkedin, keywords: "linkedin reseau" });
+      if (s?.email) cmds.push({ id: "mail", label: "M'écrire un email", icon: "✉", type: "link", arg: "mailto:" + s.email, keywords: "email mail contact écrire" });
+      for (const p of this.projects) {
+        cmds.push({ id: "p-" + p.id, label: "Projet : " + p.name, icon: "◆", type: "project", arg: p.id, keywords: ((p.tags ?? []).join(" ") + " projet").toLowerCase() });
+      }
+      for (const l of this.labs) {
+        cmds.push({ id: "l-" + l.id, label: "Labo : " + l.title, icon: "🧪", type: "lab", arg: l.id, keywords: ((l.tags ?? []).join(" ") + " labo").toLowerCase() });
+      }
+      return cmds;
+    },
+    /** Commandes filtrées par la recherche. */
+    get paletteResults(): Command[] {
+      const q = this.paletteQuery.trim().toLowerCase();
+      const all = this.paletteCommands;
+      if (!q) return all;
+      return all.filter((c) => (c.label + " " + (c.keywords ?? "")).toLowerCase().includes(q));
+    },
+    movePalette(delta: number) {
+      const n = this.paletteResults.length;
+      if (!n) return;
+      this.paletteIndex = (this.paletteIndex + delta + n) % n;
+    },
+    runPaletteAt(i: number) {
+      const cmd = this.paletteResults[i];
+      if (cmd) this.runCommand(cmd);
+    },
+    runCommand(cmd: Command) {
+      this.closePalette();
+      switch (cmd.type) {
+        case "view":
+          this.changeView(cmd.arg as string);
+          break;
+        case "cv":
+          this.cvOpen = true;
+          break;
+        case "customize":
+          this.customizeOpen = true;
+          break;
+        case "theme":
+          this.toggleTheme();
+          break;
+        case "link":
+          window.open(cmd.arg as string, "_blank", "noopener");
+          break;
+        case "project":
+          this.openProject(cmd.arg as number);
+          break;
+        case "lab":
+          this.changeView("labs");
+          this.openLab(cmd.arg as number);
+          break;
+      }
     },
 
     // --- Labs ---
