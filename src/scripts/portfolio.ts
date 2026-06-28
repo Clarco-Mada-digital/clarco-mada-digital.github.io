@@ -421,18 +421,14 @@ function portfolioApp() {
             headers: { "Content-Type": "application/json", Accept: "application/json" },
             body: JSON.stringify({
               access_key: web3key,
-              subject: `📬 Nouveau contact portfolio — ${this.form.name}`,
-              from_name: "Portfolio · Bryan Clark",
-              // Répondre à l'email tombe directement sur le visiteur.
+              subject: `Nouveau message de ${this.form.name} — Portfolio`,
+              from_name: "Portfolio Bryan Clark",
+              // Champs standard attendus par Web3Forms (NE PAS renommer "email" :
+              // il sert à la validation et au reply-to).
+              name: this.form.name,
+              email: this.form.email,
+              message: this.form.message,
               replyto: this.form.email,
-              // Clés lisibles : Web3Forms les utilise comme libellés dans l'email.
-              Nom: this.form.name,
-              Email: this.form.email,
-              Message: this.form.message,
-              Reçu_le: new Date().toLocaleString("fr-FR", {
-                dateStyle: "full",
-                timeStyle: "short",
-              }),
             }),
           });
           const out = await res.json();
