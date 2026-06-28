@@ -416,23 +416,24 @@ function portfolioApp() {
       try {
         if (web3key) {
           // --- Web3Forms (gratuit, sans serveur) ---
+          // FormData (pas de Content-Type JSON) => évite la requête preflight
+          // CORS, plus robuste. NE PAS renommer "email" (validation + reply-to).
+          const fd = new FormData();
+          fd.append("access_key", web3key);
+          fd.append("subject", `Nouveau message de ${this.form.name} — Portfolio`);
+          fd.append("from_name", "Portfolio Bryan Clark");
+          fd.append("name", this.form.name);
+          fd.append("email", this.form.email);
+          fd.append("message", this.form.message);
+          fd.append("replyto", this.form.email);
           const res = await fetch("https://api.web3forms.com/submit", {
             method: "POST",
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({
-              access_key: web3key,
-              subject: `Nouveau message de ${this.form.name} — Portfolio`,
-              from_name: "Portfolio Bryan Clark",
-              // Champs standard attendus par Web3Forms (NE PAS renommer "email" :
-              // il sert à la validation et au reply-to).
-              name: this.form.name,
-              email: this.form.email,
-              message: this.form.message,
-              replyto: this.form.email,
-            }),
+            headers: { Accept: "application/json" },
+            body: fd,
           });
-          const out = await res.json();
-          if (!out.success) throw new Error(out.message || "Échec");
+          const out = await res.json().catch(() => ({ success: false, message: "Réponse illisible" }));
+          // Surface le vrai message de Web3Forms (ex. email à vérifier).
+          if (!out.success) throw new Error(out.message || `Erreur ${res.status}`);
           this.markSent();
         } else if (endpoint) {
           // --- Formspree (ou autre endpoint compatible) ---
@@ -453,7 +454,12 @@ function portfolioApp() {
           this.markSent();
         }
       } catch (err) {
-        this.formError = "Oups, l'envoi a échoué. Réessaie ou écris-moi directement par email.";
+        // Affiche la vraie raison (utile pour diagnostiquer : email non vérifié,
+        // domaine non autorisé, réseau…).
+        const reason = (err as Error)?.message || "";
+        this.formError = reason
+          ? `Échec de l'envoi : ${reason}`
+          : "Oups, l'envoi a échoué. Réessaie ou écris-moi directement par email.";
         this.toast("Échec de l'envoi. Réessaie 🙏", "error");
       } finally {
         this.formSending = false;
