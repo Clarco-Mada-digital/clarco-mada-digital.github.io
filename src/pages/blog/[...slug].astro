@@ -23,9 +23,38 @@ const base = import.meta.env.BASE_URL;
 const fmt = (d: Date) =>
   d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 const readingTime = Math.max(1, Math.round(post.body.split(/\s+/).length / 200));
+
+// URL absolue de la couverture pour les données structurées (sinon image du site).
+const siteUrl = Astro.site ?? new URL(Astro.url.origin);
+const coverAbs = post.data.cover
+  ? new URL(assetUrl(post.data.cover, base), siteUrl).href
+  : new URL(`${base}og-image.png`, siteUrl).href;
+
+// Données structurées « BlogPosting » : Google sait que c'est un article daté, signé.
+const blogPostingLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  image: coverAbs,
+  datePublished: post.data.date.toISOString(),
+  url: new URL(Astro.url.pathname, siteUrl).href,
+  inLanguage: "fr-FR",
+  author: { "@type": "Person", name: site.name, url: siteUrl.href },
+  publisher: { "@type": "Person", name: site.name, url: siteUrl.href },
+  keywords: post.data.tags.join(", "),
+};
+const blogPostingLdJson = JSON.stringify(blogPostingLd).replace(/</g, "\\u003c");
 ---
 
-<Base title={`${post.data.title} // ${site.name}`} description={post.data.description}>
+<Base
+  title={`${post.data.title} // ${site.name}`}
+  description={post.data.description}
+  image={post.data.cover}
+  ogType="article"
+  publishedTime={post.data.date.toISOString()}
+>
+  <script type="application/ld+json" slot="head" set:html={blogPostingLdJson} />
   <!-- Barre supérieure -->
   <header
     class="sticky top-0 z-30 bg-lab-dark/90 backdrop-blur-md border-b border-lab-border"
