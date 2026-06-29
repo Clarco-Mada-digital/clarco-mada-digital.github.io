@@ -677,7 +677,7 @@ const addBtn =
                     Clé API <span class="text-neon-cyan normal-case tracking-normal" x-text="'(' + aiProvider.label + ')'"></span>
                     <span class="text-[10px] font-mono text-neon-green/80 normal-case tracking-normal">🔒 chiffrée (AES) avec ta phrase d'accès</span>
                   </label>
-                  <input type="password" class={input + ' font-mono'} x-model="ai.apiKeys[ai.provider]" @change="persistAi()" placeholder="sk-…" autocomplete="off" />
+                  <input type="password" class={input + ' font-mono'} x-model="ai.apiKeys[ai.provider]" @change="onAiKeyChange()" placeholder="sk-…" autocomplete="off" />
                   <p x-show="aiKeyLocked && !aiKey" x-cloak class="text-[11px] text-yellow-300/80 mt-1">
                     🔒 Une clé chiffrée est mémorisée mais la phrase d'accès de cette session ne l'ouvre pas. Recolle ta clé (elle sera rechiffrée).
                   </p>

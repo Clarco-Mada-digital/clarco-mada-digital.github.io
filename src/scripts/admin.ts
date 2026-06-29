@@ -550,7 +550,12 @@ function adminApp() {
       if (!this.apiAvailable) return;
       try {
         const res = await fetch("/api/admin/blog");
-        if (res.ok) this.posts = await res.json();
+        if (res.ok) {
+          const posts: BlogPost[] = await res.json();
+          // Plus récent en premier (les dates sont au format YYYY-MM-DD → tri lexical = chronologique).
+          posts.sort((a, b) => String(b.data.date || "").localeCompare(String(a.data.date || "")));
+          this.posts = posts;
+        }
       } catch {
         /* ignore */
       }
@@ -672,6 +677,12 @@ function adminApp() {
       this.aiAutoTried = false;
       this.aiTest = { busy: false, ok: false, msg: "" };
       this.persistAi();
+    },
+    /** Saisie/collage d'une clé : on mémorise (chiffré) puis on charge ses modèles. */
+    onAiKeyChange() {
+      this.persistAi();
+      this.aiAutoTried = true;
+      if (this.aiKey.trim() && this.apiAvailable) void this.testAiKey();
     },
     /**
      * Teste la clé API et charge les modèles auxquels elle donne accès.
@@ -819,7 +830,12 @@ function adminApp() {
         };
         this.editingPost = true;
         this.ai.open = false;
-        this.flash("✓ Article généré — relis, ajuste, puis enregistre.", "success");
+        this.flash(
+          a.title
+            ? "✓ Article généré — relis, ajuste, puis enregistre."
+            : "✓ Brouillon généré. L'IA n'a pas mis de titre clair : complète le champ Titre depuis le texte.",
+          "success",
+        );
       } catch (err) {
         this.ai.error = "Échec : " + (err as Error).message;
       } finally {

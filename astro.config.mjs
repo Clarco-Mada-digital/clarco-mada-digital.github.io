@@ -203,26 +203,23 @@ function adminDevApi() {
   };
 
   // Le « persona » : tout l'article doit sonner comme les articles déjà publiés.
-  const AI_SYSTEM = `Tu écris des articles de blog À LA PLACE de Bryan Clark (marque « ABC.Dev »), développeur full-stack & mobile basé à Diego-Suarez (Antsiranana), Madagascar. Tu dois imiter fidèlement SON style, déjà en place sur son blog tech.
+  // On demande du Markdown BRUT (pas de JSON) : c'est ce que tous les modèles,
+  // même gratuits/légers, savent produire de façon fiable → fini les
+  // "réponse illisible". Le titre est sur la 1ʳᵉ ligne en H1, on le détache ensuite.
+  const AI_SYSTEM = `Tu écris un article de blog À LA PLACE de Bryan Clark (« ABC.Dev »), développeur full-stack & mobile à Diego-Suarez (Antsiranana), Madagascar. Imite SON style.
 
-STYLE & TON (impératif) :
-- Français, première personne ("je"), tutoie le lecteur ("tu").
-- Ton direct, concret, un brin opinioné : il donne son avis de dev, pas un cours neutre.
-- Point de vue de praticien : il parle de ce qu'il fait/utilise, des implications réelles pour un dev.
-- Glisse, quand c'est pertinent (pas à chaque fois), son contexte : mobile, performance/latence, dev depuis Madagascar.
-- Pas de remplissage, pas de superlatifs creux, pas de "en conclusion" scolaire.
+STYLE : français, 1ʳᵉ personne ("je"), tutoie le lecteur ("tu"). Ton direct, concret, opinioné — un avis de dev, pas un cours. Point de vue de praticien ; glisse quand c'est pertinent son contexte (mobile, performance/latence, dev depuis Madagascar). Pas de remplissage ni de superlatifs creux.
 
-FORMAT (impératif) :
-- Markdown. NE répète PAS le titre en H1 : commence directement par un court paragraphe d'accroche.
-- Structure en sections "## Titre" (3 à 5 sections).
-- Listes à puces avec amorce en **gras** quand utile.
-- 0 à 2 bloc(s) de code pertinents (\`\`\`js, \`\`\`bash, \`\`\`text…) seulement si ça aide.
-- Exactement UN blockquote "> …" avec une phrase qui frappe.
-- Termine par une section d'avis perso ("## Mon avis", "## Ce que j'en retiens"…).
-- Longueur cible : 450 à 650 mots. Pas de blabla.
+FORMAT (Markdown uniquement) :
+- 1ʳᵉ ligne : le titre en H1 « # Titre » (clair, accrocheur).
+- Puis un court paragraphe d'accroche.
+- 3 à 5 sections « ## Titre ».
+- Listes à puces avec amorce en **gras** si utile ; 0 à 2 blocs de code si ça aide.
+- Exactement UN blockquote « > … ».
+- Termine par une section d'avis perso (« ## Mon avis » / « ## Ce que j'en retiens »).
+- Longueur : 450 à 650 mots.
 
-SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte autour, de la forme :
-{"title": "Titre clair, parfois avec un sous-titre après ':'", "description": "1 à 2 phrases d'accroche pour le SEO", "tags": ["Trois","Tags","Pertinents"], "coverLabel": "2-3 MOTS pour la couverture", "body": "le markdown complet de l'article"}`;
+Réponds UNIQUEMENT avec le Markdown de l'article (commençant par « # »). Aucun préambule, aucune explication, aucun JSON, aucune balise de code autour.`;
 
   function buildAiUserPrompt(mode, topic) {
     if (mode === "trends") {
@@ -231,15 +228,27 @@ SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte a
     return `Écris un article complet, dans le style décrit, sur le sujet suivant : « ${topic} ». Apporte un angle de dev concret et un avis personnel.`;
   }
 
-  function extractJson(text) {
-    let t = String(text || "").trim();
-    const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i);
-    if (fence) t = fence[1].trim();
-    const start = t.indexOf("{");
-    const end = t.lastIndexOf("}");
-    if (start >= 0 && end > start) t = t.slice(start, end + 1);
-    return JSON.parse(t);
+  /** Détache le titre (1ᵉʳ H1) du corps Markdown ; tolère un éventuel ```fence```. */
+  function splitTitleBody(raw) {
+    let text = String(raw || "").trim();
+    const fence = text.match(/^```(?:markdown|md)?\s*\n([\s\S]*?)\n```$/i);
+    if (fence) text = fence[1].trim();
+    const lines = text.split("\n");
+    let i = 0;
+    while (i < lines.length && !lines[i].trim()) i++; // saute les lignes vides
+    const h1 = lines[i] ? lines[i].match(/^#\s+(.+?)\s*$/) : null;
+    let title = "";
+    if (h1) {
+      title = h1[1].trim();
+      lines.splice(0, i + 1);
+      text = lines.join("\n").trim();
+    }
+    return { title, body: text };
   }
+
+  // Plafond de sortie : ~650 mots ≈ 1300 tokens ; on laisse de la marge sans
+  // exploser le quota (un cap évite qu'un modèle parte en roue libre).
+  const AI_MAX_TOKENS = 2000;
 
   async function callOpenAiLike(url, apiKey, model, webSearch, prompt) {
     // OpenRouter sait faire de la recherche web en suffixant le modèle de ":online".
@@ -248,14 +257,12 @@ SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte a
     const body = {
       model: finalModel,
       temperature: 0.8,
+      max_tokens: AI_MAX_TOKENS,
       messages: [
         { role: "system", content: AI_SYSTEM },
         { role: "user", content: prompt },
       ],
     };
-    // Hors recherche web, on force une sortie JSON (les modèles compatibles la
-    // respectent → fini les "réponse illisible"). Avec :online, on laisse libre.
-    if (!finalModel.includes(":online")) body.response_format = { type: "json_object" };
     const res = await fetch(url, {
       method: "POST",
       headers: {
@@ -276,11 +283,9 @@ SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte a
     const body = {
       systemInstruction: { parts: [{ text: AI_SYSTEM }] },
       contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.8 },
+      generationConfig: { temperature: 0.8, maxOutputTokens: AI_MAX_TOKENS },
     };
-    // La recherche Google et le forçage JSON ne cohabitent pas : on parse à la main si web search.
     if (webSearch) body.tools = [{ google_search: {} }];
-    else body.generationConfig.responseMimeType = "application/json";
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -391,56 +396,29 @@ SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte a
 
     const prompt = buildAiUserPrompt(mode, String(topic || "").trim());
 
-    // Certains modèles (routeurs gratuits…) rendent parfois de la prose au lieu du
-    // JSON attendu : on réessaie quelques fois avant d'abandonner.
-    const MAX_TRIES = 3;
-    let article = null;
-    let lastErr = "";
-    for (let attempt = 1; attempt <= MAX_TRIES; attempt++) {
-      let raw = "";
-      try {
-        raw =
-          conf.format === "gemini"
-            ? await callGemini(conf.url, apiKey, model, Boolean(webSearch), prompt)
-            : await callOpenAiLike(conf.url, apiKey, model, Boolean(webSearch), prompt);
-      } catch (err) {
-        lastErr = String(err?.message || err);
-        // Sur rate-limit / quota / auth, inutile (et nuisible) de réessayer : on relaie tout de suite.
-        if (/\b(429|401|403)\b|rate.?limit|quota|too many|insufficient|unauthor/i.test(lastErr)) {
-          throw new Error(lastErr);
-        }
-        if (attempt === MAX_TRIES) throw new Error(lastErr);
-        continue;
-      }
-      try {
-        const parsed = extractJson(raw);
-        if (parsed && parsed.body) {
-          article = parsed;
-          break;
-        }
-        lastErr = "réponse sans article exploitable";
-      } catch {
-        lastErr = "réponse illisible (JSON attendu)";
-      }
-    }
-    if (!article) {
+    // UN SEUL appel : la sortie est du Markdown brut (pas de JSON à parser, donc
+    // pas de "réponse illisible" → plus besoin de réessayer). Économise le quota.
+    const raw =
+      conf.format === "gemini"
+        ? await callGemini(conf.url, apiKey, model, Boolean(webSearch), prompt)
+        : await callOpenAiLike(conf.url, apiKey, model, Boolean(webSearch), prompt);
+
+    if (!String(raw || "").trim()) {
       throw new Error(
-        `L'IA n'a pas renvoyé d'article exploitable après ${MAX_TRIES} essais (${lastErr}). ` +
-          "Essaie un autre modèle, ou décoche « Recherche web » (elle empêche le format JSON forcé).",
+        "L'IA a renvoyé une réponse vide. Réessaie, ou choisis un autre modèle " +
+          "(certains modèles gratuits saturent vite).",
       );
     }
 
-    article.title = String(article.title || "Sans titre").trim();
-    article.description = String(article.description || "").trim();
-    article.tags = Array.isArray(article.tags) ? article.tags.slice(0, 6).map((t) => String(t).trim()) : [];
-    article.body = String(article.body).trim();
+    const { title, body } = splitTitleBody(raw);
+    // On ne devine ni description ni tags : tu organises le brouillon toi-même.
+    const article = { title, description: "", tags: [], body };
 
     // Couverture assortie (optionnelle, best-effort).
     let coverPath = null;
-    if (cover) {
-      const slug =
-        slugify(article.title) + "-" + Math.random().toString(36).slice(2, 6);
-      coverPath = await generateCover(slug, article.coverLabel || article.title);
+    if (cover && (title || body)) {
+      const slug = slugify(title || "article") + "-" + Math.random().toString(36).slice(2, 6);
+      coverPath = await generateCover(slug, title || "Article");
     }
 
     res.statusCode = 200;
