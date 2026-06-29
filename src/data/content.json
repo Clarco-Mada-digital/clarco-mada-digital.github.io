@@ -490,6 +490,24 @@
   },
   "labs": [
     {
+      "id": 8,
+      "title": "Flow Field",
+      "tagline": "Des milliers de particules néon suivent un champ de vecteurs ondulant et tracent des courants lumineux. La souris repousse les flux — clique pour l'inverser et tout attirer. Codé sur du canvas en rendu additif, ~60 fps, sans aucune librairie.",
+      "status": "done",
+      "tags": [
+        "Canvas",
+        "Génératif",
+        "60fps"
+      ],
+      "url": "",
+      "emoji": "🌀",
+      "demo": {
+        "html": "<canvas id=\"c\"></canvas>\n<div id=\"hud\"><span id=\"mode\">// flow field — repousse</span> &middot; <b>clique</b> pour inverser &middot; <b>bouge</b> la souris</div>",
+        "css": "html, body { height: 100%; overflow: hidden; }\nbody { cursor: crosshair; background: #070a0f; }\n#c { display: block; width: 100vw; height: 100vh; }\n#hud {\n  position: fixed; left: 12px; bottom: 10px;\n  font: 12px/1.4 ui-monospace, \"SFMono-Regular\", Menlo, monospace;\n  color: #5b7686; letter-spacing: .02em; pointer-events: none;\n  text-shadow: 0 0 10px #000;\n}\n#hud b { color: #00e5ff; font-weight: 600; }\n#mode { color: #39ff14; }",
+        "js": "const cv = document.getElementById('c');\nconst ctx = cv.getContext('2d');\nconst modeEl = document.getElementById('mode');\nconst COLORS = ['#00e5ff', '#b388ff', '#39ff14', '#ff2fb3'];\n\nlet W = 0, H = 0, DPR = 1, ps = [];\n\nfunction spawn(p) {\n  p.x = Math.random() * W;\n  p.y = Math.random() * H;\n  p.px = p.x; p.py = p.y;\n  p.c = COLORS[(Math.random() * COLORS.length) | 0];\n  p.s = 0.6 + Math.random() * 1.5;\n  return p;\n}\n\nfunction resize() {\n  DPR = Math.min(2, window.devicePixelRatio || 1);\n  W = cv.clientWidth || window.innerWidth;\n  H = cv.clientHeight || window.innerHeight;\n  cv.width = W * DPR; cv.height = H * DPR;\n  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);\n  ctx.fillStyle = '#070a0f';\n  ctx.fillRect(0, 0, W, H);\n  const n = Math.round(Math.min(1100, Math.max(350, (W * H) / 1500)));\n  ps = [];\n  for (let i = 0; i < n; i++) ps.push(spawn({}));\n}\nwindow.addEventListener('resize', resize);\n\nconst mouse = { x: -9999, y: -9999, active: false };\nwindow.addEventListener('pointermove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true; });\nwindow.addEventListener('pointerleave', () => { mouse.active = false; });\n\nlet attract = false;\nwindow.addEventListener('click', () => {\n  attract = !attract;\n  modeEl.textContent = attract ? '// flow field — attire' : '// flow field — repousse';\n});\n\n// Champ de vecteurs « maison » (trigonométrique) qui ondule dans le temps.\nconst SCALE = 0.0016;\nlet t = 0;\nfunction field(x, y) {\n  return (Math.cos(x * SCALE) + Math.sin(y * SCALE) + Math.sin((x + y) * SCALE * 0.5) + t) * 1.4;\n}\n\nconst R2 = 16000; // rayon² d'influence de la souris\n\nfunction tick() {\n  t += 0.0016;\n  // Voile sombre = traînées qui s'estompent (effet « courants »).\n  ctx.globalCompositeOperation = 'source-over';\n  ctx.fillStyle = 'rgba(7,10,15,0.075)';\n  ctx.fillRect(0, 0, W, H);\n  // Rendu additif = superposition néon lumineuse.\n  ctx.globalCompositeOperation = 'lighter';\n  ctx.lineWidth = 1.1;\n  ctx.lineCap = 'round';\n  for (const p of ps) {\n    const a = field(p.x, p.y);\n    let vx = Math.cos(a) * p.s;\n    let vy = Math.sin(a) * p.s;\n    if (mouse.active) {\n      const dx = p.x - mouse.x, dy = p.y - mouse.y;\n      const d2 = dx * dx + dy * dy;\n      if (d2 < R2) {\n        const d = Math.sqrt(d2) || 1;\n        const f = (1 - d / Math.sqrt(R2)) * (attract ? -2.6 : 2.6);\n        vx += (dx / d) * f;\n        vy += (dy / d) * f;\n      }\n    }\n    p.px = p.x; p.py = p.y;\n    p.x += vx; p.y += vy;\n    if (p.x < 0 || p.x > W || p.y < 0 || p.y > H) { spawn(p); continue; }\n    ctx.strokeStyle = p.c;\n    ctx.globalAlpha = 0.85;\n    ctx.beginPath();\n    ctx.moveTo(p.px, p.py);\n    ctx.lineTo(p.x, p.y);\n    ctx.stroke();\n  }\n  ctx.globalAlpha = 1;\n  requestAnimationFrame(tick);\n}\n\nresize();\nrequestAnimationFrame(tick);"
+      }
+    },
+    {
       "id": 7,
       "title": "Synthwave Sunset",
       "tagline": "Une scène rétrowave en CSS pur : soleil à rayures, grille néon en perspective et étoiles scintillantes.",
