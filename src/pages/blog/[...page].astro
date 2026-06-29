@@ -7,10 +7,10 @@ import { content } from "../../lib/content";
 import { assetUrl } from "../../lib/url";
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const posts = (await getCollection("blog"))
-    .filter((p) => import.meta.env.DEV || !p.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  return paginate(posts, { pageSize: 6 });
+    const posts = (await getCollection("blog"))
+        .filter((p) => import.meta.env.DEV || !p.data.draft)
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+    return paginate(posts, { pageSize: 6 });
 }) satisfies GetStaticPaths;
 
 type Props = { page: Page<CollectionEntry<"blog">> };
@@ -20,137 +20,152 @@ const { site } = content;
 const base = import.meta.env.BASE_URL;
 
 const fmt = (d: Date) =>
-  d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+    d.toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
 const readingTime = (body: string) =>
-  Math.max(1, Math.round(body.split(/\s+/).length / 200));
+    Math.max(1, Math.round(body.split(/\s+/).length / 200));
 ---
 
 <Base
-  title={`Blog // ${site.name}`}
-  description={`Articles et notes techniques de ${site.name}.`}
+    title={`Blog // ${site.name}`}
+    description={`Articles et notes techniques de ${site.name}.`}
 >
-  <!-- Barre supérieure -->
-  <header
-    class="sticky top-0 z-30 bg-lab-dark/90 backdrop-blur-md border-b border-lab-border"
-  >
-    <div class="max-w-5xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
-      <a href={base} class="flex items-center gap-2.5 group">
+    <!-- Barre supérieure -->
+    <header
+        class="sticky top-0 z-30 bg-lab-dark/90 backdrop-blur-md border-b border-lab-border"
+    >
         <div
-          class="w-9 h-9 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center text-lab-dark font-extrabold"
+            class="max-w-5xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between"
         >
-          {site.initials}
-        </div>
-        <span class="font-mono text-sm text-white group-hover:text-neon-cyan transition-colors">
-          {site.handle}
-        </span>
-      </a>
-      <a
-        href={base}
-        class="text-sm font-mono text-gray-400 hover:text-neon-cyan transition-colors"
-      >
-        ← Portfolio
-      </a>
-    </div>
-  </header>
-
-  <main class="max-w-5xl mx-auto px-5 sm:px-8 py-12 min-h-[70vh]">
-    <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">// Blog</h1>
-    <p class="text-gray-500 mb-10 font-mono text-sm">writeThoughts()</p>
-
-    {
-      page.data.length === 0 && (
-        <p class="text-gray-500 font-mono text-sm">
-          Aucun article pour le moment. Reviens bientôt !
-        </p>
-      )
-    }
-
-    <div class="grid sm:grid-cols-2 gap-6">
-      {
-        page.data.map((post) => (
-          <a
-            href={`${base}blog/${post.slug}`}
-            class="group flex flex-col bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover"
-          >
-            {/* Couverture */}
-            <div class="aspect-[1200/630] bg-lab-dark overflow-hidden border-b border-lab-border">
-              {post.data.cover ? (
-                <img
-                  src={assetUrl(post.data.cover, base)}
-                  alt={`Couverture : ${post.data.title}`}
-                  loading="lazy"
-                decoding="async"
-                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              ) : (
-                <div class="w-full h-full bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center">
-                  <span class="font-mono text-neon-cyan/40 text-sm">~/blog</span>
+            <a href={base} class="flex items-center gap-2.5 group">
+                <div
+                    class="w-9 h-9 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center text-lab-dark font-extrabold"
+                >
+                    {site.initials}
                 </div>
-              )}
-            </div>
-            <div class="flex flex-col flex-1 p-5">
-              <div class="flex items-center gap-3 text-xs font-mono text-gray-500 mb-2">
-                <time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
-                <span>·</span>
-                <span>{readingTime(post.body)} min</span>
-                {post.data.draft && (
-                  <span class="px-1.5 py-0.5 rounded bg-yellow-300/10 border border-yellow-300/30 text-yellow-300">
-                    brouillon
-                  </span>
-                )}
-              </div>
-              <h2 class="text-lg font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors">
-                {post.data.title}
-              </h2>
-              <p class="text-gray-400 text-sm leading-relaxed mb-4 flex-1">
-                {post.data.description}
-              </p>
-              <div class="flex flex-wrap gap-1.5">
-                {post.data.tags.map((tag) => (
-                  <span class="text-[10px] font-mono px-2 py-0.5 bg-lab-dark rounded text-gray-500 border border-lab-border">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </a>
-        ))
-      }
-    </div>
+                <span
+                    class="font-mono text-sm text-white group-hover:text-neon-cyan transition-colors"
+                >
+                    {site.handle}
+                </span>
+            </a>
+            <a
+                href={base}
+                class="text-sm font-mono text-gray-400 hover:text-neon-cyan transition-colors"
+            >
+                ← Portfolio
+            </a>
+        </div>
+    </header>
 
-    {/* Pagination (affichée seulement s'il y a plusieurs pages) */}
-    {
-      page.lastPage > 1 && (
-        <nav class="flex items-center justify-between mt-12 font-mono text-sm" aria-label="Pagination">
-          {page.url.prev ? (
-            <a
-              href={page.url.prev}
-              class="px-4 py-2 rounded-lg border border-lab-border text-gray-300 hover:border-neon-cyan hover:text-neon-cyan transition-all"
-            >
-              ← Précédent
-            </a>
-          ) : (
-            <span class="px-4 py-2 rounded-lg border border-lab-border/40 text-gray-700">
-              ← Précédent
-            </span>
-          )}
-          <span class="text-gray-500">
-            Page {page.currentPage} / {page.lastPage}
-          </span>
-          {page.url.next ? (
-            <a
-              href={page.url.next}
-              class="px-4 py-2 rounded-lg border border-lab-border text-gray-300 hover:border-neon-cyan hover:text-neon-cyan transition-all"
-            >
-              Suivant →
-            </a>
-          ) : (
-            <span class="px-4 py-2 rounded-lg border border-lab-border/40 text-gray-700">
-              Suivant →
-            </span>
-          )}
-        </nav>
-      )
-    }
-  </main>
+    <main class="max-w-5xl mx-auto px-5 sm:px-8 py-12 min-h-[70vh]">
+        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">// Blog</h1>
+        <p class="text-gray-500 mb-10 font-mono text-sm">writeThoughts()</p>
+
+        {
+            page.data.length === 0 && (
+                <p class="text-gray-500 font-mono text-sm">
+                    Aucun article pour le moment. Reviens bientôt !
+                </p>
+            )
+        }
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {
+                page.data.map((post) => (
+                    <a
+                        href={`${base}blog/${post.slug}`}
+                        class="group flex flex-col bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover"
+                    >
+                        {/* Couverture */}
+                        <div class="aspect-[1200/630] bg-lab-dark overflow-hidden border-b border-lab-border">
+                            {post.data.cover ? (
+                                <img
+                                    src={assetUrl(post.data.cover, base)}
+                                    alt={`Couverture : ${post.data.title}`}
+                                    loading="lazy"
+                                    decoding="async"
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                            ) : (
+                                <div class="w-full h-full bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center">
+                                    <span class="font-mono text-neon-cyan/40 text-sm">
+                                        ~/blog
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                        <div class="flex flex-col flex-1 p-5">
+                            <div class="flex items-center gap-3 text-xs font-mono text-gray-500 mb-2">
+                                <time datetime={post.data.date.toISOString()}>
+                                    {fmt(post.data.date)}
+                                </time>
+                                <span>·</span>
+                                <span>{readingTime(post.body)} min</span>
+                                {post.data.draft && (
+                                    <span class="px-1.5 py-0.5 rounded bg-yellow-300/10 border border-yellow-300/30 text-yellow-300">
+                                        brouillon
+                                    </span>
+                                )}
+                            </div>
+                            <h2 class="text-lg font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors">
+                                {post.data.title}
+                            </h2>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-4 flex-1">
+                                {post.data.description}
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                {post.data.tags.map((tag) => (
+                                    <span class="text-[10px] font-mono px-2 py-0.5 bg-lab-dark rounded text-gray-500 border border-lab-border">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    </a>
+                ))
+            }
+        </div>
+
+        {/* Pagination (affichée seulement s'il y a plusieurs pages) */}
+        {
+            page.lastPage > 1 && (
+                <nav
+                    class="flex items-center justify-between mt-12 font-mono text-sm"
+                    aria-label="Pagination"
+                >
+                    {page.url.prev ? (
+                        <a
+                            href={page.url.prev}
+                            class="px-4 py-2 rounded-lg border border-lab-border text-gray-300 hover:border-neon-cyan hover:text-neon-cyan transition-all"
+                        >
+                            ← Précédent
+                        </a>
+                    ) : (
+                        <span class="px-4 py-2 rounded-lg border border-lab-border/40 text-gray-700">
+                            ← Précédent
+                        </span>
+                    )}
+                    <span class="text-gray-500">
+                        Page {page.currentPage} / {page.lastPage}
+                    </span>
+                    {page.url.next ? (
+                        <a
+                            href={page.url.next}
+                            class="px-4 py-2 rounded-lg border border-lab-border text-gray-300 hover:border-neon-cyan hover:text-neon-cyan transition-all"
+                        >
+                            Suivant →
+                        </a>
+                    ) : (
+                        <span class="px-4 py-2 rounded-lg border border-lab-border/40 text-gray-700">
+                            Suivant →
+                        </span>
+                    )}
+                </nav>
+            )
+        }
+    </main>
 </Base>

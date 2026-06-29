@@ -178,7 +178,12 @@
       "demoUrl": "https://clarco-mada-digital.github.io/gestion-projet/",
       "cover": "/projects/gestion-projet-cover.jpg",
       "gallery": [
-        "/projects/gestion-projet-02.jpg"
+        "/projects/gestion-projet-02.jpg",
+        "/projects/gestion-projet-07-mqyz0pzg.png",
+        "/projects/gestion-projet-06-mqyz0q23.png",
+        "/projects/gestion-projet-05-mqyz0q53.png",
+        "/projects/gestion-projet-04-mqyz0q7k.png",
+        "/projects/gestion-projet-03-mqyz0qa3.png"
       ],
       "features": [
         "Kanban en glisser-déposer",
@@ -205,8 +210,13 @@
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
       "repoUrl": "https://github.com/Clarco-Mada-digital/omniagent",
       "demoUrl": "",
-      "cover": "",
-      "gallery": [],
+      "cover": "/projects/omniagent-02-mqyz4etu.png",
+      "gallery": [
+        "/projects/omniagent-04-mqyz4lsm.png",
+        "/projects/omniagent-03-mqyz4lvd.png",
+        "/projects/omniagent-02-mqyz4lyg.png",
+        "/projects/omniagent-01-mqyz4m0r.png"
+      ],
       "features": [
         "IA locale (Ollama) + cloud (GPT-4o, Claude, Gemini)",
         "Routage intelligent entre modèles",
@@ -228,11 +238,16 @@
         "TypeScript",
         "Rust"
       ],
-      "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-green/30",
+      "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
       "repoUrl": "https://github.com/Brayan-Clark/myprojector",
       "demoUrl": "",
-      "cover": "",
-      "gallery": [],
+      "cover": "/projects/myprojector-01-mqyz8hjj.png",
+      "gallery": [
+        "/projects/myprojector-05-mqyz8l13.png",
+        "/projects/myprojector-04-mqyz8l4e.png",
+        "/projects/myprojector-03-mqyz8l78.png",
+        "/projects/myprojector-02-mqyz8l9x.png"
+      ],
       "features": [
         "Bible intégrée (recherche par référence)",
         "Recueils de chants + recherche plein texte",
@@ -259,7 +274,12 @@
       "demoUrl": "https://brayan-clark.github.io/SolarNova/",
       "cover": "/projects/solarnova-cover.jpg",
       "gallery": [
-        "/projects/solarnova-02.jpg"
+        "/projects/solarnova-02.jpg",
+        "/projects/solarnova-05-mqyzbo6n.png",
+        "/projects/solarnova-04-mqyzboac.png",
+        "/projects/solarnova-03-mqyzbodt.png",
+        "/projects/solarnova-02-mqyzbogq.png",
+        "/projects/solarnova-01-mqyzbojs.png"
       ],
       "features": [
         "Calculateur d'énergie solaire",
@@ -287,7 +307,13 @@
       "demoUrl": "https://myp-v1.mada-digital.xyz/",
       "cover": "/projects/myprofessor-cover.jpg",
       "gallery": [
-        "/projects/myprofessor-02.jpg"
+        "/projects/myprofessor-02.jpg",
+        "/projects/myprofessor-06-mqyzfxfw.png",
+        "/projects/myprofessor-05-mqyzfxj2.png",
+        "/projects/myprofessor-04-mqyzfxm7.png",
+        "/projects/myprofessor-03-mqyzfxp3.png",
+        "/projects/myprofessor-02-mqyzfxrj.png",
+        "/projects/myprofessor-01-mqyzfxuh.png"
       ],
       "features": [
         "Génération de cours par IA (Gemini/OpenRouter/Ollama)",
@@ -342,7 +368,13 @@
       "demoUrl": "https://brayan-clark.github.io/CSE-Mada/",
       "cover": "/projects/cse-mada-cover.jpg",
       "gallery": [
-        "/projects/cse-mada-02.jpg"
+        "/projects/cse-mada-02.jpg",
+        "/projects/cse-06-mqyzjsr0.png",
+        "/projects/cse-05-mqyzjsuu.png",
+        "/projects/cse-04-mqyzjsxw.png",
+        "/projects/cse-03-mqyzjt1b.png",
+        "/projects/cse-02-mqyzjt4v.png",
+        "/projects/cse-01-mqyzjt9k.png"
       ],
       "features": [
         "Site ultra-rapide (Astro)",

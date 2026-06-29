@@ -618,7 +618,7 @@ const addBtn =
           <!-- Génération par IA -->
           <template x-if="!editingPost">
             <div class:list={[card, 'space-y-4', 'border-neon-cyan/30']}>
-              <button type="button" class="w-full flex items-center justify-between text-left" @click="ai.open = !ai.open">
+              <button type="button" class="w-full flex items-center justify-between text-left" @click="toggleAi()">
                 <span class="text-white font-bold flex items-center gap-2">✨ Générer avec l'IA <span class="text-[11px] font-mono text-gray-500">(dans ton style)</span></span>
                 <span class="text-neon-cyan font-mono text-sm" x-text="ai.open ? '−' : '+'"></span>
               </button>
@@ -639,25 +639,59 @@ const addBtn =
                     </select>
                   </div>
                   <div>
-                    <label class={label}>Modèle</label>
-                    <input class={input} x-model="ai.model" @change="persistAi()" :placeholder="aiProvider.defaultModel" />
-                    <p class="text-[11px] text-gray-600 mt-1" x-text="aiProvider.modelHint"></p>
+                    <label class={label + ' flex items-center justify-between gap-2'}>
+                      <span>Modèle</span>
+                      <button type="button" x-show="aiModels.length" x-cloak @click="aiManualModel = !aiManualModel"
+                        class="text-[10px] font-mono normal-case tracking-normal text-neon-cyan hover:underline"
+                        x-text="aiManualModel ? '← choisir dans la liste' : 'saisir à la main'"></button>
+                    </label>
+                    <!-- Combobox : modèles réellement dispo pour la clé (chargés via « Tester la clé »). -->
+                    <div x-show="aiModels.length && !aiManualModel" x-cloak class="relative" @click.outside="aiModelOpen = false">
+                      <input class={input} x-model="aiModelFilter"
+                        @focus="aiModelOpen = true" @click="aiModelOpen = true" @input="aiModelOpen = true"
+                        :placeholder="ai.model || 'Choisir un modèle…'" autocomplete="off" />
+                      <div x-show="aiModelOpen" x-cloak class="absolute z-20 mt-1 w-full max-h-60 overflow-auto bg-lab-dark border border-lab-border rounded-lg shadow-xl">
+                        <template x-for="m in filteredAiModels" :key="m">
+                          <button type="button" @click="pickAiModel(m)"
+                            class="block w-full text-left px-3 py-1.5 text-sm hover:bg-lab-card transition-colors flex items-center justify-between gap-2"
+                            :class="m === ai.model ? 'text-neon-cyan' : 'text-gray-300'">
+                            <span x-text="m"></span>
+                            <span x-show="m === ai.model" class="text-neon-cyan">✓</span>
+                          </button>
+                        </template>
+                        <p x-show="!filteredAiModels.length" class="px-3 py-2 text-xs text-gray-500">Aucun modèle ne correspond.</p>
+                      </div>
+                    </div>
+                    <!-- Saisie libre (aucun modèle chargé, ou mode manuel). -->
+                    <input x-show="!aiModels.length || aiManualModel" class={input} x-model="ai.model" @change="persistAi()" :placeholder="aiProvider.defaultModel" />
+                    <p class="text-[11px] text-gray-600 mt-1" x-show="!aiModels.length" x-text="aiProvider.modelHint"></p>
+                    <p class="text-[11px] mt-1" x-show="aiModels.length && !aiManualModel" x-cloak>
+                      <span class="text-gray-500">Sélectionné :</span> <span class="text-neon-green font-mono" x-text="ai.model || '—'"></span>
+                      <span class="text-gray-600" x-text="' (' + aiModels.length + ' dispo)'"></span>
+                    </p>
                   </div>
                 </div>
 
                 <div>
                   <label class={label + ' flex items-center gap-2'}>
-                    Clé API
+                    Clé API <span class="text-neon-cyan normal-case tracking-normal" x-text="'(' + aiProvider.label + ')'"></span>
                     <span class="text-[10px] font-mono text-neon-green/80 normal-case tracking-normal">🔒 chiffrée (AES) avec ta phrase d'accès</span>
                   </label>
-                  <input type="password" class={input + ' font-mono'} x-model="ai.apiKey" @change="persistAi()" placeholder="sk-…" autocomplete="off" />
-                  <p x-show="aiKeyLocked && !ai.apiKey" x-cloak class="text-[11px] text-yellow-300/80 mt-1">
+                  <input type="password" class={input + ' font-mono'} x-model="ai.apiKeys[ai.provider]" @change="persistAi()" placeholder="sk-…" autocomplete="off" />
+                  <p x-show="aiKeyLocked && !aiKey" x-cloak class="text-[11px] text-yellow-300/80 mt-1">
                     🔒 Une clé chiffrée est mémorisée mais la phrase d'accès de cette session ne l'ouvre pas. Recolle ta clé (elle sera rechiffrée).
                   </p>
                   <p class="text-[11px] text-gray-600 mt-1">
                     Stockée chiffrée en local, jamais committée. Obtenir une clé :
                     <a :href="aiProvider.keyUrl" target="_blank" rel="noopener" class="text-neon-cyan hover:underline" x-text="aiProvider.keyUrl"></a>
                   </p>
+                  <div class="flex flex-wrap items-center gap-3 mt-2">
+                    <button type="button" class={addBtn} @click="testAiKey()" :disabled="aiTest.busy || !apiAvailable">
+                      <span x-show="!aiTest.busy">🔑 Tester la clé &amp; charger les modèles</span>
+                      <span x-show="aiTest.busy" x-cloak>⏳ Test…</span>
+                    </button>
+                    <span x-show="aiTest.msg" x-cloak class="text-sm" :class="aiTest.ok ? 'text-neon-green' : 'text-red-300'" x-text="aiTest.msg"></span>
+                  </div>
                 </div>
 
                 <div class="flex flex-wrap gap-4">

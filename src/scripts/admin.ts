@@ -209,7 +209,8 @@ function adminApp() {
     ai: {
       open: false,
       provider: "openrouter",
-      apiKey: "",
+      // Une clé par fournisseur : changer de fournisseur n'écrase pas l'autre clé.
+      apiKeys: {} as Record<string, string>,
       model: "anthropic/claude-3.5-sonnet",
       topic: "",
       webSearch: true,
@@ -217,8 +218,43 @@ function adminApp() {
       busy: false,
       error: "",
     },
+    /** Clé API du fournisseur actuellement sélectionné (lecture). */
+    get aiKey(): string {
+      return this.ai.apiKeys[this.ai.provider] || "";
+    },
     // Vrai s'il existe une clé chiffrée en mémoire qu'on n'a pas pu déverrouiller.
     aiKeyLocked: false,
+    // Modèles disponibles pour la clé courante (chargés à la demande, pas en dur).
+    aiModels: [] as string[],
+    aiManualModel: false,
+    aiModelFilter: "",
+    aiModelOpen: false,
+    // Évite de relancer l'auto-test en boucle si le panneau est rouvert (ou si le test échoue).
+    aiAutoTried: false,
+    aiTest: { busy: false, ok: false, msg: "" },
+    /** Ouvre/ferme le panneau IA ; à la 1ʳᵉ ouverture, charge la liste si une clé est prête. */
+    toggleAi() {
+      this.ai.open = !this.ai.open;
+      // UNE SEULE tentative auto par session : on ne re-teste pas à chaque réouverture,
+      // même si le test précédent a échoué (sinon on spamme l'API → rate-limit).
+      if (this.ai.open && !this.aiAutoTried && this.aiKey.trim() && !this.aiModels.length && this.apiAvailable) {
+        this.aiAutoTried = true;
+        void this.testAiKey();
+      }
+    },
+    /** Choisit un modèle dans le combobox puis referme la liste. */
+    pickAiModel(m: string) {
+      this.ai.model = m;
+      this.aiModelFilter = "";
+      this.aiModelOpen = false;
+      this.persistAi();
+    },
+    /** Modèles filtrés par la recherche (utile : OpenRouter en a des centaines). */
+    get filteredAiModels(): string[] {
+      const q = this.aiModelFilter.trim().toLowerCase();
+      if (!q) return this.aiModels;
+      return this.aiModels.filter((m) => m.toLowerCase().includes(q));
+    },
     // --- Articles de blog ---
     posts: [] as BlogPost[],
     editingPost: false,
@@ -629,7 +665,54 @@ function adminApp() {
       const p = this.aiProvider;
       this.ai.model = p.defaultModel;
       if (!p.webSearch) this.ai.webSearch = false;
+      // Les modèles et le résultat du test sont propres à chaque fournisseur/clé.
+      this.aiModels = [];
+      this.aiModelFilter = "";
+      this.aiManualModel = false;
+      this.aiAutoTried = false;
+      this.aiTest = { busy: false, ok: false, msg: "" };
       this.persistAi();
+    },
+    /**
+     * Teste la clé API et charge les modèles auxquels elle donne accès.
+     * Interroger l'endpoint /models du fournisseur valide la clé (200 = OK)
+     * tout en renvoyant la liste réelle — d'où la liste dynamique, pas en dur.
+     */
+    async testAiKey() {
+      if (!this.apiAvailable) {
+        this.flash("Le test nécessite le serveur local (npm run dev).", "error");
+        return;
+      }
+      if (!this.aiKey.trim()) {
+        this.aiTest = { busy: false, ok: false, msg: "Renseigne ta clé API." };
+        return;
+      }
+      this.persistAi();
+      this.aiTest = { busy: true, ok: false, msg: "" };
+      try {
+        const res = await fetch("/api/admin/ai/models", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ provider: this.ai.provider, apiKey: this.aiKey }),
+        });
+        const out = await res.json();
+        if (!res.ok || !out.ok) throw new Error(out.error || `Erreur ${res.status}`);
+        this.aiModels = Array.isArray(out.models) ? out.models : [];
+        // Si le modèle mémorisé n'est plus proposé par la clé, bascule sur le 1ᵉʳ dispo.
+        if (this.aiModels.length && !this.aiModels.includes(this.ai.model)) {
+          this.ai.model = this.aiModels[0];
+          this.persistAi();
+        }
+        this.aiManualModel = false;
+        this.aiTest = {
+          busy: false,
+          ok: true,
+          msg: `✓ Clé valide — ${this.aiModels.length} modèle(s) disponible(s).`,
+        };
+      } catch (err) {
+        this.aiModels = [];
+        this.aiTest = { busy: false, ok: false, msg: "✗ " + (err as Error).message };
+      }
     },
     /** Charge la config IA ; déchiffre la clé API si on a la phrase d'accès. */
     async loadAiConfig() {
@@ -645,29 +728,41 @@ function adminApp() {
       if (typeof saved.model === "string") this.ai.model = saved.model;
       if (typeof saved.webSearch === "boolean") this.ai.webSearch = saved.webSearch;
       if (typeof saved.cover === "boolean") this.ai.cover = saved.cover;
-      const enc = typeof saved.apiKeyEnc === "string" ? saved.apiKeyEnc : "";
-      if (enc) {
-        const dec = this.gateSecret ? await decryptStr(enc, this.gateSecret) : "";
-        if (dec) {
-          this.ai.apiKey = dec;
-          this.aiKeyLocked = false;
-        } else {
-          // Clé chiffrée présente mais pas (encore) déchiffrable (phrase absente).
-          this.aiKeyLocked = true;
+      // Clés chiffrées par fournisseur. Compat ascendante : ancienne clé unique
+      // `apiKeyEnc` → rattachée au fournisseur enregistré.
+      const encMap: Record<string, string> = {};
+      if (saved.apiKeysEnc && typeof saved.apiKeysEnc === "object") {
+        for (const [prov, v] of Object.entries(saved.apiKeysEnc as Record<string, unknown>)) {
+          if (typeof v === "string") encMap[prov] = v;
         }
       }
+      if (typeof saved.apiKeyEnc === "string" && saved.apiKeyEnc && !encMap[this.ai.provider]) {
+        encMap[this.ai.provider] = saved.apiKeyEnc;
+      }
+      let anyLocked = false;
+      for (const [prov, enc] of Object.entries(encMap)) {
+        const dec = this.gateSecret ? await decryptStr(enc, this.gateSecret) : "";
+        if (dec) this.ai.apiKeys[prov] = dec;
+        else anyLocked = true; // chiffrée mais pas déchiffrable (phrase absente).
+      }
+      this.aiKeyLocked = anyLocked;
     },
     async persistAi() {
       try {
-        // La clé API est chiffrée avec la phrase d'accès ; sans phrase, on ne
-        // persiste pas la clé (elle reste en mémoire le temps de la session).
-        const apiKeyEnc = this.gateSecret ? await encryptStr(this.ai.apiKey, this.gateSecret) : "";
-        if (this.ai.apiKey && this.gateSecret) this.aiKeyLocked = false;
+        // Chaque clé est chiffrée avec la phrase d'accès ; sans phrase, on ne
+        // persiste pas les clés (elles restent en mémoire le temps de la session).
+        const apiKeysEnc: Record<string, string> = {};
+        if (this.gateSecret) {
+          for (const [prov, key] of Object.entries(this.ai.apiKeys)) {
+            if (key) apiKeysEnc[prov] = await encryptStr(key, this.gateSecret);
+          }
+          if (this.aiKey) this.aiKeyLocked = false;
+        }
         localStorage.setItem(
           AI_KEY,
           JSON.stringify({
             provider: this.ai.provider,
-            apiKeyEnc,
+            apiKeysEnc,
             model: this.ai.model,
             webSearch: this.ai.webSearch,
             cover: this.ai.cover,
@@ -683,7 +778,7 @@ function adminApp() {
         this.flash("La génération IA nécessite le serveur local (npm run dev).", "error");
         return;
       }
-      if (!this.ai.apiKey.trim()) {
+      if (!this.aiKey.trim()) {
         this.ai.error = "Renseigne ta clé API.";
         return;
       }
@@ -700,7 +795,7 @@ function adminApp() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             provider: this.ai.provider,
-            apiKey: this.ai.apiKey,
+            apiKey: this.aiKey,
             model: this.ai.model,
             mode,
             topic: this.ai.topic,

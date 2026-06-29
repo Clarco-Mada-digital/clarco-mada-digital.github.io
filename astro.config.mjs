@@ -180,10 +180,26 @@ function adminDevApi() {
   // CORS, pas de CSP, et la clé API n'est jamais committée (elle vit dans le
   // localStorage du navigateur et n'est relayée qu'au provider à la volée).
   const AI_PROVIDERS = {
-    openrouter: { url: "https://openrouter.ai/api/v1/chat/completions", format: "openai" },
-    groq: { url: "https://api.groq.com/openai/v1/chat/completions", format: "openai" },
-    xai: { url: "https://api.x.ai/v1/chat/completions", format: "openai" },
-    gemini: { url: "https://generativelanguage.googleapis.com/v1beta/models", format: "gemini" },
+    openrouter: {
+      url: "https://openrouter.ai/api/v1/chat/completions",
+      modelsUrl: "https://openrouter.ai/api/v1/models",
+      format: "openai",
+    },
+    groq: {
+      url: "https://api.groq.com/openai/v1/chat/completions",
+      modelsUrl: "https://api.groq.com/openai/v1/models",
+      format: "openai",
+    },
+    xai: {
+      url: "https://api.x.ai/v1/chat/completions",
+      modelsUrl: "https://api.x.ai/v1/models",
+      format: "openai",
+    },
+    gemini: {
+      url: "https://generativelanguage.googleapis.com/v1beta/models",
+      modelsUrl: "https://generativelanguage.googleapis.com/v1beta/models",
+      format: "gemini",
+    },
   };
 
   // Le « persona » : tout l'article doit sonner comme les articles déjà publiés.
@@ -237,6 +253,9 @@ SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte a
         { role: "user", content: prompt },
       ],
     };
+    // Hors recherche web, on force une sortie JSON (les modèles compatibles la
+    // respectent → fini les "réponse illisible"). Avec :online, on laisse libre.
+    if (!finalModel.includes(":online")) body.response_format = { type: "json_object" };
     const res = await fetch(url, {
       method: "POST",
       headers: {
@@ -315,6 +334,48 @@ SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte a
     }
   }
 
+  /** Liste les modèles auxquels la clé donne accès (sert aussi de test de clé). */
+  async function fetchAiModels(conf, apiKey) {
+    if (conf.format === "gemini") {
+      const res = await fetch(`${conf.modelsUrl}?key=${encodeURIComponent(apiKey)}`);
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(out?.error?.message || `HTTP ${res.status}`);
+      return (out.models || [])
+        .filter((m) => (m.supportedGenerationMethods || []).includes("generateContent"))
+        .map((m) => String(m.name || "").replace(/^models\//, ""))
+        .filter(Boolean);
+    }
+    const res = await fetch(conf.modelsUrl, { headers: { Authorization: `Bearer ${apiKey}` } });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out?.error?.message || out?.error || `HTTP ${res.status}`);
+    // On garde les modèles qui savent répondre en texte (on écarte image/audio/embeddings).
+    // NB : les routeurs (openrouter/auto, openrouter/free) restent proposés, mais ils
+    // rendent parfois de la prose au lieu du JSON → "réponse illisible" possible.
+    return (out.data || [])
+      .filter((m) => {
+        const outMods = m?.architecture?.output_modalities;
+        if (Array.isArray(outMods) && outMods.length && !outMods.includes("text")) return false;
+        return true;
+      })
+      .map((m) => String(m.id || ""))
+      .filter(Boolean);
+  }
+
+  async function handleAiModels(req, res) {
+    if (req.method !== "POST") {
+      res.statusCode = 405;
+      res.end(JSON.stringify({ ok: false, error: "Méthode non autorisée" }));
+      return;
+    }
+    const { provider, apiKey } = JSON.parse(await readBody(req));
+    const conf = AI_PROVIDERS[provider];
+    if (!conf) throw new Error("Fournisseur inconnu : " + provider);
+    if (!apiKey) throw new Error("Clé API manquante.");
+    const models = (await fetchAiModels(conf, apiKey)).sort((a, b) => a.localeCompare(b));
+    res.statusCode = 200;
+    res.end(JSON.stringify({ ok: true, models }));
+  }
+
   async function handleAi(req, res) {
     if (req.method !== "POST") {
       res.statusCode = 405;
@@ -330,18 +391,44 @@ SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte a
 
     const prompt = buildAiUserPrompt(mode, String(topic || "").trim());
 
-    const raw =
-      conf.format === "gemini"
-        ? await callGemini(conf.url, apiKey, model, Boolean(webSearch), prompt)
-        : await callOpenAiLike(conf.url, apiKey, model, Boolean(webSearch), prompt);
-
-    let article;
-    try {
-      article = extractJson(raw);
-    } catch {
-      throw new Error("Réponse de l'IA illisible (JSON attendu). Essaie un autre modèle.");
+    // Certains modèles (routeurs gratuits…) rendent parfois de la prose au lieu du
+    // JSON attendu : on réessaie quelques fois avant d'abandonner.
+    const MAX_TRIES = 3;
+    let article = null;
+    let lastErr = "";
+    for (let attempt = 1; attempt <= MAX_TRIES; attempt++) {
+      let raw = "";
+      try {
+        raw =
+          conf.format === "gemini"
+            ? await callGemini(conf.url, apiKey, model, Boolean(webSearch), prompt)
+            : await callOpenAiLike(conf.url, apiKey, model, Boolean(webSearch), prompt);
+      } catch (err) {
+        lastErr = String(err?.message || err);
+        // Sur rate-limit / quota / auth, inutile (et nuisible) de réessayer : on relaie tout de suite.
+        if (/\b(429|401|403)\b|rate.?limit|quota|too many|insufficient|unauthor/i.test(lastErr)) {
+          throw new Error(lastErr);
+        }
+        if (attempt === MAX_TRIES) throw new Error(lastErr);
+        continue;
+      }
+      try {
+        const parsed = extractJson(raw);
+        if (parsed && parsed.body) {
+          article = parsed;
+          break;
+        }
+        lastErr = "réponse sans article exploitable";
+      } catch {
+        lastErr = "réponse illisible (JSON attendu)";
+      }
     }
-    if (!article || !article.body) throw new Error("L'IA n'a pas renvoyé d'article exploitable.");
+    if (!article) {
+      throw new Error(
+        `L'IA n'a pas renvoyé d'article exploitable après ${MAX_TRIES} essais (${lastErr}). ` +
+          "Essaie un autre modèle, ou décoche « Recherche web » (elle empêche le format JSON forcé).",
+      );
+    }
 
     article.title = String(article.title || "Sans titre").trim();
     article.description = String(article.description || "").trim();
@@ -371,6 +458,7 @@ SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte a
           if (req.url.startsWith("/api/admin/content")) return await handleContent(req, res);
           if (req.url.startsWith("/api/admin/upload")) return await handleUpload(req, res);
           if (req.url.startsWith("/api/admin/blog")) return await handleBlog(req, res);
+          if (req.url.startsWith("/api/admin/ai/models")) return await handleAiModels(req, res);
           if (req.url.startsWith("/api/admin/ai")) return await handleAi(req, res);
           res.statusCode = 404;
           res.end(JSON.stringify({ ok: false, error: "Route inconnue" }));
