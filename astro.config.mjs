@@ -7,6 +7,10 @@ import matter from "gray-matter";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { execFile, execFileSync } from "node:child_process";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 
 /**
  * === Plugin Vite "Admin local" ===
@@ -171,6 +175,191 @@ function adminDevApi() {
     res.end(JSON.stringify({ ok: false, error: "Méthode non autorisée" }));
   }
 
+  // --- Génération d'articles par IA (dev only) ---
+  // Les appels passent par ici (serveur Node) et non le navigateur : pas de
+  // CORS, pas de CSP, et la clé API n'est jamais committée (elle vit dans le
+  // localStorage du navigateur et n'est relayée qu'au provider à la volée).
+  const AI_PROVIDERS = {
+    openrouter: { url: "https://openrouter.ai/api/v1/chat/completions", format: "openai" },
+    groq: { url: "https://api.groq.com/openai/v1/chat/completions", format: "openai" },
+    xai: { url: "https://api.x.ai/v1/chat/completions", format: "openai" },
+    gemini: { url: "https://generativelanguage.googleapis.com/v1beta/models", format: "gemini" },
+  };
+
+  // Le « persona » : tout l'article doit sonner comme les articles déjà publiés.
+  const AI_SYSTEM = `Tu écris des articles de blog À LA PLACE de Bryan Clark (marque « ABC.Dev »), développeur full-stack & mobile basé à Diego-Suarez (Antsiranana), Madagascar. Tu dois imiter fidèlement SON style, déjà en place sur son blog tech.
+
+STYLE & TON (impératif) :
+- Français, première personne ("je"), tutoie le lecteur ("tu").
+- Ton direct, concret, un brin opinioné : il donne son avis de dev, pas un cours neutre.
+- Point de vue de praticien : il parle de ce qu'il fait/utilise, des implications réelles pour un dev.
+- Glisse, quand c'est pertinent (pas à chaque fois), son contexte : mobile, performance/latence, dev depuis Madagascar.
+- Pas de remplissage, pas de superlatifs creux, pas de "en conclusion" scolaire.
+
+FORMAT (impératif) :
+- Markdown. NE répète PAS le titre en H1 : commence directement par un court paragraphe d'accroche.
+- Structure en sections "## Titre" (3 à 5 sections).
+- Listes à puces avec amorce en **gras** quand utile.
+- 0 à 2 bloc(s) de code pertinents (\`\`\`js, \`\`\`bash, \`\`\`text…) seulement si ça aide.
+- Exactement UN blockquote "> …" avec une phrase qui frappe.
+- Termine par une section d'avis perso ("## Mon avis", "## Ce que j'en retiens"…).
+- Longueur cible : 450 à 650 mots. Pas de blabla.
+
+SORTIE (impératif) : réponds UNIQUEMENT par un objet JSON valide, sans texte autour, de la forme :
+{"title": "Titre clair, parfois avec un sous-titre après ':'", "description": "1 à 2 phrases d'accroche pour le SEO", "tags": ["Trois","Tags","Pertinents"], "coverLabel": "2-3 MOTS pour la couverture", "body": "le markdown complet de l'article"}`;
+
+  function buildAiUserPrompt(mode, topic) {
+    if (mode === "trends") {
+      return `Choisis TOI-MÊME un sujet d'actualité tech ou IA qui fait le buzz en ce moment (dev web/mobile, frameworks, IA, performance, outils…) et qui collerait au blog. ${topic ? `Oriente-toi de préférence vers : « ${topic} ». ` : ""}Puis écris l'article complet dans le style décrit. Reste factuel et à jour ; si tu cites des chiffres, qu'ils soient crédibles.`;
+    }
+    return `Écris un article complet, dans le style décrit, sur le sujet suivant : « ${topic} ». Apporte un angle de dev concret et un avis personnel.`;
+  }
+
+  function extractJson(text) {
+    let t = String(text || "").trim();
+    const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fence) t = fence[1].trim();
+    const start = t.indexOf("{");
+    const end = t.lastIndexOf("}");
+    if (start >= 0 && end > start) t = t.slice(start, end + 1);
+    return JSON.parse(t);
+  }
+
+  async function callOpenAiLike(url, apiKey, model, webSearch, prompt) {
+    // OpenRouter sait faire de la recherche web en suffixant le modèle de ":online".
+    const finalModel =
+      webSearch && url.includes("openrouter") && !model.includes(":online") ? model + ":online" : model;
+    const body = {
+      model: finalModel,
+      temperature: 0.8,
+      messages: [
+        { role: "system", content: AI_SYSTEM },
+        { role: "user", content: prompt },
+      ],
+    };
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+        "HTTP-Referer": "http://localhost:4321",
+        "X-Title": "Portfolio Admin",
+      },
+      body: JSON.stringify(body),
+    });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out?.error?.message || out?.error || `HTTP ${res.status}`);
+    return out?.choices?.[0]?.message?.content || "";
+  }
+
+  async function callGemini(base, apiKey, model, webSearch, prompt) {
+    const url = `${base}/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+    const body = {
+      systemInstruction: { parts: [{ text: AI_SYSTEM }] },
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.8 },
+    };
+    // La recherche Google et le forçage JSON ne cohabitent pas : on parse à la main si web search.
+    if (webSearch) body.tools = [{ google_search: {} }];
+    else body.generationConfig.responseMimeType = "application/json";
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out?.error?.message || `HTTP ${res.status}`);
+    return out?.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("") || "";
+  }
+
+  /** Génère une couverture néon dans le style du blog (best-effort, ne jette jamais). */
+  async function generateCover(slug, label) {
+    try {
+      let font = null;
+      try {
+        font = execFileSync("fc-match", ["-f", "%{file}", "JetBrains Mono"]).toString().trim() || null;
+      } catch {
+        /* font par défaut */
+      }
+      const accents = ["#00e5ff", "#39ff14", "#ff2fb3", "#b388ff", "#ffd23f"];
+      let h = 0;
+      for (const c of slug) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+      const accent = accents[h % accents.length];
+      const raw = String(label || "Article").toUpperCase().slice(0, 28);
+      // Coupe en 2 lignes sur l'espace le plus central si c'est long.
+      let text = raw;
+      if (raw.length > 14 && raw.includes(" ")) {
+        const mid = raw.length / 2;
+        let best = -1;
+        for (let i = 0; i < raw.length; i++)
+          if (raw[i] === " " && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i;
+        if (best > 0) text = raw.slice(0, best) + "\n" + raw.slice(best + 1);
+      }
+      const size = raw.length > 16 ? "60" : "78";
+      const outDir = path.join(publicDir, "blog");
+      await fs.mkdir(outDir, { recursive: true });
+      const outPath = path.join(outDir, `${slug}.webp`);
+      const args = ["-size", "1200x630", "radial-gradient:#0b2533-#05070b"];
+      if (font) args.push("-font", font);
+      args.push(
+        "-fill", "#13303d", "-draw", "rectangle 0,540 1200,544",
+        "-gravity", "NorthWest", "-pointsize", "26", "-fill", "#5b7686", "-annotate", "+80+90", "// abc.dev — blog",
+        "-gravity", "West", "-pointsize", size, "-fill", accent, "-annotate", "+80-10", text,
+        "-gravity", "SouthEast", "-pointsize", "24", "-fill", "#5b7686", "-annotate", "+70+60", new Date().getFullYear() + "",
+        outPath,
+      );
+      await execFileAsync("convert", args);
+      return `/blog/${slug}.webp`;
+    } catch {
+      return null;
+    }
+  }
+
+  async function handleAi(req, res) {
+    if (req.method !== "POST") {
+      res.statusCode = 405;
+      res.end(JSON.stringify({ ok: false, error: "Méthode non autorisée" }));
+      return;
+    }
+    const { provider, apiKey, model, mode, topic, webSearch, cover } = JSON.parse(await readBody(req));
+    const conf = AI_PROVIDERS[provider];
+    if (!conf) throw new Error("Fournisseur inconnu : " + provider);
+    if (!apiKey) throw new Error("Clé API manquante.");
+    if (!model) throw new Error("Nom du modèle manquant.");
+    if (mode !== "trends" && !String(topic || "").trim()) throw new Error("Donne un sujet à traiter.");
+
+    const prompt = buildAiUserPrompt(mode, String(topic || "").trim());
+
+    const raw =
+      conf.format === "gemini"
+        ? await callGemini(conf.url, apiKey, model, Boolean(webSearch), prompt)
+        : await callOpenAiLike(conf.url, apiKey, model, Boolean(webSearch), prompt);
+
+    let article;
+    try {
+      article = extractJson(raw);
+    } catch {
+      throw new Error("Réponse de l'IA illisible (JSON attendu). Essaie un autre modèle.");
+    }
+    if (!article || !article.body) throw new Error("L'IA n'a pas renvoyé d'article exploitable.");
+
+    article.title = String(article.title || "Sans titre").trim();
+    article.description = String(article.description || "").trim();
+    article.tags = Array.isArray(article.tags) ? article.tags.slice(0, 6).map((t) => String(t).trim()) : [];
+    article.body = String(article.body).trim();
+
+    // Couverture assortie (optionnelle, best-effort).
+    let coverPath = null;
+    if (cover) {
+      const slug =
+        slugify(article.title) + "-" + Math.random().toString(36).slice(2, 6);
+      coverPath = await generateCover(slug, article.coverLabel || article.title);
+    }
+
+    res.statusCode = 200;
+    res.end(JSON.stringify({ ok: true, article, cover: coverPath }));
+  }
+
   return {
     name: "portfolio-admin-dev-api",
     apply: "serve",
@@ -182,6 +371,7 @@ function adminDevApi() {
           if (req.url.startsWith("/api/admin/content")) return await handleContent(req, res);
           if (req.url.startsWith("/api/admin/upload")) return await handleUpload(req, res);
           if (req.url.startsWith("/api/admin/blog")) return await handleBlog(req, res);
+          if (req.url.startsWith("/api/admin/ai")) return await handleAi(req, res);
           res.statusCode = 404;
           res.end(JSON.stringify({ ok: false, error: "Route inconnue" }));
         } catch (err) {

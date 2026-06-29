@@ -615,6 +615,78 @@ const addBtn =
             </div>
           </template>
 
+          <!-- Génération par IA -->
+          <template x-if="!editingPost">
+            <div class:list={[card, 'space-y-4', 'border-neon-cyan/30']}>
+              <button type="button" class="w-full flex items-center justify-between text-left" @click="ai.open = !ai.open">
+                <span class="text-white font-bold flex items-center gap-2">✨ Générer avec l'IA <span class="text-[11px] font-mono text-gray-500">(dans ton style)</span></span>
+                <span class="text-neon-cyan font-mono text-sm" x-text="ai.open ? '−' : '+'"></span>
+              </button>
+
+              <div x-show="ai.open" x-cloak class="space-y-4">
+                <p class="text-[12px] text-gray-500 leading-relaxed">
+                  L'IA rédige un brouillon dans <span class="text-gray-300">ton style</span> (1ʳᵉ personne, point de vue dev, ton blog).
+                  Ta clé API reste <span class="text-neon-cyan">en local</span> dans ton navigateur — elle n'est jamais committée, juste relayée par le serveur dev au fournisseur.
+                </p>
+
+                <div class="grid sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class={label}>Fournisseur</label>
+                    <select class={input} x-model="ai.provider" @change="onAiProviderChange()">
+                      <template x-for="p in aiProviders" :key="p.id">
+                        <option :value="p.id" x-text="p.label"></option>
+                      </template>
+                    </select>
+                  </div>
+                  <div>
+                    <label class={label}>Modèle</label>
+                    <input class={input} x-model="ai.model" @change="persistAi()" :placeholder="aiProvider.defaultModel" />
+                    <p class="text-[11px] text-gray-600 mt-1" x-text="aiProvider.modelHint"></p>
+                  </div>
+                </div>
+
+                <div>
+                  <label class={label}>Clé API</label>
+                  <input type="password" class={input + ' font-mono'} x-model="ai.apiKey" @change="persistAi()" placeholder="sk-…" autocomplete="off" />
+                  <p class="text-[11px] text-gray-600 mt-1">
+                    Obtenir une clé :
+                    <a :href="aiProvider.keyUrl" target="_blank" rel="noopener" class="text-neon-cyan hover:underline" x-text="aiProvider.keyUrl"></a>
+                  </p>
+                </div>
+
+                <div class="flex flex-wrap gap-4">
+                  <label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer" :class="!aiProvider.webSearch && 'opacity-40 cursor-not-allowed'">
+                    <input type="checkbox" x-model="ai.webSearch" :disabled="!aiProvider.webSearch" @change="persistAi()" class="accent-neon-cyan" />
+                    Recherche web <span class="text-[11px] text-gray-600" x-show="!aiProvider.webSearch">(indispo pour ce fournisseur)</span>
+                  </label>
+                  <label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                    <input type="checkbox" x-model="ai.cover" @change="persistAi()" class="accent-neon-cyan" />
+                    Générer une couverture néon
+                  </label>
+                </div>
+
+                <div>
+                  <label class={label}>Sujet (pour « depuis un sujet ») / orientation (optionnelle pour « tendance »)</label>
+                  <textarea rows="2" class={input} x-model="ai.topic" placeholder="ex. Le edge computing pour les apps mobiles en 2026…"></textarea>
+                </div>
+
+                <div x-show="ai.error" x-cloak class="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm" x-text="ai.error"></div>
+
+                <div class="flex flex-wrap gap-3 items-center">
+                  <button class={addBtn} @click="generateArticle('topic')" :disabled="ai.busy || !apiAvailable">
+                    <span x-show="!ai.busy">🪄 Depuis ce sujet</span>
+                    <span x-show="ai.busy" x-cloak>⏳ Génération…</span>
+                  </button>
+                  <button class={addBtn} @click="generateArticle('trends')" :disabled="ai.busy || !apiAvailable">
+                    <span x-show="!ai.busy">📡 Tendance du moment</span>
+                    <span x-show="ai.busy" x-cloak>⏳ Génération…</span>
+                  </button>
+                  <span class="text-[11px] text-gray-600">Le brouillon s'ouvre dans l'éditeur — rien n'est publié sans ton enregistrement.</span>
+                </div>
+              </div>
+            </div>
+          </template>
+
           <!-- Liste des articles -->
           <template x-if="!editingPost">
             <div class="space-y-4">

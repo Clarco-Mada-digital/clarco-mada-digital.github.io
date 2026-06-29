@@ -46,6 +46,52 @@ declare global {
 const API = "/api/admin/content";
 const BACKUP_KEY = "portfolio-admin-backup";
 const GATE_KEY = "portfolio-admin-unlocked";
+// Config IA mémorisée dans le navigateur (la clé API ne quitte jamais ta machine,
+// elle est seulement relayée par le serveur dev local au fournisseur choisi).
+const AI_KEY = "portfolio-admin-ai";
+
+interface AiProviderInfo {
+  id: string;
+  label: string;
+  defaultModel: string;
+  modelHint: string;
+  webSearch: boolean;
+  keyUrl: string;
+}
+const AI_PROVIDERS: AiProviderInfo[] = [
+  {
+    id: "openrouter",
+    label: "OpenRouter",
+    defaultModel: "anthropic/claude-3.5-sonnet",
+    modelHint: "ex. anthropic/claude-3.5-sonnet, google/gemini-2.0-flash-001, x-ai/grok-2",
+    webSearch: true,
+    keyUrl: "https://openrouter.ai/keys",
+  },
+  {
+    id: "gemini",
+    label: "Google Gemini",
+    defaultModel: "gemini-2.0-flash",
+    modelHint: "ex. gemini-2.0-flash, gemini-2.5-pro",
+    webSearch: true,
+    keyUrl: "https://aistudio.google.com/apikey",
+  },
+  {
+    id: "xai",
+    label: "xAI (Grok)",
+    defaultModel: "grok-2-latest",
+    modelHint: "ex. grok-2-latest, grok-beta",
+    webSearch: false,
+    keyUrl: "https://console.x.ai",
+  },
+  {
+    id: "groq",
+    label: "Groq",
+    defaultModel: "llama-3.3-70b-versatile",
+    modelHint: "ex. llama-3.3-70b-versatile, qwen-2.5-32b",
+    webSearch: false,
+    keyUrl: "https://console.groq.com/keys",
+  },
+];
 // SHA-256 de la phrase d'accès (par défaut "abc-dev-2026"). Pour la changer :
 // node -e "console.log(require('crypto').createHash('sha256').update('TA_PHRASE').digest('hex'))"
 // NB : garde-fou « soft » côté client (les données sont de toute façon publiques
@@ -105,6 +151,19 @@ function adminApp() {
     // Filtres de recherche (listes nombreuses)
     projectQuery: "",
     labQuery: "",
+    // --- Génération d'articles par IA ---
+    aiProviders: AI_PROVIDERS as readonly AiProviderInfo[],
+    ai: {
+      open: false,
+      provider: "openrouter",
+      apiKey: "",
+      model: "anthropic/claude-3.5-sonnet",
+      topic: "",
+      webSearch: true,
+      cover: true,
+      busy: false,
+      error: "",
+    },
     // --- Articles de blog ---
     posts: [] as BlogPost[],
     editingPost: false,
@@ -146,6 +205,13 @@ function adminApp() {
       // Déverrouillage mémorisé pour la session.
       try {
         if (sessionStorage.getItem(GATE_KEY) === "1") this.unlocked = true;
+      } catch {
+        /* ignore */
+      }
+      // Config IA mémorisée (provider, clé, modèle).
+      try {
+        const saved = localStorage.getItem(AI_KEY);
+        if (saved) Object.assign(this.ai, JSON.parse(saved));
       } catch {
         /* ignore */
       }
@@ -498,6 +564,90 @@ function adminApp() {
       if (!file) return;
       const path = await this.uploadFile(file, "blog");
       if (path) this.postDraft.cover = path;
+    },
+
+    // ---- Génération d'articles par IA ----
+    /** Infos du fournisseur actuellement sélectionné. */
+    get aiProvider(): AiProviderInfo {
+      return AI_PROVIDERS.find((p) => p.id === this.ai.provider) ?? AI_PROVIDERS[0];
+    },
+    /** Quand on change de fournisseur, propose son modèle par défaut. */
+    onAiProviderChange() {
+      const p = this.aiProvider;
+      this.ai.model = p.defaultModel;
+      if (!p.webSearch) this.ai.webSearch = false;
+      this.persistAi();
+    },
+    persistAi() {
+      try {
+        // On mémorise la config (clé comprise : pratique en local, jamais committée).
+        localStorage.setItem(
+          AI_KEY,
+          JSON.stringify({
+            provider: this.ai.provider,
+            apiKey: this.ai.apiKey,
+            model: this.ai.model,
+            webSearch: this.ai.webSearch,
+            cover: this.ai.cover,
+          }),
+        );
+      } catch {
+        /* ignore */
+      }
+    },
+    /** Génère un article via l'IA puis ouvre l'éditeur pré-rempli pour relecture. */
+    async generateArticle(mode: "topic" | "trends") {
+      if (!this.apiAvailable) {
+        this.flash("La génération IA nécessite le serveur local (npm run dev).", "error");
+        return;
+      }
+      if (!this.ai.apiKey.trim()) {
+        this.ai.error = "Renseigne ta clé API.";
+        return;
+      }
+      if (mode === "topic" && !this.ai.topic.trim()) {
+        this.ai.error = "Donne un sujet à traiter.";
+        return;
+      }
+      this.persistAi();
+      this.ai.busy = true;
+      this.ai.error = "";
+      try {
+        const res = await fetch("/api/admin/ai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            provider: this.ai.provider,
+            apiKey: this.ai.apiKey,
+            model: this.ai.model,
+            mode,
+            topic: this.ai.topic,
+            webSearch: this.ai.webSearch && this.aiProvider.webSearch,
+            cover: this.ai.cover,
+          }),
+        });
+        const out = await res.json();
+        if (!res.ok || !out.ok) throw new Error(out.error || `Erreur ${res.status}`);
+        const a = out.article;
+        this.postDraft = {
+          originalSlug: "",
+          slug: "",
+          title: a.title || "",
+          description: a.description || "",
+          date: new Date().toISOString().slice(0, 10),
+          tags: Array.isArray(a.tags) ? a.tags : [],
+          draft: true,
+          cover: out.cover || "",
+          body: a.body || "",
+        };
+        this.editingPost = true;
+        this.ai.open = false;
+        this.flash("✓ Article généré — relis, ajuste, puis enregistre.", "success");
+      } catch (err) {
+        this.ai.error = "Échec : " + (err as Error).message;
+      } finally {
+        this.ai.busy = false;
+      }
     },
 
     // ---- Stats ----
