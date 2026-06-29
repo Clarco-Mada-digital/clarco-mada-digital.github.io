@@ -48,7 +48,53 @@ const BACKUP_KEY = "portfolio-admin-backup";
 const GATE_KEY = "portfolio-admin-unlocked";
 // Config IA mémorisée dans le navigateur (la clé API ne quitte jamais ta machine,
 // elle est seulement relayée par le serveur dev local au fournisseur choisi).
+// La clé API est CHIFFRÉE (AES-GCM) avec ta phrase d'accès admin avant d'être
+// posée dans localStorage. La phrase, elle, ne vit qu'en sessionStorage
+// (éphémère). Donc le stockage persistant ne contient jamais la clé en clair.
 const AI_KEY = "portfolio-admin-ai";
+const SECRET_KEY = "portfolio-admin-secret";
+
+/** Dérive une clé AES-256 à partir de la phrase d'accès (PBKDF2). */
+async function deriveAesKey(passphrase: string): Promise<CryptoKey> {
+  const enc = new TextEncoder();
+  const base = await crypto.subtle.importKey("raw", enc.encode(passphrase), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: enc.encode("portfolio-admin-ai-v1"), iterations: 120000, hash: "SHA-256" },
+    base,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt", "decrypt"],
+  );
+}
+
+/** Chiffre une chaîne → base64 (iv + ciphertext). Renvoie "" si vide. */
+async function encryptStr(plain: string, passphrase: string): Promise<string> {
+  if (!plain || !passphrase) return "";
+  const key = await deriveAesKey(passphrase);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(
+    await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(plain)),
+  );
+  const buf = new Uint8Array(iv.length + ct.length);
+  buf.set(iv, 0);
+  buf.set(ct, iv.length);
+  return btoa(String.fromCharCode(...buf));
+}
+
+/** Déchiffre une chaîne base64. Renvoie "" si échec (mauvaise phrase, etc.). */
+async function decryptStr(b64: string, passphrase: string): Promise<string> {
+  if (!b64 || !passphrase) return "";
+  try {
+    const raw = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    const iv = raw.slice(0, 12);
+    const ct = raw.slice(12);
+    const key = await deriveAesKey(passphrase);
+    const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ct);
+    return new TextDecoder().decode(pt);
+  } catch {
+    return "";
+  }
+}
 
 interface AiProviderInfo {
   id: string;
@@ -133,17 +179,24 @@ function adminApp() {
     unlocked: false,
     gateInput: "",
     gateError: false,
+    // Phrase d'accès gardée en mémoire (+ sessionStorage éphémère) pour
+    // (dé)chiffrer la clé API. Jamais écrite dans localStorage.
+    gateSecret: "",
     async tryUnlock() {
       const hash = await sha256Hex(this.gateInput);
       if (hash === GATE_HASH) {
         this.unlocked = true;
         this.gateError = false;
+        this.gateSecret = this.gateInput;
         this.gateInput = "";
         try {
           sessionStorage.setItem(GATE_KEY, "1");
+          sessionStorage.setItem(SECRET_KEY, this.gateSecret);
         } catch {
           /* ignore */
         }
+        // Maintenant qu'on a la phrase, on peut déchiffrer la clé API mémorisée.
+        await this.loadAiConfig();
       } else {
         this.gateError = true;
       }
@@ -164,6 +217,8 @@ function adminApp() {
       busy: false,
       error: "",
     },
+    // Vrai s'il existe une clé chiffrée en mémoire qu'on n'a pas pu déverrouiller.
+    aiKeyLocked: false,
     // --- Articles de blog ---
     posts: [] as BlogPost[],
     editingPost: false,
@@ -205,18 +260,16 @@ function adminApp() {
       // Déverrouillage mémorisé pour la session.
       try {
         if (sessionStorage.getItem(GATE_KEY) === "1") this.unlocked = true;
-      } catch {
-        /* ignore */
-      }
-      // Config IA mémorisée (provider, clé, modèle).
-      try {
-        const saved = localStorage.getItem(AI_KEY);
-        if (saved) Object.assign(this.ai, JSON.parse(saved));
+        this.gateSecret = sessionStorage.getItem(SECRET_KEY) || "";
       } catch {
         /* ignore */
       }
       // Seed = données actuelles intégrées au build (fonctionne même sans API).
+      // À faire AVANT tout `await` : le template référence `data.*`, qui ne doit
+      // jamais être null pendant un rendu.
       this.data = structuredClone(window.__ADMIN_SEED__);
+      // Config IA mémorisée (provider/modèle en clair, clé API chiffrée).
+      await this.loadAiConfig();
       try {
         const res = await fetch(API, { method: "GET" });
         if (res.ok) {
@@ -578,14 +631,43 @@ function adminApp() {
       if (!p.webSearch) this.ai.webSearch = false;
       this.persistAi();
     },
-    persistAi() {
+    /** Charge la config IA ; déchiffre la clé API si on a la phrase d'accès. */
+    async loadAiConfig() {
+      let saved: Record<string, unknown> | null = null;
       try {
-        // On mémorise la config (clé comprise : pratique en local, jamais committée).
+        const s = localStorage.getItem(AI_KEY);
+        if (s) saved = JSON.parse(s);
+      } catch {
+        /* ignore */
+      }
+      if (!saved) return;
+      if (typeof saved.provider === "string") this.ai.provider = saved.provider;
+      if (typeof saved.model === "string") this.ai.model = saved.model;
+      if (typeof saved.webSearch === "boolean") this.ai.webSearch = saved.webSearch;
+      if (typeof saved.cover === "boolean") this.ai.cover = saved.cover;
+      const enc = typeof saved.apiKeyEnc === "string" ? saved.apiKeyEnc : "";
+      if (enc) {
+        const dec = this.gateSecret ? await decryptStr(enc, this.gateSecret) : "";
+        if (dec) {
+          this.ai.apiKey = dec;
+          this.aiKeyLocked = false;
+        } else {
+          // Clé chiffrée présente mais pas (encore) déchiffrable (phrase absente).
+          this.aiKeyLocked = true;
+        }
+      }
+    },
+    async persistAi() {
+      try {
+        // La clé API est chiffrée avec la phrase d'accès ; sans phrase, on ne
+        // persiste pas la clé (elle reste en mémoire le temps de la session).
+        const apiKeyEnc = this.gateSecret ? await encryptStr(this.ai.apiKey, this.gateSecret) : "";
+        if (this.ai.apiKey && this.gateSecret) this.aiKeyLocked = false;
         localStorage.setItem(
           AI_KEY,
           JSON.stringify({
             provider: this.ai.provider,
-            apiKey: this.ai.apiKey,
+            apiKeyEnc,
             model: this.ai.model,
             webSearch: this.ai.webSearch,
             cover: this.ai.cover,

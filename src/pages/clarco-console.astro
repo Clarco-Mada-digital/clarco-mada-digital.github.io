@@ -646,10 +646,16 @@ const addBtn =
                 </div>
 
                 <div>
-                  <label class={label}>Clé API</label>
+                  <label class={label + ' flex items-center gap-2'}>
+                    Clé API
+                    <span class="text-[10px] font-mono text-neon-green/80 normal-case tracking-normal">🔒 chiffrée (AES) avec ta phrase d'accès</span>
+                  </label>
                   <input type="password" class={input + ' font-mono'} x-model="ai.apiKey" @change="persistAi()" placeholder="sk-…" autocomplete="off" />
+                  <p x-show="aiKeyLocked && !ai.apiKey" x-cloak class="text-[11px] text-yellow-300/80 mt-1">
+                    🔒 Une clé chiffrée est mémorisée mais la phrase d'accès de cette session ne l'ouvre pas. Recolle ta clé (elle sera rechiffrée).
+                  </p>
                   <p class="text-[11px] text-gray-600 mt-1">
-                    Obtenir une clé :
+                    Stockée chiffrée en local, jamais committée. Obtenir une clé :
                     <a :href="aiProvider.keyUrl" target="_blank" rel="noopener" class="text-neon-cyan hover:underline" x-text="aiProvider.keyUrl"></a>
                   </p>
                 </div>
