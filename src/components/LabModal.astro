@@ -85,10 +85,27 @@
             </div>
           </div>
 
-          <!-- Code -->
+          <!-- Code (coloré + numéros de ligne + copie) -->
           <template x-for="key in ['html','css','js']" :key="key">
-            <div x-show="labTab === key" class="h-[60vh] overflow-auto">
-              <pre class="p-4 text-xs font-mono text-gray-300 whitespace-pre-wrap break-words"><code x-text="(selectedLab.demo && selectedLab.demo[key]) || '— vide —'"></code></pre>
+            <div x-show="labTab === key" class="h-[60vh] flex flex-col">
+              <div class="flex items-center justify-end px-3 py-1.5 border-b border-lab-border bg-lab-dark/60">
+                <button
+                  @click="copyLabCode(key)"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded-md text-gray-400 hover:text-neon-green border border-lab-border hover:border-neon-green transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-current" aria-hidden="true"><path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1zm3 4H8a2 2 0 00-2 2v14a2 2 0 002 2h11a2 2 0 002-2V7a2 2 0 00-2-2zm0 16H8V7h11v14z"></path></svg>
+                  <span x-text="labCopied === key ? '✓ Copié' : 'Copier'"></span>
+                </button>
+              </div>
+              <template x-if="((selectedLab.demo && selectedLab.demo[key]) || '').trim()">
+                <div class="code-view flex-1 min-h-0">
+                  <div class="code-gutter" x-html="$linenos((selectedLab.demo && selectedLab.demo[key]) || '')"></div>
+                  <pre><code class="hljs" x-html="$hl((selectedLab.demo && selectedLab.demo[key]) || '', key)"></code></pre>
+                </div>
+              </template>
+              <template x-if="!((selectedLab.demo && selectedLab.demo[key]) || '').trim()">
+                <div class="flex-1 flex items-center justify-center text-gray-600 font-mono text-sm">— vide —</div>
+              </template>
             </div>
           </template>
         </div>

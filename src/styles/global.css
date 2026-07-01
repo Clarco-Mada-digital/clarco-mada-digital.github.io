@@ -575,3 +575,116 @@ body,
   border-top: 1px solid #1c2230;
   margin: 2.5em 0;
 }
+
+/* ============================================================
+   Coloration syntaxique (highlight.js) — thème néon « lab »
+   Tokens mappés sur la palette du site. Utilisé par :
+   - le visualiseur de code des labos (LabModal, lecture seule)
+   - l'éditeur de démo de l'admin (superposition colorée)
+   ============================================================ */
+.hljs { color: #cdd6e4; background: transparent; }
+.hljs-comment,
+.hljs-quote { color: #5b6678; font-style: italic; }
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-doctag { color: #c084fc; }            /* violet */
+.hljs-string,
+.hljs-regexp,
+.hljs-meta-string { color: #34d399; }        /* vert néon */
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet { color: #fb923c; }             /* orange */
+.hljs-title,
+.hljs-title.function_,
+.hljs-built_in { color: #38e8ff; }           /* cyan */
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable { color: #f472b6; }  /* rose */
+.hljs-tag { color: #7c8699; }
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class { color: #38e8ff; }     /* cyan */
+.hljs-type,
+.hljs-class .hljs-title { color: #fbbf24; }  /* or */
+.hljs-meta { color: #5b6678; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+
+/* --- Visualiseur de code (lecture seule, avec numéros de ligne) --- */
+.code-view {
+  display: flex;
+  font-family: var(--font-mono, "JetBrains Mono", ui-monospace, monospace);
+  font-size: 12px;
+  line-height: 1.6;
+  background: #070a0f;
+}
+.code-view .code-gutter {
+  flex: none;
+  padding: 16px 10px 16px 14px;
+  text-align: right;
+  color: #3a4250;
+  user-select: none;
+  border-right: 1px solid #1c2230;
+  background: #0a0e15;
+}
+.code-view .code-gutter span { display: block; }
+.code-view pre {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 16px;
+}
+.code-view pre code {
+  display: block;
+  white-space: pre;
+  font: inherit;
+}
+
+/* --- Éditeur de code de l'admin (textarea + superposition colorée) --- */
+.code-editor {
+  position: relative;
+  border: 1px solid #1c2230;
+  border-radius: 10px;
+  background: #070a0f;
+  overflow: hidden;
+}
+.code-editor > pre,
+.code-editor > textarea {
+  margin: 0;
+  padding: 12px 14px;
+  font-family: var(--font-mono, "JetBrains Mono", ui-monospace, monospace);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  tab-size: 2;
+  border: 0;
+}
+.code-editor > pre {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  overflow: auto;
+  pointer-events: none;
+  z-index: 0;
+}
+.code-editor > pre code { font: inherit; }
+.code-editor > textarea {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  resize: vertical;
+  background: transparent;
+  color: transparent;          /* texte invisible : seul le caret reste visible */
+  caret-color: #38e8ff;
+  outline: none;
+}
+.code-editor > textarea::selection { background: rgba(56, 232, 255, 0.25); }
+.code-editor:focus-within { border-color: rgba(56, 232, 255, 0.5); }
+.code-editor > textarea::placeholder { color: #3a4250; }

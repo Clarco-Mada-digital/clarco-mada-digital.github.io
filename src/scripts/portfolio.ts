@@ -1,5 +1,6 @@
 import Alpine from "alpinejs";
 import { refreshReveal } from "./effects";
+import { registerHighlight } from "./highlight";
 import { assetUrl } from "../lib/url";
 import { generateCv, CV_TEMPLATES } from "./cv";
 import {
@@ -65,6 +66,7 @@ function portfolioApp() {
     selectedLab: null as Lab | null,
     labTab: "result" as "result" | "html" | "css" | "js",
     labViewport: "fit" as "fit" | "desktop" | "mobile",
+    labCopied: null as string | null,
     lightbox: null as string | null,
     lightboxImages: [] as string[],
     lightboxIndex: 0,
@@ -240,6 +242,19 @@ function portfolioApp() {
     },
     closeLab() {
       this.selectedLab = null;
+    },
+    /** Copie le code de l'onglet courant (html/css/js) dans le presse-papier. */
+    async copyLabCode(key: "html" | "css" | "js") {
+      const code = (this.selectedLab?.demo?.[key] as string | undefined) ?? "";
+      try {
+        await navigator.clipboard.writeText(code);
+        this.labCopied = key;
+        setTimeout(() => {
+          if (this.labCopied === key) this.labCopied = null;
+        }, 1600);
+      } catch {
+        /* presse-papier indisponible (contexte non sécurisé) : on ignore */
+      }
     },
     /** Document complet de la démo, pour le srcdoc de l'iframe agrandi. */
     get labSrcdoc(): string {
@@ -486,4 +501,5 @@ document.addEventListener("alpine:init", () => {
 });
 
 window.Alpine = Alpine;
+registerHighlight(Alpine);
 Alpine.start();

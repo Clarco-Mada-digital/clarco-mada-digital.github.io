@@ -3,6 +3,7 @@ import type { Content, Project, Lab } from "../lib/content";
 import { GRADIENT_PRESETS } from "../lib/content";
 import { assetUrl } from "../lib/url";
 import { buildLabSrcdoc } from "../lib/labs";
+import { registerHighlight } from "./highlight";
 import { marked } from "marked";
 import markedKatex from "marked-katex-extension";
 
@@ -855,4 +856,5 @@ document.addEventListener("alpine:init", () => {
 });
 
 window.Alpine = Alpine;
+registerHighlight(Alpine);
 Alpine.start();
