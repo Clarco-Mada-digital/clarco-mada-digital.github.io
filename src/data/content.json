@@ -5,7 +5,7 @@
     "initials": "BC",
     "role": "Full-Stack & Mobile Architect",
     "titleTag": "Bryan Clark // Full-Stack & Mobile Architect",
-    "description": "Portfolio de Bryan Clark, développeur Full-Stack, Web et Mobile.",
+    "description": "Bryan Clark — développeur Full-Stack & Mobile (React, Node.js, Flutter) basé à Antsiranana, Madagascar. Portfolio, labos interactifs (WebGL, Canvas) et articles sur le développement web, mobile et l'IA.",
     "available": true,
     "availabilityLabel": "Disponible",
     "cvUrl": "",
@@ -147,9 +147,9 @@
       "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
       "repoUrl": "https://github.com/Clarco-Mada-digital/SurveySense",
       "demoUrl": "https://clarco-mada-digital.github.io/SurveySense/",
-      "cover": "/projects/surveysense-cover.jpg",
+      "cover": "/projects/surveysense-cover.webp",
       "gallery": [
-        "/projects/surveysense-02.jpg"
+        "/projects/surveysense-02.webp"
       ],
       "features": [
         "Générateur de formulaires intuitif",
@@ -176,14 +176,14 @@
       "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
       "repoUrl": "https://github.com/Clarco-Mada-digital/gestion-projet",
       "demoUrl": "https://clarco-mada-digital.github.io/gestion-projet/",
-      "cover": "/projects/gestion-projet-cover.jpg",
+      "cover": "/projects/gestion-projet-cover.webp",
       "gallery": [
-        "/projects/gestion-projet-02.jpg",
-        "/projects/gestion-projet-07-mqyz0pzg.png",
-        "/projects/gestion-projet-06-mqyz0q23.png",
-        "/projects/gestion-projet-05-mqyz0q53.png",
-        "/projects/gestion-projet-04-mqyz0q7k.png",
-        "/projects/gestion-projet-03-mqyz0qa3.png"
+        "/projects/gestion-projet-02.webp",
+        "/projects/gestion-projet-07-mqyz0pzg.webp",
+        "/projects/gestion-projet-06-mqyz0q23.webp",
+        "/projects/gestion-projet-05-mqyz0q53.webp",
+        "/projects/gestion-projet-04-mqyz0q7k.webp",
+        "/projects/gestion-projet-03-mqyz0qa3.webp"
       ],
       "features": [
         "Kanban en glisser-déposer",
@@ -210,12 +210,12 @@
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
       "repoUrl": "https://github.com/Clarco-Mada-digital/omniagent",
       "demoUrl": "",
-      "cover": "/projects/omniagent-02-mqyz4etu.png",
+      "cover": "/projects/omniagent-02-mqyz4etu.webp",
       "gallery": [
-        "/projects/omniagent-04-mqyz4lsm.png",
-        "/projects/omniagent-03-mqyz4lvd.png",
-        "/projects/omniagent-02-mqyz4lyg.png",
-        "/projects/omniagent-01-mqyz4m0r.png"
+        "/projects/omniagent-04-mqyz4lsm.webp",
+        "/projects/omniagent-03-mqyz4lvd.webp",
+        "/projects/omniagent-02-mqyz4lyg.webp",
+        "/projects/omniagent-01-mqyz4m0r.webp"
       ],
       "features": [
         "IA locale (Ollama) + cloud (GPT-4o, Claude, Gemini)",
@@ -241,12 +241,12 @@
       "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
       "repoUrl": "https://github.com/Brayan-Clark/myprojector",
       "demoUrl": "",
-      "cover": "/projects/myprojector-01-mqyz8hjj.png",
+      "cover": "/projects/myprojector-01-mqyz8hjj.webp",
       "gallery": [
-        "/projects/myprojector-05-mqyz8l13.png",
-        "/projects/myprojector-04-mqyz8l4e.png",
-        "/projects/myprojector-03-mqyz8l78.png",
-        "/projects/myprojector-02-mqyz8l9x.png"
+        "/projects/myprojector-05-mqyz8l13.webp",
+        "/projects/myprojector-04-mqyz8l4e.webp",
+        "/projects/myprojector-03-mqyz8l78.webp",
+        "/projects/myprojector-02-mqyz8l9x.webp"
       ],
       "features": [
         "Bible intégrée (recherche par référence)",
@@ -272,14 +272,14 @@
       "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30",
       "repoUrl": "https://github.com/Brayan-Clark/SolarNova",
       "demoUrl": "https://brayan-clark.github.io/SolarNova/",
-      "cover": "/projects/solarnova-cover.jpg",
+      "cover": "/projects/solarnova-cover.webp",
       "gallery": [
-        "/projects/solarnova-02.jpg",
-        "/projects/solarnova-05-mqyzbo6n.png",
-        "/projects/solarnova-04-mqyzboac.png",
-        "/projects/solarnova-03-mqyzbodt.png",
-        "/projects/solarnova-02-mqyzbogq.png",
-        "/projects/solarnova-01-mqyzbojs.png"
+        "/projects/solarnova-02.webp",
+        "/projects/solarnova-05-mqyzbo6n.webp",
+        "/projects/solarnova-04-mqyzboac.webp",
+        "/projects/solarnova-03-mqyzbodt.webp",
+        "/projects/solarnova-02-mqyzbogq.webp",
+        "/projects/solarnova-01-mqyzbojs.webp"
       ],
       "features": [
         "Calculateur d'énergie solaire",
@@ -305,15 +305,15 @@
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
       "repoUrl": "https://github.com/Clarco-Mada-digital/MyP",
       "demoUrl": "https://myp-v1.mada-digital.xyz/",
-      "cover": "/projects/myprofessor-cover.jpg",
+      "cover": "/projects/myprofessor-cover.webp",
       "gallery": [
-        "/projects/myprofessor-02.jpg",
-        "/projects/myprofessor-06-mqyzfxfw.png",
-        "/projects/myprofessor-05-mqyzfxj2.png",
-        "/projects/myprofessor-04-mqyzfxm7.png",
-        "/projects/myprofessor-03-mqyzfxp3.png",
-        "/projects/myprofessor-02-mqyzfxrj.png",
-        "/projects/myprofessor-01-mqyzfxuh.png"
+        "/projects/myprofessor-02.webp",
+        "/projects/myprofessor-06-mqyzfxfw.webp",
+        "/projects/myprofessor-05-mqyzfxj2.webp",
+        "/projects/myprofessor-04-mqyzfxm7.webp",
+        "/projects/myprofessor-03-mqyzfxp3.webp",
+        "/projects/myprofessor-02-mqyzfxrj.webp",
+        "/projects/myprofessor-01-mqyzfxuh.webp"
       ],
       "features": [
         "Génération de cours par IA (Gemini/OpenRouter/Ollama)",
@@ -366,15 +366,15 @@
       "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
       "repoUrl": "https://github.com/Brayan-Clark/CSE-Mada",
       "demoUrl": "https://brayan-clark.github.io/CSE-Mada/",
-      "cover": "/projects/cse-mada-cover.jpg",
+      "cover": "/projects/cse-mada-cover.webp",
       "gallery": [
-        "/projects/cse-mada-02.jpg",
-        "/projects/cse-06-mqyzjsr0.png",
-        "/projects/cse-05-mqyzjsuu.png",
-        "/projects/cse-04-mqyzjsxw.png",
-        "/projects/cse-03-mqyzjt1b.png",
-        "/projects/cse-02-mqyzjt4v.png",
-        "/projects/cse-01-mqyzjt9k.png"
+        "/projects/cse-mada-02.webp",
+        "/projects/cse-06-mqyzjsr0.webp",
+        "/projects/cse-05-mqyzjsuu.webp",
+        "/projects/cse-04-mqyzjsxw.webp",
+        "/projects/cse-03-mqyzjt1b.webp",
+        "/projects/cse-02-mqyzjt4v.webp",
+        "/projects/cse-01-mqyzjt9k.webp"
       ],
       "features": [
         "Site ultra-rapide (Astro)",
@@ -399,12 +399,12 @@
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
       "repoUrl": "https://github.com/Brayan-Clark/adventools",
       "demoUrl": "",
-      "cover": "/projects/adventools-5-mqv5hc73.jpg",
+      "cover": "/projects/adventools-5-mqv5hc73.webp",
       "gallery": [
-        "/projects/adventools-1-mqv5hndy.jpg",
-        "/projects/adventools-2-mqv5hni6.jpg",
-        "/projects/adventools-3-mqv5hnm1.jpg",
-        "/projects/adventools-4-mqv5hnq9.jpg"
+        "/projects/adventools-1-mqv5hndy.webp",
+        "/projects/adventools-2-mqv5hni6.webp",
+        "/projects/adventools-3-mqv5hnm1.webp",
+        "/projects/adventools-4-mqv5hnq9.webp"
       ],
       "features": [
         "Étude biblique",

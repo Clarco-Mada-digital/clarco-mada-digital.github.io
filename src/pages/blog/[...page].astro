@@ -27,12 +27,20 @@ const fmt = (d: Date) =>
     });
 const readingTime = (body: string) =>
     Math.max(1, Math.round(body.split(/\s+/).length / 200));
+
+// SEO : titre unique par page de pagination + liens prev/next pour les moteurs.
+const pageTitle =
+    page.currentPage > 1
+        ? `Blog — page ${page.currentPage} // ${site.name}`
+        : `Blog // ${site.name}`;
 ---
 
 <Base
-    title={`Blog // ${site.name}`}
-    description={`Articles et notes techniques de ${site.name}.`}
+    title={pageTitle}
+    description={`Articles et notes techniques de ${site.name} : développement web, mobile et IA.`}
 >
+    {page.url.prev && <link rel="prev" slot="head" href={page.url.prev} />}
+    {page.url.next && <link rel="next" slot="head" href={page.url.next} />}
     <!-- Barre supérieure -->
     <header
         class="sticky top-0 z-30 bg-lab-dark/90 backdrop-blur-md border-b border-lab-border"
