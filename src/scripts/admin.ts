@@ -462,7 +462,17 @@ function adminApp() {
         });
         const out = await res.json();
         if (!res.ok || !out.ok) throw new Error(out.error || "Échec de l'upload");
-        this.flash(`✓ Fichier ajouté dans public/${dir}/.`, "success");
+        if (out.optimized && out.originalBytes && out.finalBytes) {
+          const before = Math.round(out.originalBytes / 1024);
+          const after = Math.round(out.finalBytes / 1024);
+          const gain = Math.round((1 - out.finalBytes / out.originalBytes) * 100);
+          this.flash(
+            `✓ Image optimisée automatiquement : ${before} Ko → ${after} Ko (-${gain} %, WebP).`,
+            "success",
+          );
+        } else {
+          this.flash(`✓ Fichier ajouté dans public/${dir}/.`, "success");
+        }
         return out.path as string;
       } catch (err) {
         this.flash("Upload : " + (err as Error).message, "error");

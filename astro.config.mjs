@@ -6,6 +6,7 @@ import rehypeKatex from "rehype-katex";
 import matter from "gray-matter";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { execFile, execFileSync } from "node:child_process";
 import { promisify } from "node:util";
@@ -103,14 +104,55 @@ function adminDevApi() {
     const buffer = Buffer.from(match[2], "base64");
     if (buffer.length > MAX_UPLOAD) throw new Error("Fichier trop volumineux (max 10 Mo)");
 
+    // Optimisation automatique : les images bitmap sont remises droites (EXIF),
+    // limitées à 1600 px de côté et converties en WebP (qualité 82). Peu importe
+    // le format ou la taille d'origine, le site reçoit toujours un fichier léger.
+    // Si ImageMagick n'est pas disponible ou échoue, on garde l'original tel quel.
+    const { buffer: finalBuffer, ext: finalExt, optimized } = await optimizeImage(buffer, ext);
+
     const outDir = path.join(publicDir, targetDir);
     await fs.mkdir(outDir, { recursive: true });
     const baseName = slugify((name || "fichier").replace(/\.[^.]+$/, ""));
-    const fileName = `${baseName}-${Date.now().toString(36)}.${ext}`;
-    await fs.writeFile(path.join(outDir, fileName), buffer);
+    const fileName = `${baseName}-${Date.now().toString(36)}.${finalExt}`;
+    await fs.writeFile(path.join(outDir, fileName), finalBuffer);
     const publicPath = `/${targetDir}/${fileName}`;
     res.statusCode = 200;
-    res.end(JSON.stringify({ ok: true, path: publicPath }));
+    res.end(
+      JSON.stringify({
+        ok: true,
+        path: publicPath,
+        optimized,
+        originalBytes: buffer.length,
+        finalBytes: finalBuffer.length,
+      }),
+    );
+  }
+
+  // Formats bitmap qu'on sait convertir. SVG (vectoriel), GIF (souvent animé)
+  // et PDF passent tels quels.
+  const OPTIMIZABLE_EXTS = new Set(["png", "jpg", "webp", "avif"]);
+
+  async function optimizeImage(buffer, ext) {
+    if (!OPTIMIZABLE_EXTS.has(ext)) return { buffer, ext, optimized: false };
+    const stamp = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const tmpIn = path.join(os.tmpdir(), `folio-up-${stamp}.${ext}`);
+    const tmpOut = path.join(os.tmpdir(), `folio-up-${stamp}.webp`);
+    try {
+      await fs.writeFile(tmpIn, buffer);
+      // "1600x1600>" : ne réduit QUE si l'image dépasse 1600 px (jamais d'agrandissement).
+      await execFileAsync("convert", [
+        tmpIn, "-auto-orient", "-resize", "1600x1600>", "-quality", "82", tmpOut,
+      ]);
+      const out = await fs.readFile(tmpOut);
+      // Si la conversion ne fait pas gagner de place (image déjà optimale), on garde l'original.
+      if (out.length >= buffer.length) return { buffer, ext, optimized: false };
+      return { buffer: out, ext: "webp", optimized: true };
+    } catch {
+      return { buffer, ext, optimized: false };
+    } finally {
+      await fs.rm(tmpIn, { force: true }).catch(() => {});
+      await fs.rm(tmpOut, { force: true }).catch(() => {});
+    }
   }
 
   // --- Articles de blog (fichiers Markdown dans src/content/blog/) ---
