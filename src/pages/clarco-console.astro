@@ -360,17 +360,61 @@ const addBtn =
             class={input + ' !max-w-sm'}
           />
           <template x-for="(project, pi) in data.projects" :key="project.id">
-            <div class:list={[card, 'space-y-4']} x-show="matches(project.name, projectQuery)">
-              <div class="flex items-start gap-3">
-                <div class="flex-1 grid sm:grid-cols-2 gap-4">
-                  <div><label class={label}>Nom</label><input class={input} x-model="project.name" /></div>
-                  <div><label class={label}>Année</label><input class={input} x-model="project.year" /></div>
+            <div class:list={[card, 'space-y-0']} x-show="matches(project.name, projectQuery)">
+              <!-- En-tête (toujours visible) : cliquer pour déplier/replier -->
+              <div class="flex items-start gap-3 cursor-pointer select-none" @click="toggleProject(project.id)">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-gray-600 font-mono text-xs" x-text="isProjectOpen(project.id) ? '▾' : '▸'"></span>
+                    <span class="text-white font-bold truncate" x-text="project.name || 'Sans titre'"></span>
+                    <span class="text-gray-600 font-mono text-xs" x-text="project.year"></span>
+                    <span
+                      class="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                      :class="project.category === 'pro' ? 'bg-neon-purple/20 text-neon-purple' : 'bg-neon-cyan/20 text-neon-cyan'"
+                      x-text="project.category === 'pro' ? ('Pro' + (project.company ? ' · ' + project.company : '')) : 'Perso'"
+                    ></span>
+                    <span x-show="project.featured" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-400">★</span>
+                    <span x-show="project.includeInCv === false" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-lab-dark text-gray-500">hors CV</span>
+                  </div>
+                  <p x-show="!isProjectOpen(project.id)" class="text-gray-500 text-xs mt-1 truncate" x-text="project.shortDesc"></p>
                 </div>
-                <div class="flex gap-1 pt-5">
+                <div class="flex gap-1 shrink-0" @click.stop>
                   <button class={miniBtn} @click="move(data.projects, pi, -1)">↑</button>
                   <button class={miniBtn} @click="move(data.projects, pi, 1)">↓</button>
                   <button class={miniBtn} @click="remove(data.projects, pi)">✕</button>
                 </div>
+              </div>
+
+              <div x-show="isProjectOpen(project.id)" class="space-y-4 pt-4">
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div><label class={label}>Nom</label><input class={input} x-model="project.name" /></div>
+                <div><label class={label}>Année</label><input class={input} x-model="project.year" /></div>
+              </div>
+
+              <!-- Catégorie : perso ou pro (+ entreprise/statut si pro) -->
+              <div class="border-t border-lab-border pt-4 grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class={label}>Catégorie</label>
+                  <select class={input} x-model="project.category">
+                    <option value="perso">Personnel</option>
+                    <option value="pro">Professionnel</option>
+                  </select>
+                </div>
+                <label class="flex items-center gap-2 text-sm text-gray-300 py-2 sm:pt-6">
+                  <input type="checkbox" x-model="project.includeInCv" class="accent-neon-cyan" /> Inclure dans le CV généré
+                </label>
+                <template x-if="project.category === 'pro'">
+                  <div><label class={label}>Entreprise / client</label><input class={input} x-model="project.company" placeholder="ex. MADA-Digital" /></div>
+                </template>
+                <template x-if="project.category === 'pro'">
+                  <div>
+                    <label class={label}>Statut</label>
+                    <select class={input} x-model="project.employment">
+                      <option value="salarie">Salarié</option>
+                      <option value="freelance">Freelance</option>
+                    </select>
+                  </div>
+                </template>
               </div>
 
               <div><label class={label}>Description courte</label><textarea rows="2" class={input} x-model="project.shortDesc"></textarea></div>
@@ -487,6 +531,7 @@ const addBtn =
                   </div>
                   <button class={addBtn + ' mt-2'} @click="addString(project.features)">+ feature</button>
                 </div>
+              </div>
               </div>
             </div>
           </template>

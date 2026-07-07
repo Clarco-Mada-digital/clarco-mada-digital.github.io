@@ -75,6 +75,8 @@ function portfolioApp() {
     cvOpen: false,
     // null (et pas "") : Alpine considère "" comme vrai pour :disabled.
     cvBusy: null as string | null,
+    // "complet" = tout (peut faire 2 pages), "simple" = condensé sur 1 page.
+    cvMode: "complet" as "complet" | "simple",
     cvTemplates: CV_TEMPLATES,
     customCv: boot.content?.site?.cvUrl || "",
     isLight:
@@ -408,7 +410,7 @@ function portfolioApp() {
       if (this.cvBusy) return;
       this.cvBusy = templateId;
       try {
-        await generateCv(boot.content, templateId, boot.base);
+        await generateCv(boot.content, templateId, boot.base, this.cvMode);
         this.toast("CV généré et téléchargé ✓", "success");
       } catch (err) {
         console.error("Génération CV échouée", err);

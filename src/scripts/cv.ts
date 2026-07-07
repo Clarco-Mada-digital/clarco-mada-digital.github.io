@@ -35,6 +35,46 @@ function stripHtml(s: string): string {
     .trim();
 }
 
+/** Tronque un texte à n caractères (mode "simple", pour tenir sur 1 page). */
+function truncate(s: string, n: number): string {
+  const t = (s || "").trim();
+  if (t.length <= n) return t;
+  return t.slice(0, n - 1).trimEnd() + "…";
+}
+
+export type CvMode = "complet" | "simple";
+
+interface CvData {
+  projects: Content["projects"];
+  experience: Content["experience"];
+  about: string;
+}
+
+/** Prépare les données à afficher selon le mode (complet = tout, simple = condensé 1 page). */
+function prepareCvData(c: Content, mode: CvMode): CvData {
+  const included = c.projects.filter((p) => p.includeInCv !== false);
+  const sorted = [...included].sort((a, b) => {
+    const featDiff = (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+    if (featDiff !== 0) return featDiff;
+    return (parseInt(b.year, 10) || 0) - (parseInt(a.year, 10) || 0);
+  });
+  const aboutFull = stripHtml(c.about.paragraphs[0] || c.hero.tagline);
+  if (mode === "simple") {
+    return {
+      projects: sorted.slice(0, 3),
+      experience: c.experience.slice(0, 2),
+      about: truncate(aboutFull, 220),
+    };
+  }
+  return { projects: sorted, experience: c.experience, about: aboutFull };
+}
+
+/** Libellé affiché à côté d'un projet pro (ex. "chez MADA-Digital"). */
+function projectOrigin(p: Content["projects"][number]): string {
+  if (p.category !== "pro" || !p.company) return "";
+  return ` — chez ${p.company}${p.employment === "freelance" ? " (freelance)" : ""}`;
+}
+
 function slug(s: string) {
   return s
     .toLowerCase()
@@ -59,7 +99,8 @@ function contactItems(c: Content): ContactItem[] {
 }
 
 /* ====================== TEMPLATE 1 : ÉLÉGANT (sidebar sombre) ====================== */
-function elegant(c: Content, photo: string | null): any {
+function elegant(c: Content, photo: string | null, mode: CvMode): any {
+  const data = prepareCvData(c, mode);
   const SIDE = "#2b2d42";
   const ACCENT = "#0d9488";
   const SW = 200; // largeur sidebar
@@ -104,9 +145,9 @@ function elegant(c: Content, photo: string | null): any {
 
   const main: any[] = [];
   main.push(mainHeading("Profil"));
-  main.push({ text: stripHtml(c.about.paragraphs[0] || c.hero.tagline), fontSize: 10, color: "#374151", lineHeight: 1.3 });
+  main.push({ text: data.about, fontSize: 10, color: "#374151", lineHeight: 1.3 });
   main.push(mainHeading("Expériences"));
-  for (const e of c.experience) {
+  for (const e of data.experience) {
     main.push({
       margin: [0, 0, 0, 9],
       stack: [
@@ -123,12 +164,12 @@ function elegant(c: Content, photo: string | null): any {
     });
   }
   main.push(mainHeading("Projets"));
-  for (const p of c.projects.slice(0, 4)) {
+  for (const p of data.projects) {
     main.push({
       margin: [0, 0, 0, 5],
       text: [
         { text: `${p.name} `, bold: true, color: "#1f2937", fontSize: 10 },
-        { text: `(${p.year})  `, color: "#9ca3af", fontSize: 9 },
+        { text: `(${p.year})${projectOrigin(p)}  `, color: "#9ca3af", fontSize: 9 },
         { text: p.shortDesc, color: "#4b5563", fontSize: 9.5 },
       ],
     });
@@ -151,7 +192,8 @@ function elegant(c: Content, photo: string | null): any {
 }
 
 /* ====================== TEMPLATE 2 : VIBRANT (bandeau coloré) ====================== */
-function vibrant(c: Content, photo: string | null): any {
+function vibrant(c: Content, photo: string | null, mode: CvMode): any {
+  const data = prepareCvData(c, mode);
   const BANNER = "#4f46e5";
   const ACCENT = "#4f46e5";
   const BANNER_H = 215;
@@ -171,7 +213,7 @@ function vibrant(c: Content, photo: string | null): any {
 
   const leftCol: any[] = [];
   leftCol.push(secHead("Profil"));
-  leftCol.push({ text: stripHtml(c.about.paragraphs[0] || c.hero.tagline), fontSize: 9.5, color: "#374151", lineHeight: 1.3, alignment: "justify" });
+  leftCol.push({ text: data.about, fontSize: 9.5, color: "#374151", lineHeight: 1.3, alignment: "justify" });
   leftCol.push(secHead("Compétences"));
   for (const cat of c.skills) {
     leftCol.push({ text: cat.name, bold: true, fontSize: 9.5, color: "#1f2937", margin: [0, 5, 0, 1] });
@@ -180,7 +222,7 @@ function vibrant(c: Content, photo: string | null): any {
 
   const rightCol: any[] = [];
   rightCol.push(secHead("Expérience"));
-  for (const e of c.experience) {
+  for (const e of data.experience) {
     rightCol.push({
       margin: [0, 0, 0, 8],
       stack: [
@@ -192,12 +234,12 @@ function vibrant(c: Content, photo: string | null): any {
     });
   }
   rightCol.push(secHead("Projets"));
-  for (const p of c.projects.slice(0, 4)) {
+  for (const p of data.projects) {
     rightCol.push({
       margin: [0, 0, 0, 4],
       text: [
         { text: `${p.name} `, bold: true, fontSize: 9.5, color: "#1f2937" },
-        { text: `(${p.year}) `, fontSize: 8.5, color: "#9ca3af" },
+        { text: `(${p.year})${projectOrigin(p)} `, fontSize: 8.5, color: "#9ca3af" },
         { text: p.shortDesc, fontSize: 9, color: "#4b5563" },
       ],
     });
@@ -225,7 +267,8 @@ function vibrant(c: Content, photo: string | null): any {
 }
 
 /* ====================== TEMPLATE 3 : ROSÉ (sidebar colorée) ====================== */
-function rose(c: Content, photo: string | null): any {
+function rose(c: Content, photo: string | null, mode: CvMode): any {
+  const data = prepareCvData(c, mode);
   const SIDE = "#be185d";
   const SW = 205;
   const lightText = "#fce7f0";
@@ -264,9 +307,9 @@ function rose(c: Content, photo: string | null): any {
 
   const main: any[] = [];
   main.push(mainHeading("Profil"));
-  main.push({ text: stripHtml(c.about.paragraphs[0] || c.hero.tagline), fontSize: 10, color: "#374151", lineHeight: 1.3 });
+  main.push({ text: data.about, fontSize: 10, color: "#374151", lineHeight: 1.3 });
   main.push(mainHeading("Expérience professionnelle"));
-  for (const e of c.experience) {
+  for (const e of data.experience) {
     main.push({
       margin: [0, 0, 0, 9],
       stack: [
@@ -283,12 +326,12 @@ function rose(c: Content, photo: string | null): any {
     });
   }
   main.push(mainHeading("Projets"));
-  for (const p of c.projects.slice(0, 4)) {
+  for (const p of data.projects) {
     main.push({
       margin: [0, 0, 0, 5],
       text: [
         { text: `${p.name} `, bold: true, color: "#1f2937", fontSize: 10 },
-        { text: `(${p.year})  `, color: "#9ca3af", fontSize: 9 },
+        { text: `(${p.year})${projectOrigin(p)}  `, color: "#9ca3af", fontSize: 9 },
         { text: p.shortDesc, color: "#4b5563", fontSize: 9.5 },
       ],
     });
@@ -310,15 +353,15 @@ function rose(c: Content, photo: string | null): any {
   };
 }
 
-const BUILDERS: Record<string, (c: Content, photo: string | null) => any> = {
+const BUILDERS: Record<string, (c: Content, photo: string | null, mode: CvMode) => any> = {
   elegant,
   vibrant,
   rose,
 };
 
 /** Construit la définition pdfmake (sans dépendre de pdfmake ni d'un DOM). */
-export function buildCvDoc(content: Content, templateId: string, photo: string | null = null): any {
-  return (BUILDERS[templateId] ?? elegant)(content, photo);
+export function buildCvDoc(content: Content, templateId: string, photo: string | null = null, mode: CvMode = "complet"): any {
+  return (BUILDERS[templateId] ?? elegant)(content, photo, mode);
 }
 
 /* ----------------------- Helpers image (navigateur) ----------------------- */
@@ -414,12 +457,12 @@ async function loadPdfMake(): Promise<any> {
   return pdfMake;
 }
 
-export async function generateCv(content: Content, templateId: string, base = "/") {
+export async function generateCv(content: Content, templateId: string, base = "/", mode: CvMode = "complet") {
   const photo = await getAvatar(content, base);
-  const docDefinition = buildCvDoc(content, templateId, photo);
+  const docDefinition = buildCvDoc(content, templateId, photo, mode);
   const pdfMake = await loadPdfMake();
 
-  const filename = `CV-${slug(content.site.name) || "cv"}.pdf`;
+  const filename = `CV-${slug(content.site.name) || "cv"}${mode === "simple" ? "-1page" : ""}.pdf`;
   await new Promise<void>((resolve, reject) => {
     try {
       pdfMake.createPdf(docDefinition).getBlob((blob: Blob) => {

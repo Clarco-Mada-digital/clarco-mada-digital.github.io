@@ -165,6 +165,10 @@ function emptyProject(id: number): Project {
     cover: "",
     gallery: [],
     features: [],
+    category: "perso",
+    company: "",
+    employment: "salarie",
+    includeInCv: true,
   };
 }
 
@@ -430,8 +434,21 @@ function adminApp() {
     },
 
     // ---- Projets ----
+    // Repliés par défaut (évite un scroll interminable dès qu'il y a plusieurs projets) ;
+    // on garde juste la liste des id actuellement dépliés.
+    openProjectIds: [] as number[],
+    isProjectOpen(id: number): boolean {
+      return this.openProjectIds.includes(id);
+    },
+    toggleProject(id: number) {
+      const i = this.openProjectIds.indexOf(id);
+      if (i === -1) this.openProjectIds.push(id);
+      else this.openProjectIds.splice(i, 1);
+    },
     addProject() {
-      this.data.projects.unshift(emptyProject(this.nextId(this.data.projects)));
+      const project = emptyProject(this.nextId(this.data.projects));
+      this.data.projects.unshift(project);
+      this.openProjectIds.push(project.id);
       this.flash("Projet ajouté en tête de liste.", "info");
     },
 

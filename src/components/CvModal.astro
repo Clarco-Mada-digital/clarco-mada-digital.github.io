@@ -35,9 +35,26 @@
         </svg>
       </button>
     </div>
-    <p class="text-gray-500 text-sm font-mono mb-5">
+    <p class="text-gray-500 text-sm font-mono mb-4">
       Choisis un style — le PDF est créé à partir de mes données, à la volée.
     </p>
+
+    <div class="flex gap-2 mb-5 p-1 rounded-lg bg-lab-dark border border-lab-border">
+      <button
+        @click="cvMode = 'complet'"
+        class="flex-1 rounded-md py-2 text-xs font-mono transition-colors"
+        :class="cvMode === 'complet' ? 'bg-neon-cyan/20 text-neon-cyan' : 'text-gray-500 hover:text-gray-300'"
+      >
+        Complet <span class="opacity-70">(tout, 1-2 pages)</span>
+      </button>
+      <button
+        @click="cvMode = 'simple'"
+        class="flex-1 rounded-md py-2 text-xs font-mono transition-colors"
+        :class="cvMode === 'simple' ? 'bg-neon-cyan/20 text-neon-cyan' : 'text-gray-500 hover:text-gray-300'"
+      >
+        Simple <span class="opacity-70">(condensé, 1 page)</span>
+      </button>
+    </div>
 
     <div class="space-y-3">
       <template x-for="tpl in cvTemplates" :key="tpl.id">

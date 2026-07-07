@@ -28,6 +28,14 @@ export interface Project {
   /** Images de démo affichées dans la modale. */
   gallery?: string[];
   features: string[];
+  /** Projet personnel (side-project) ou réalisé en contexte professionnel. */
+  category?: "perso" | "pro";
+  /** Entreprise / client pour lequel le projet a été réalisé (si category = "pro"). */
+  company?: string;
+  /** Statut pro : salarié ou freelance (si category = "pro"). */
+  employment?: "salarie" | "freelance";
+  /** Inclure ce projet dans le CV généré (case cochée par défaut). */
+  includeInCv?: boolean;
 }
 
 export interface Experience {

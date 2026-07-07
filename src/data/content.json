@@ -157,7 +157,9 @@
         "Stockage local chiffré AES-256",
         "Export JSON / CSV",
         "Interface responsive"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     },
     {
       "id": 2,
@@ -191,7 +193,9 @@
         "Assistant IA contextuel (Nexus)",
         "Générateur de dossiers stratégiques par IA",
         "Exports PDF / HTML / Markdown"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     },
     {
       "id": 3,
@@ -223,7 +227,9 @@
         "Recherche locale RAG sur vos fichiers",
         "Génération d'images",
         "Application de bureau (Tauri)"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     },
     {
       "id": 4,
@@ -254,7 +260,9 @@
         "Double écran (opérateur / projection)",
         "Aperçu temps réel & mode caméra",
         "Agenda / playlist de service"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     },
     {
       "id": 5,
@@ -287,7 +295,9 @@
         "Intégration Supabase optionnelle",
         "Avis & formulaires contact/devis",
         "Design responsive animé"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     },
     {
       "id": 6,
@@ -321,7 +331,9 @@
         "Parcours d'apprentissage & suivi de progression",
         "Quiz et exercices interactifs",
         "Partage communautaire de parcours"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     },
     {
       "id": 7,
@@ -348,7 +360,9 @@
         "Recherche avancée et catégories",
         "Messagerie intégrée",
         "Authentification (NextAuth) + Prisma"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     },
     {
       "id": 8,
@@ -382,7 +396,9 @@
         "Carte interactive de localisation",
         "Formulaire de contact",
         "SEO optimisé"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     },
     {
       "id": 9,
@@ -412,7 +428,9 @@
         "Prise de notes (texte, vocal, images)",
         "Support multilingue",
         "Application Android (APK)"
-      ]
+      ],
+      "category": "perso",
+      "includeInCv": true
     }
   ],
   "experience": [
