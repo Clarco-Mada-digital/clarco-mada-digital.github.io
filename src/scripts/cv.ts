@@ -47,6 +47,7 @@ export type CvMode = "complet" | "simple";
 interface CvData {
   projects: Content["projects"];
   experience: Content["experience"];
+  skills: Content["skills"];
   about: string;
 }
 
@@ -62,17 +63,12 @@ function prepareCvData(c: Content, mode: CvMode): CvData {
   if (mode === "simple") {
     return {
       projects: sorted.slice(0, 3),
-      experience: c.experience.slice(0, 2),
-      about: truncate(aboutFull, 220),
+      experience: c.experience.slice(0, 1),
+      skills: c.skills.slice(0, 2).map((cat) => ({ ...cat, items: cat.items.slice(0, 6) })),
+      about: truncate(aboutFull, 200),
     };
   }
-  return { projects: sorted, experience: c.experience, about: aboutFull };
-}
-
-/** Libellé affiché à côté d'un projet pro (ex. "chez MADA-Digital"). */
-function projectOrigin(p: Content["projects"][number]): string {
-  if (p.category !== "pro" || !p.company) return "";
-  return ` — chez ${p.company}${p.employment === "freelance" ? " (freelance)" : ""}`;
+  return { projects: sorted, experience: c.experience, skills: c.skills, about: aboutFull };
 }
 
 function slug(s: string) {
@@ -85,17 +81,58 @@ function slug(s: string) {
 }
 
 interface ContactItem {
+  /** Court repère façon icône (2-4 lettres), affiché dans un badge coloré. */
+  abbr: string;
   label: string;
   value: string;
 }
 function contactItems(c: Content): ContactItem[] {
   const items: ContactItem[] = [];
-  if (c.contact.phone) items.push({ label: "Téléphone", value: c.contact.phone });
-  if (c.contact.email) items.push({ label: "Email", value: c.contact.email });
-  if (c.contact.location) items.push({ label: "Localisation", value: c.contact.location });
-  if (c.socials.github) items.push({ label: "GitHub", value: c.socials.github.replace(/^https?:\/\//, "") });
-  if (c.socials.linkedin) items.push({ label: "LinkedIn", value: c.socials.linkedin.replace(/^https?:\/\//, "") });
+  if (c.contact.phone) items.push({ abbr: "TÉL", label: "Téléphone", value: c.contact.phone });
+  if (c.contact.email) items.push({ abbr: "MAIL", label: "Email", value: c.contact.email });
+  if (c.contact.location) items.push({ abbr: "LIEU", label: "Localisation", value: c.contact.location });
+  if (c.socials.github) items.push({ abbr: "GH", label: "GitHub", value: c.socials.github.replace(/^https?:\/\//, "") });
+  if (c.socials.linkedin) items.push({ abbr: "IN", label: "LinkedIn", value: c.socials.linkedin.replace(/^https?:\/\//, "") });
   return items;
+}
+
+/** Badge coloré façon "icône" (abréviation) + valeur — remplace les labels bruts. */
+function contactChip(it: ContactItem, chipFill: string, chipText: string, valueColor: string): any {
+  return {
+    columns: [
+      {
+        width: 30,
+        table: {
+          widths: ["*"],
+          body: [[{ text: it.abbr, color: chipText, bold: true, fontSize: 6.5, alignment: "center", fillColor: chipFill, margin: [0, 3, 0, 3] }]],
+        },
+        layout: "noBorders",
+      },
+      { width: "*", text: it.value, fontSize: 8.5, color: valueColor, margin: [7, 3, 0, 0] },
+    ],
+    columnGap: 0,
+    margin: [0, 4, 0, 0],
+  };
+}
+
+/** Bloc "Projets" enrichi : nom/année, origine perso/pro (+ entreprise), description, stack. */
+function projectBlock(p: Content["projects"][number], accent: string, titleColor: string, descColor: string, mutedColor: string): any {
+  const origin =
+    p.category === "pro"
+      ? { text: `${p.company || "Mission professionnelle"}${p.employment === "freelance" ? " · Freelance" : p.company ? " · Salarié" : ""}`, color: accent, bold: true, fontSize: 8, margin: [0, 1, 0, 2] }
+      : { text: "Projet personnel", color: mutedColor, italics: true, fontSize: 8, margin: [0, 1, 0, 2] };
+  const stack: any[] = [
+    {
+      columns: [
+        { text: p.name, bold: true, fontSize: 10, color: titleColor, width: "*" },
+        { text: p.year, fontSize: 8.5, color: mutedColor, alignment: "right", width: "auto" },
+      ],
+    },
+    origin,
+    { text: p.shortDesc, fontSize: 9, color: descColor, lineHeight: 1.22 },
+  ];
+  if (p.tags?.length) stack.push({ text: p.tags.slice(0, 4).join("  ·  "), fontSize: 7.5, color: mutedColor, margin: [0, 2, 0, 0] });
+  return { margin: [0, 0, 0, 8], stack };
 }
 
 /* ====================== TEMPLATE 1 : ÉLÉGANT (sidebar sombre) ====================== */
@@ -114,10 +151,12 @@ function elegant(c: Content, photo: string | null, mode: CvMode): any {
     characterSpacing: 1,
     margin: [0, 14, 0, 4],
   });
-  const sideRule = {
+  // Fonction (pas un objet constant) : pdfmake annote l'objet avec sa position calculée,
+  // donc réutiliser la même référence à 2 endroits déplace le second trait au mauvais endroit.
+  const sideRule = () => ({
     canvas: [{ type: "line", x1: 0, y1: 0, x2: SW - 44, y2: 0, lineWidth: 1, lineColor: ACCENT }],
     margin: [0, 0, 0, 6],
-  };
+  });
   const mainHeading = (t: string) => ({
     columns: [
       { width: 4, canvas: [{ type: "rect", x: 0, y: 1, w: 4, h: 14, color: ACCENT }] },
@@ -131,14 +170,13 @@ function elegant(c: Content, photo: string | null, mode: CvMode): any {
   sidebar.push({ text: c.site.name, color: "#ffffff", bold: true, fontSize: 17, alignment: "center" });
   sidebar.push({ text: c.site.role, color: ACCENT, fontSize: 10, alignment: "center", margin: [0, 2, 0, 4] });
 
-  sidebar.push(sideHeading("Contact"), sideRule);
+  sidebar.push(sideHeading("Contact"), sideRule());
   for (const it of contactItems(c)) {
-    sidebar.push({ text: it.label, color: ACCENT, fontSize: 8, bold: true, margin: [0, 4, 0, 0] });
-    sidebar.push({ text: it.value, color: light, fontSize: 9 });
+    sidebar.push(contactChip(it, ACCENT, "#ffffff", light));
   }
 
-  sidebar.push(sideHeading("Compétences"), sideRule);
-  for (const cat of c.skills) {
+  sidebar.push(sideHeading("Compétences"), sideRule());
+  for (const cat of data.skills) {
     sidebar.push({ text: cat.name, color: "#ffffff", fontSize: 9, bold: true, margin: [0, 5, 0, 1] });
     sidebar.push({ text: cat.items.join(", "), color: light, fontSize: 8.5, lineHeight: 1.2 });
   }
@@ -165,14 +203,7 @@ function elegant(c: Content, photo: string | null, mode: CvMode): any {
   }
   main.push(mainHeading("Projets"));
   for (const p of data.projects) {
-    main.push({
-      margin: [0, 0, 0, 5],
-      text: [
-        { text: `${p.name} `, bold: true, color: "#1f2937", fontSize: 10 },
-        { text: `(${p.year})${projectOrigin(p)}  `, color: "#9ca3af", fontSize: 9 },
-        { text: p.shortDesc, color: "#4b5563", fontSize: 9.5 },
-      ],
-    });
+    main.push(projectBlock(p, ACCENT, "#1f2937", "#4b5563", "#9ca3af"));
   }
 
   return {
@@ -198,15 +229,19 @@ function vibrant(c: Content, photo: string | null, mode: CvMode): any {
   const ACCENT = "#4f46e5";
   const BANNER_H = 215;
 
+  const TOP_MARGIN = 30;
+
   const head: any[] = [];
-  if (photo) head.push({ image: photo, width: 84, alignment: "center", margin: [0, 0, 0, 8] });
-  head.push({ text: c.site.name, color: "#ffffff", bold: true, fontSize: 23, alignment: "center", characterSpacing: 1 });
-  head.push({ text: c.site.role, color: "#dbeafe", fontSize: 11, alignment: "center", margin: [0, 2, 0, 7] });
+  if (photo) head.push({ image: photo, width: 78, alignment: "center", margin: [0, 0, 0, 7] });
+  head.push({ text: c.site.name, color: "#ffffff", bold: true, fontSize: 22, alignment: "center", characterSpacing: 1 });
+  head.push({ text: c.site.role, color: "#dbeafe", fontSize: 10.5, alignment: "center", margin: [0, 2, 0, 9] });
   head.push({
-    text: contactItems(c).map((i) => i.value).join("   •   "),
-    color: "#eef2ff",
-    fontSize: 8.5,
+    text: contactItems(c).flatMap((it, i, arr) => [
+      { text: it.abbr + " ", bold: true, fontSize: 7, color: "#c7d2fe" },
+      { text: it.value + (i < arr.length - 1 ? "     " : ""), fontSize: 8.5, color: "#eef2ff" },
+    ]),
     alignment: "center",
+    lineHeight: 1.6,
   });
 
   const secHead = (t: string) => ({ text: t.toUpperCase(), bold: true, fontSize: 12, color: ACCENT, margin: [0, 14, 0, 6], characterSpacing: 1 });
@@ -215,7 +250,7 @@ function vibrant(c: Content, photo: string | null, mode: CvMode): any {
   leftCol.push(secHead("Profil"));
   leftCol.push({ text: data.about, fontSize: 9.5, color: "#374151", lineHeight: 1.3, alignment: "justify" });
   leftCol.push(secHead("Compétences"));
-  for (const cat of c.skills) {
+  for (const cat of data.skills) {
     leftCol.push({ text: cat.name, bold: true, fontSize: 9.5, color: "#1f2937", margin: [0, 5, 0, 1] });
     leftCol.push({ text: cat.items.join(", "), fontSize: 8.5, color: "#6b7280", lineHeight: 1.2 });
   }
@@ -235,32 +270,30 @@ function vibrant(c: Content, photo: string | null, mode: CvMode): any {
   }
   rightCol.push(secHead("Projets"));
   for (const p of data.projects) {
-    rightCol.push({
-      margin: [0, 0, 0, 4],
-      text: [
-        { text: `${p.name} `, bold: true, fontSize: 9.5, color: "#1f2937" },
-        { text: `(${p.year})${projectOrigin(p)} `, fontSize: 8.5, color: "#9ca3af" },
-        { text: p.shortDesc, fontSize: 9, color: "#4b5563" },
-      ],
-    });
+    rightCol.push(projectBlock(p, ACCENT, "#1f2937", "#4b5563", "#9ca3af"));
   }
 
   return {
-    pageMargins: [40, BANNER_H + 18, 40, 36],
+    // Marges normales sur TOUTES les pages : le bandeau (page 1 seulement) est peint en
+    // fond (background) et l'en-tête est positionné en absolu par-dessus, donc il ne
+    // consomme aucun espace de mise en page — ça évite le grand vide en haut des pages
+    // suivantes qu'on aurait avec une marge haute permanente de la taille du bandeau.
+    pageMargins: [40, TOP_MARGIN, 40, 36],
     defaultStyle: { font: "Roboto" },
     background: (page: number) =>
       page === 1
         ? { canvas: [{ type: "rect", x: 0, y: 0, w: A4.width, h: BANNER_H, color: BANNER }] }
         : null,
     content: [
-      // En-tête (sur le bandeau) — marges négatives pour remonter dans le bandeau.
-      { stack: head, margin: [0, -BANNER_H + 22, 0, 0] },
+      { stack: head, absolutePosition: { x: 40, y: 22 }, width: A4.width - 80 },
       {
         columns: [
           { width: "38%", stack: leftCol },
           { width: "*", stack: rightCol, margin: [16, 0, 0, 0] },
         ],
-        margin: [0, 8, 0, 0],
+        // Pousse le contenu sous le bandeau — une seule fois, en haut du flux, donc les
+        // pages suivantes démarrent normalement à TOP_MARGIN.
+        margin: [0, BANNER_H - TOP_MARGIN + 14, 0, 0],
       },
     ],
   };
@@ -297,10 +330,10 @@ function rose(c: Content, photo: string | null, mode: CvMode): any {
 
   sidebar.push(sideHeading("Contact"));
   for (const it of contactItems(c)) {
-    sidebar.push({ text: it.value, color: lightText, fontSize: 9, margin: [0, 2, 0, 0] });
+    sidebar.push(contactChip(it, "#ffffff", SIDE, lightText));
   }
   sidebar.push(sideHeading("Compétences"));
-  for (const cat of c.skills) {
+  for (const cat of data.skills) {
     sidebar.push({ text: cat.name, color: "#ffffff", fontSize: 9, bold: true, margin: [0, 5, 0, 1] });
     sidebar.push({ text: cat.items.join(", "), color: lightText, fontSize: 8.5, lineHeight: 1.2 });
   }
@@ -327,14 +360,7 @@ function rose(c: Content, photo: string | null, mode: CvMode): any {
   }
   main.push(mainHeading("Projets"));
   for (const p of data.projects) {
-    main.push({
-      margin: [0, 0, 0, 5],
-      text: [
-        { text: `${p.name} `, bold: true, color: "#1f2937", fontSize: 10 },
-        { text: `(${p.year})${projectOrigin(p)}  `, color: "#9ca3af", fontSize: 9 },
-        { text: p.shortDesc, color: "#4b5563", fontSize: 9.5 },
-      ],
-    });
+    main.push(projectBlock(p, SIDE, "#1f2937", "#4b5563", "#9ca3af"));
   }
 
   return {

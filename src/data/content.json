@@ -111,7 +111,6 @@
         "Flutter",
         "React Native",
         "Dart",
-        "Swift",
         "Kotlin",
         "PWA",
         "Electron"
@@ -159,7 +158,7 @@
         "Interface responsive"
       ],
       "category": "perso",
-      "includeInCv": true
+      "includeInCv": false
     },
     {
       "id": 2,
@@ -297,7 +296,7 @@
         "Design responsive animé"
       ],
       "category": "perso",
-      "includeInCv": true
+      "includeInCv": false
     },
     {
       "id": 6,
@@ -439,7 +438,7 @@
       "role": "Senior Full-Stack Developer",
       "company": "MADA-Digital",
       "period": " 2023 — Présent",
-      "description": "Développement de plateformes web à fort traffic (2M+ utilisateurs). Migration d'une architecture monolithique vers microservices. Optimisation des performances (Core Web Vitals).",
+      "description": "Développement et scalabilité : Conception et maintenance de plateformes web à fort trafic, garantissant la stabilité et la performance pour plus de 2 millions d'utilisateurs.\nModernisation architecturale : Pilotage de la migration d'une architecture monolithique vers des microservices pour accroître la flexibilité et la maintenabilité du système.\nOptimisation Performance : Amélioration de l'expérience utilisateur et du SEO via l'optimisation rigoureuse des Core Web Vitals.\nLogiciel de Gestion (ERP) : Conception et développement d'un ERP modulaire (similaire à Odoo), permettant la gestion centralisée et évolutive des processus métiers de l'entreprise.\nDéveloppement Mobile & API : Création d'applications mobiles intuitives et mise en œuvre d'API robustes pour l'interconnexion des services.",
       "tech": [
         "React.js",
         "Django",
@@ -455,7 +454,7 @@
       "role": "Mobile & Web Developer",
       "company": "Freelance",
       "period": "2021 — 2023",
-      "description": "Création d'applications mobiles et web pour divers clients (Fintech, E-commerce, Santé). Mise en place de CI/CD et de process de tests automatisés.",
+      "description": "Développement Multi-plateformes : Conception et déploiement d'applications web et mobiles sur mesure pour des clients issus de secteurs à fortes contraintes (Fintech, E-commerce, Santé), en adaptant les solutions aux besoins métiers spécifiques.\nCulture DevOps & Qualité : Optimisation du cycle de vie du logiciel (SDLC) par la mise en œuvre de pipelines CI/CD et l'automatisation des tests, garantissant une réduction des bugs en production et une accélération des cycles de livraison.",
       "tech": [
         "Flutter",
         "React",
@@ -470,7 +469,7 @@
       "role": "Développeur Junior",
       "company": "Freelance",
       "period": "2018 — 2020",
-      "description": "Développement de sites vitrines et e-commerce sous WordPress et Shopify. Premiers pas en React et Node.js. Sensibilisation aux bonnes pratiques de développement.",
+      "description": " Développement Web : Création de sites vitrines et de solutions e-commerce optimisées via WordPress.\nÉvolution Technique : Montée en compétence sur les technologies React et Node.js pour le développement d'applications dynamiques.\nQualité Logicielle : Application des standards de développement et des bonnes pratiques de codage pour garantir des bases saines et évolutives.",
       "tech": [
         "PHP",
         "JavaScript",
