@@ -352,8 +352,12 @@
       "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
       "repoUrl": "https://github.com/Clarco-Mada-digital/dev_suarez",
       "demoUrl": "",
-      "cover": "",
-      "gallery": [],
+      "cover": "/projects/d-s-by-mada-digital-3-mrazj4h3.webp",
+      "gallery": [
+        "/projects/d-s-by-mada-digital-mrazje7s.webp",
+        "/projects/d-s-by-mada-digital-1-mrazjmjy.webp",
+        "/projects/d-s-by-mada-digital-2-mrazjnnv.webp"
+      ],
       "features": [
         "Publication de projets & gestion des offres",
         "Profils freelances & soumission d'offres",
