@@ -6,10 +6,10 @@
     "role": "Full-Stack & Mobile Architect",
     "titleTag": "Bryan Clark // Full-Stack & Mobile Architect",
     "description": "Bryan Clark — développeur Full-Stack & Mobile (React, Node.js, Flutter) basé à Antsiranana, Madagascar. Portfolio, labos interactifs (WebGL, Canvas) et articles sur le développement web, mobile et l'IA.",
-    "available": true,
+    "available": false,
     "availabilityLabel": "Disponible",
     "cvUrl": "",
-    "photo": "https://res.cloudinary.com/dqhksjmzp/image/upload/v1770882848/gestion-projet/img-hero-presentation.png"
+    "photo": "https://res.cloudinary.com/dqhksjmzp/image/upload/v1783446311/BC_Image_no_backround_vuqnxo.png"
   },
   "hero": {
     "tagline": "Full-Stack & Mobile Architect. Je conçois des applications performantes, élégantes et scalables.",
@@ -54,9 +54,10 @@
   ],
   "about": {
     "paragraphs": [
-      "Bonjour ! Je suis Bryan Clark, développeur Full-Stack & Mobile et fondateur de <span class=\"text-neon-cyan font-semibold\">ABC.Dev</span>. Je transforme des idées en applications web et mobiles robustes, pensées pour durer.",
-      "Mon approche est simple : un code propre, une architecture réfléchie et une obsession du détail. Je navigue entre le front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go, Python, Rust) et le mobile (Flutter, React Native).",
-      "Quand je ne code pas, je contribue à des projets open-source, j'expérimente avec des outils d'IA et j'explore les nouveautés tech. Avec ABC.Dev, j'accompagne les entreprises de l'idée jusqu'à la mise en production."
+      "Bonjour ! Je suis <span class=\"text-neon-cyan font-semibold\">Bryan Clark</span>, développeur Full-Stack & Mobile. Je ne me contente pas de créer des applications ; je bâtis des écosystèmes numériques robustes, scalables et pensés pour durer.",
+      "Mon expertise s'est forgée sur des défis techniques majeurs : de la conception d'ERP modulaires complexes à la gestion de plateformes supportant plus de 2 millions d'utilisateurs. Mon approche repose sur trois piliers : un code propre, une architecture microservices réfléchie et une obsession pour la performance.",
+      "Côté technique, je navigue avec aisance entre le front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go, Python, Rust) et le mobile (Flutter, React Native).",
+      "Passionné par l'open-source et l'IA, je m'épanouis dans la résolution de problèmes complexes. J'accompagne aujourd'hui les entreprises et les entrepreneurs pour transformer leurs visions en produits industriels, de la phase de conception stratégique jusqu'au déploiement final en production."
     ],
     "doing": [
       "Architecture d'applications web SaaS",

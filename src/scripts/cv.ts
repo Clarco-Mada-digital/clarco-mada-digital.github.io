@@ -59,7 +59,11 @@ function prepareCvData(c: Content, mode: CvMode): CvData {
     if (featDiff !== 0) return featDiff;
     return (parseInt(b.year, 10) || 0) - (parseInt(a.year, 10) || 0);
   });
-  const aboutFull = stripHtml(c.about.paragraphs[0] || c.hero.tagline);
+  // Mode "complet" : tous les paragraphes (avant, seul le 1er était repris, le reste
+  // du "À propos" du site n'apparaissait jamais sur le CV).
+  const aboutFull = c.about.paragraphs.length
+    ? c.about.paragraphs.map(stripHtml).join("  ")
+    : stripHtml(c.hero.tagline);
   if (mode === "simple") {
     return {
       projects: sorted.slice(0, 3),
@@ -207,14 +211,16 @@ function elegant(c: Content, photo: string | null, mode: CvMode): any {
   }
 
   return {
-    pageMargins: [0, 0, 0, 0],
+    // Un peu d'air en haut/bas sur CHAQUE page (le bandeau sidebar reste plein-bord :
+    // le "background" ci-dessous peint indépendamment des marges de page).
+    pageMargins: [0, 22, 0, 26],
     defaultStyle: { font: "Roboto" },
     background: () => ({ canvas: [{ type: "rect", x: 0, y: 0, w: SW, h: A4.height, color: SIDE }] }),
     content: [
       {
         columns: [
-          { width: SW, stack: sidebar, margin: [22, 28, 22, 24] },
-          { width: "*", stack: main, margin: [22, 30, 28, 24] },
+          { width: SW, stack: sidebar, margin: [22, 6, 22, 6] },
+          { width: "*", stack: main, margin: [22, 8, 28, 6] },
         ],
         columnGap: 0,
       },
@@ -364,14 +370,16 @@ function rose(c: Content, photo: string | null, mode: CvMode): any {
   }
 
   return {
-    pageMargins: [0, 0, 0, 0],
+    // Un peu d'air en haut/bas sur CHAQUE page (le bandeau sidebar reste plein-bord :
+    // le "background" ci-dessous peint indépendamment des marges de page).
+    pageMargins: [0, 22, 0, 26],
     defaultStyle: { font: "Roboto" },
     background: () => ({ canvas: [{ type: "rect", x: 0, y: 0, w: SW, h: A4.height, color: SIDE }] }),
     content: [
       {
         columns: [
-          { width: SW, stack: sidebar, margin: [20, 26, 20, 22] },
-          { width: "*", stack: main, margin: [22, 28, 28, 22] },
+          { width: SW, stack: sidebar, margin: [20, 6, 20, 6] },
+          { width: "*", stack: main, margin: [22, 8, 28, 6] },
         ],
         columnGap: 0,
       },
