@@ -35,13 +35,6 @@ function stripHtml(s: string): string {
     .trim();
 }
 
-/** Tronque un texte à n caractères (mode "simple", pour tenir sur 1 page). */
-function truncate(s: string, n: number): string {
-  const t = (s || "").trim();
-  if (t.length <= n) return t;
-  return t.slice(0, n - 1).trimEnd() + "…";
-}
-
 export type CvMode = "complet" | "simple";
 
 interface CvData {
@@ -65,11 +58,14 @@ function prepareCvData(c: Content, mode: CvMode): CvData {
     ? c.about.paragraphs.map(stripHtml).join("  ")
     : stripHtml(c.hero.tagline);
   if (mode === "simple") {
+    // Le 1er paragraphe en entier (jamais coupé en plein milieu d'une phrase —
+    // une phrase tronquée fait mauvais effet sur un CV), pas un extrait tronqué.
+    const aboutSimple = stripHtml(c.about.paragraphs[0] || c.hero.tagline);
     return {
       projects: sorted.slice(0, 3),
       experience: c.experience.slice(0, 1),
       skills: c.skills.slice(0, 2).map((cat) => ({ ...cat, items: cat.items.slice(0, 6) })),
-      about: truncate(aboutFull, 200),
+      about: aboutSimple,
     };
   }
   return { projects: sorted, experience: c.experience, skills: c.skills, about: aboutFull };
