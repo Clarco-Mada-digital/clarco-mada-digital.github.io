@@ -222,12 +222,13 @@
       "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
       "repoUrl": "",
       "demoUrl": "",
-      "cover": "/projects/gplus-accueil-mrbo7iq8.png",
+      "cover": "/projects/abc-dev-mrc2jb6g.png",
       "gallery": [
         "/projects/gplus-modules-mrbo7orr.png",
         "/projects/gplus-facture-devis-mrbo7ow0.png",
         "/projects/gplus-caisse-mrbo7ozh.png",
-        "/projects/gplus-mrbo7p2i.png"
+        "/projects/gplus-mrbo7p2i.png",
+        "/projects/gplus-accueil-mrbo7iq8.png"
       ],
       "features": [
         "Application modulaire",
