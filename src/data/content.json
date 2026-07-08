@@ -212,7 +212,7 @@
       "name": "Gplus",
       "year": "2026",
       "featured": true,
-      "shortDesc": "'ai développé Socle GPlus, une plateforme applicative modulaire qui s'adapte aux besoins métier grâce à un système de modules extensibles. L'assistant de configuration web permet un déploiement rapide sans intervention technique. L'architecture découvre automatiquement les modules et gère leurs dépendances, offrant une expérience utilisateur fluide. Le projet intègre les meilleures pratiques Django avec une API REST et une interface moderne.",
+      "shortDesc": "Socle GPlus, une plateforme applicative modulaire qui s'adapte aux besoins métier grâce à un système de modules extensibles. L'assistant de configuration web permet un déploiement rapide sans intervention technique. L'architecture découvre automatiquement les modules et gère leurs dépendances, offrant une expérience utilisateur fluide. Le projet intègre les meilleures pratiques Django avec une API REST et une interface moderne.",
       "fullDesc": "Socle GPlus est une application Django modulaire conçue pour démarrer seule et se configurer via un assistant web. Elle permet d'installer des modules métier (stock, vente, caisse, banque) selon les besoins spécifiques de chaque entreprise. Le projet utilise Django REST Framework, Tailwind CSS et supporte SQLite, MySQL et PostgreSQL. Les modules sont découverts automatiquement et peuvent être distribués sous forme d'archives .zip.",
       "tags": [
         "Django",
