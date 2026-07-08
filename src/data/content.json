@@ -1,11 +1,11 @@
 {
   "site": {
-    "name": "Bryan Clark",
+    "name": "Clarco RAHERINANDRASANA",
     "handle": "bryan_clark",
     "initials": "BC",
     "role": "Full-Stack & Mobile Architect",
-    "titleTag": "Bryan Clark >> Full-Stack & Mobile Architect",
-    "description": "Bryan Clark — développeur Full-Stack & Mobile (React, Node.js, Flutter) basé à Antsiranana, Madagascar. Portfolio, labos interactifs (WebGL, Canvas) et articles sur le développement web, mobile et l'IA.",
+    "titleTag": "Bryan Clark // Full-Stack & Mobile Architect",
+    "description": "Clarco RAHERINANDRASANA — développeur Full-Stack & Mobile (React, Node.js, Flutter) basé à Antsiranana, Madagascar. Portfolio, labos interactifs (WebGL, Canvas) et articles sur le développement web, mobile et l'IA.",
     "available": false,
     "availabilityLabel": "Disponible",
     "cvUrl": "",
@@ -14,7 +14,7 @@
   "hero": {
     "tagline": "Full-Stack & Mobile Architect. Je conçois des applications performantes, élégantes et scalables.",
     "code": {
-      "name": "Bryan Clark",
+      "name": "Clarco RAHERINANDRASANA",
       "role": "Full-Stack & Mobile Architect",
       "location": "Antsiranana,Madagascar",
       "stack": [
@@ -54,7 +54,7 @@
   ],
   "about": {
     "paragraphs": [
-      "Bonjour ! Je suis <span class=\"text-neon-cyan font-semibold\">Bryan Clark</span>, développeur Full-Stack & Mobile. Je ne me contente pas de créer des applications ; je bâtis des écosystèmes numériques robustes, scalables et pensés pour durer.",
+      "Bonjour ! Je suis <span class=\"text-neon-cyan font-semibold\">Clarco</span>, développeur Full-Stack & Mobile. Je ne me contente pas de créer des applications ; je bâtis des écosystèmes numériques robustes, scalables et pensés pour durer.",
       "Mon expertise s'est forgée sur des défis techniques majeurs : de la conception d'ERP modulaires complexes à la gestion de plateformes supportant plus de 2 millions d'utilisateurs. Mon approche repose sur trois piliers : un code propre, une architecture microservices réfléchie et une obsession pour la performance.",
       "Côté technique, je navigue avec aisance entre le front-end (React, Vue.js, Tailwind), le back-end (Node.js, Go, Python, Rust) et le mobile (Flutter, React Native).",
       "Passionné par l'open-source et l'IA, je m'épanouis dans la résolution de problèmes complexes. J'accompagne aujourd'hui les entreprises et les entrepreneurs pour transformer leurs visions en produits industriels, de la phase de conception stratégique jusqu'au déploiement final en production."
@@ -131,6 +131,114 @@
   ],
   "projects": [
     {
+      "id": 13,
+      "name": "MADABEST",
+      "year": "2024",
+      "featured": false,
+      "shortDesc": "La plateforme Madabestour, un site de réservation de tours et circuits touristiques à Madagascar. Le site propose une variété de forfaits incluant trekking, excursions et circuits sur mesure dans les différentes régions de l'île. L'intégration permet la gestion des réservations, la présentation des packages touristiques et la location de véhicules. Une interface complète pour faciliter l'organisation de voyages à Madagascar.",
+      "fullDesc": "Madabestour est une plateforme de tourisme qui permet aux voyageurs de découvrir Madagascar à travers des circuits organisés et des expériences sur mesure. J'ai conçu un système de réservation en ligne présentant des tours dans le Nord, l'Ouest et les trésors de l'île. Le site intègre la gestion des forfaits, les excursions et les services de location de véhicules. Une solution numérique qui connecte les touristes aux merveilles de Madagascar.",
+      "tags": [
+        "WordPress",
+        "Elementor",
+        "Woocommerce"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "cover": "/projects/the-north-madagascar-madabest-mrbp3ckg.png",
+      "gallery": [
+        "/projects/madabest-tour-in-madagascar-organizer-2-mrbp3ibh.png",
+        "/projects/madabest-tour-in-madagascar-organizer-mrbp3igo.png"
+      ],
+      "features": [],
+      "category": "pro",
+      "company": "MADA-Digital",
+      "employment": "freelance",
+      "includeInCv": false
+    },
+    {
+      "id": 12,
+      "name": "Basy-Eky",
+      "year": "2026",
+      "featured": true,
+      "shortDesc": "**BASY** est une solution mobile complète dédiée à la lutte contre les violences basées sur le genre (VBG) et la protection des mineurs. Le projet comprend deux applications distinctes qui travaillent ensemble pour offrir un écosystème sécurisé de signalement et de gestion des cas.",
+      "fullDesc": "**BASY** est une solution mobile complète dédiée à la lutte contre les violences basées sur le genre (VBG) et la protection des mineurs. Le projet comprend deux applications distinctes qui travaillent ensemble pour offrir un écosystème sécurisé de signalement et de gestion des cas.",
+      "tags": [
+        "React Native",
+        "TypeScript"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "cover": "/projects/accueil-mrbovvqk.png",
+      "gallery": [
+        "/projects/3-1-informations-utiles-mrbow4oe.png",
+        "/projects/1-3-mode-de-paiment-mrbow4ry.png",
+        "/projects/1-1-avec-identifiant-mrbow4ut.png"
+      ],
+      "features": [],
+      "category": "pro",
+      "company": "MADA-Digital",
+      "employment": "salarie",
+      "includeInCv": true
+    },
+    {
+      "id": 11,
+      "name": "VogheraCoffee",
+      "year": "2026",
+      "featured": true,
+      "shortDesc": "C'est une plateforme e-commerce de Voghera Coffee, premier café de spécialité de Madagascar. Le site présente une boutique en ligne pour le café torréfié et les grains verts, tout en valorisant le projet de reforestation de l'entreprise. L'interface met en avant la biodiversité unique de Madagascar et l'engagement écologique de la marque. Une expérience utilisateur immersive qui connecte les clients à la mission de préservation forestière.",
+      "fullDesc": "Voghera Coffee est un projet e-commerce qui vend le premier café de spécialité de Madagascar tout en finançant un programme de reforestation. J'ai conçu une plateforme qui raconte l'histoire de ce café unique, né sous la canopée des forêts malgaches. Le site permet l'achat de café torréfié et de grains verts, avec une mise en avant de la biodiversité exceptionnelle de l'île. Chaque achat contribue directement à la restauration des écosystèmes forestiers menacés.",
+      "tags": [
+        "WordPress",
+        "E-commerce"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "cover": "/projects/voghera-specialty-coffee-from-madagascar-mrbof4ac.png",
+      "gallery": [
+        "/projects/grains-verts-voghera-mrbofa5m.png",
+        "/projects/cafe-voghera-voghera-mrbofaa0.png"
+      ],
+      "features": [],
+      "category": "pro",
+      "company": "MADA-Digital",
+      "employment": "salarie",
+      "includeInCv": true
+    },
+    {
+      "id": 10,
+      "name": "Gplus",
+      "year": "2026",
+      "featured": true,
+      "shortDesc": "'ai développé Socle GPlus, une plateforme applicative modulaire qui s'adapte aux besoins métier grâce à un système de modules extensibles. L'assistant de configuration web permet un déploiement rapide sans intervention technique. L'architecture découvre automatiquement les modules et gère leurs dépendances, offrant une expérience utilisateur fluide. Le projet intègre les meilleures pratiques Django avec une API REST et une interface moderne.",
+      "fullDesc": "Socle GPlus est une application Django modulaire conçue pour démarrer seule et se configurer via un assistant web. Elle permet d'installer des modules métier (stock, vente, caisse, banque) selon les besoins spécifiques de chaque entreprise. Le projet utilise Django REST Framework, Tailwind CSS et supporte SQLite, MySQL et PostgreSQL. Les modules sont découverts automatiquement et peuvent être distribués sous forme d'archives .zip.",
+      "tags": [
+        "Django",
+        "Tailwind CSS",
+        "Alpine.js"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
+      "repoUrl": "",
+      "demoUrl": "",
+      "cover": "/projects/gplus-accueil-mrbo7iq8.png",
+      "gallery": [
+        "/projects/gplus-modules-mrbo7orr.png",
+        "/projects/gplus-facture-devis-mrbo7ow0.png",
+        "/projects/gplus-caisse-mrbo7ozh.png",
+        "/projects/gplus-mrbo7p2i.png"
+      ],
+      "features": [
+        "Application modulaire",
+        "ERP"
+      ],
+      "category": "pro",
+      "company": "MADA-Digital",
+      "employment": "salarie",
+      "includeInCv": true
+    },
+    {
       "id": 1,
       "name": "SurveySense",
       "year": "2025",
@@ -164,7 +272,7 @@
     {
       "id": 2,
       "name": "Gestion de Projet",
-      "year": "2024",
+      "year": "2025",
       "featured": true,
       "shortDesc": "Tableau de bord de gestion de projet (Astro + React) : Kanban en glisser-déposer, collaboration temps réel (Firebase) et assistant IA.",
       "fullDesc": "Tableau de bord moderne de gestion de projet construit avec Astro, React et Tailwind CSS. Gestion des tâches en glisser-déposer, tableaux Kanban, collaboration et synchronisation temps réel via Firebase, gestion d'équipe. Intègre « Nexus IA », un assistant contextuel, et un « Assistant Vision IA » qui génère des dossiers stratégiques (vision, tech, planning, roadmap), avec exports PDF, HTML et Markdown. Mode sombre/clair et UI moderne (glassmorphism, Framer Motion).",
@@ -229,7 +337,7 @@
         "Application de bureau (Tauri)"
       ],
       "category": "perso",
-      "includeInCv": true
+      "includeInCv": false
     },
     {
       "id": 4,
@@ -366,13 +474,13 @@
         "Authentification (NextAuth) + Prisma"
       ],
       "category": "perso",
-      "includeInCv": true
+      "includeInCv": false
     },
     {
       "id": 8,
       "name": "Camping Store & Event Mada",
       "year": "2026",
-      "featured": false,
+      "featured": true,
       "shortDesc": "Site vitrine (Astro + Tailwind) d'une enseigne de location de matériel de camping et d'événementiel à Antsiranana.",
       "fullDesc": "Site web officiel de Camping Store & Event Madagascar, construit avec Astro et Tailwind CSS. Il présente les services de location de matériel de camping et d'organisation d'événements en plein air à Antsiranana. Site ultra-rapide grâce à Astro, design responsive, thème clair/sombre persistant, carte interactive de localisation, formulaire de contact fonctionnel, pages légales complètes et SEO optimisé.",
       "tags": [
