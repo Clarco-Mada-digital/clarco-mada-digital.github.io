@@ -18,14 +18,20 @@ export const CV_TEMPLATES: CvTemplate[] = [
   { id: "elegant", label: "Élégant", description: "Sidebar sombre + photo, sobre et pro", color: "#0d9488" },
   { id: "vibrant", label: "Vibrant", description: "Grand bandeau coloré + photo ronde", color: "#4f46e5" },
   { id: "rose", label: "Rosé", description: "Sidebar colorée, moderne et chaleureux", color: "#be185d" },
+  { id: "sable", label: "Sable", description: "Minimaliste chic, timeline discrète", color: "#c99a7a" },
+  { id: "marine", label: "Marine", description: "Sidebar bleu nuit à droite, très pro", color: "#1e3a5f" },
+  { id: "solaire", label: "Solaire", description: "Blocs encadrés, jaune audacieux", color: "#d9a509" },
+  { id: "emeraude", label: "Émeraude", description: "Turquoise, sections en pastilles", color: "#0f9d8f" },
+  { id: "amethyste", label: "Améthyste", description: "Sidebar violette, typo aérée", color: "#8b3a9e" },
 ];
 
 const A4 = { width: 595.28, height: 841.89 };
 
-/** Retire les balises HTML (les paragraphes "À propos" peuvent en contenir). */
+/** Retire les balises HTML et le markdown léger (gras **…**) — les textes saisis dans l'admin peuvent en contenir. */
 function stripHtml(s: string): string {
   return (s || "")
     .replace(/<[^>]*>/g, "")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
     .replace(/&amp;/g, "&")
     .replace(/&nbsp;/g, " ")
     .replace(/&lt;/g, "<")
@@ -62,7 +68,9 @@ function prepareCvData(c: Content, mode: CvMode): CvData {
     // une phrase tronquée fait mauvais effet sur un CV), pas un extrait tronqué.
     const aboutSimple = stripHtml(c.about.paragraphs[0] || c.hero.tagline);
     return {
-      projects: sorted.slice(0, 3),
+      // 2 projets max : avec 3, les descriptions longues font déborder plusieurs
+      // styles sur une 2e page, ce qui casse la promesse "1 page".
+      projects: sorted.slice(0, 2),
       experience: c.experience.slice(0, 1),
       skills: c.skills.slice(0, 2).map((cat) => ({ ...cat, items: cat.items.slice(0, 6) })),
       about: aboutSimple,
@@ -129,7 +137,7 @@ function projectBlock(p: Content["projects"][number], accent: string, titleColor
       ],
     },
     origin,
-    { text: p.shortDesc, fontSize: 9, color: descColor, lineHeight: 1.22 },
+    { text: stripHtml(p.shortDesc), fontSize: 9, color: descColor, lineHeight: 1.22 },
   ];
   if (p.tags?.length) stack.push({ text: p.tags.slice(0, 4).join("  ·  "), fontSize: 7.5, color: mutedColor, margin: [0, 2, 0, 0] });
   return { margin: [0, 0, 0, 8], stack };
@@ -140,35 +148,37 @@ function elegant(c: Content, photo: string | null, mode: CvMode): any {
   const data = prepareCvData(c, mode);
   const SIDE = "#2b2d42";
   const ACCENT = "#0d9488";
-  const SW = 200; // largeur sidebar
+  // Mêmes gabarits que "rose" : sidebar un peu plus large + polices alignées sur rose,
+  // sinon les textes de la colonne gauche passaient trop souvent à la ligne.
+  const SW = 205;
   const light = "#cbd2dc";
 
   const sideHeading = (t: string) => ({
     text: t.toUpperCase(),
     color: "#ffffff",
     bold: true,
-    fontSize: 10,
+    fontSize: 9.5,
     characterSpacing: 1,
     margin: [0, 14, 0, 4],
   });
   // Fonction (pas un objet constant) : pdfmake annote l'objet avec sa position calculée,
   // donc réutiliser la même référence à 2 endroits déplace le second trait au mauvais endroit.
   const sideRule = () => ({
-    canvas: [{ type: "line", x1: 0, y1: 0, x2: SW - 44, y2: 0, lineWidth: 1, lineColor: ACCENT }],
+    canvas: [{ type: "line", x1: 0, y1: 0, x2: SW - 40, y2: 0, lineWidth: 1, lineColor: ACCENT }],
     margin: [0, 0, 0, 6],
   });
   const mainHeading = (t: string) => ({
     columns: [
-      { width: 4, canvas: [{ type: "rect", x: 0, y: 1, w: 4, h: 14, color: ACCENT }] },
-      { text: t.toUpperCase(), bold: true, fontSize: 13, color: "#1f2937", margin: [8, 0, 0, 0], characterSpacing: 0.5 },
+      { width: 4, canvas: [{ type: "rect", x: 0, y: 1, w: 4, h: 12, color: ACCENT }] },
+      { text: t.toUpperCase(), bold: true, fontSize: 11, color: "#1f2937", margin: [8, 0, 0, 0], characterSpacing: 0.5 },
     ],
     margin: [0, 16, 0, 8],
   });
 
   const sidebar: any[] = [];
-  if (photo) sidebar.push({ image: photo, width: 110, alignment: "center", margin: [0, 0, 0, 12] });
-  sidebar.push({ text: c.site.name, color: "#ffffff", bold: true, fontSize: 17, alignment: "center" });
-  sidebar.push({ text: c.site.role, color: ACCENT, fontSize: 10, alignment: "center", margin: [0, 2, 0, 4] });
+  if (photo) sidebar.push({ image: photo, width: 120, alignment: "center", margin: [0, 0, 0, 10] });
+  sidebar.push({ text: c.site.name, color: "#ffffff", bold: true, fontSize: 16, alignment: "center" });
+  sidebar.push({ text: c.site.role, color: ACCENT, fontSize: 9.5, alignment: "center", margin: [0, 2, 0, 4] });
 
   sidebar.push(sideHeading("Contact"), sideRule());
   for (const it of contactItems(c)) {
@@ -215,7 +225,7 @@ function elegant(c: Content, photo: string | null, mode: CvMode): any {
     content: [
       {
         columns: [
-          { width: SW, stack: sidebar, margin: [22, 6, 22, 6] },
+          { width: SW, stack: sidebar, margin: [20, 6, 20, 6] },
           { width: "*", stack: main, margin: [22, 8, 28, 6] },
         ],
         columnGap: 0,
@@ -383,10 +393,453 @@ function rose(c: Content, photo: string | null, mode: CvMode): any {
   };
 }
 
+/* ====================== TEMPLATE 4 : SABLE (minimaliste chic) ====================== */
+function sable(c: Content, photo: string | null, mode: CvMode): any {
+  const data = prepareCvData(c, mode);
+  const ACCENT = "#c99a7a";
+  const BLUSH = "#f3ddd0";
+  const DARK = "#3f3f46";
+  const MUTED = "#9ca3af";
+
+  const heading = (t: string) => ({
+    text: t.toUpperCase(),
+    bold: true,
+    fontSize: 12,
+    color: DARK,
+    characterSpacing: 2,
+    margin: [0, 16, 0, 6],
+  });
+
+  // Expérience façon "timeline" : petit rond + trait vertical suggéré par l'espacement.
+  const timelineItem = (top: any[], body: any[]) => ({
+    columns: [
+      { width: 12, canvas: [{ type: "ellipse", x: 4, y: 6, r1: 3, r2: 3, lineWidth: 1.2, lineColor: DARK, color: "#ffffff" }] },
+      { width: "*", stack: [...top, ...body] },
+    ],
+    columnGap: 2,
+    margin: [0, 0, 0, 10],
+  });
+
+  const left: any[] = [];
+  if (photo) left.push({ image: photo, width: 116, alignment: "center", margin: [0, 4, 0, 18] });
+  for (const it of contactItems(c)) {
+    left.push({ text: it.label.toUpperCase(), fontSize: 7, color: MUTED, characterSpacing: 1, margin: [0, 6, 0, 1] });
+    left.push({ text: it.value, fontSize: 8.5, color: DARK });
+  }
+  left.push(heading("Compétences"));
+  for (const cat of data.skills) {
+    left.push({ text: cat.name, fontSize: 9, bold: true, color: DARK, margin: [0, 5, 0, 1] });
+    left.push({ text: cat.items.join(", "), fontSize: 8.5, color: "#6b7280", lineHeight: 1.25 });
+  }
+
+  const right: any[] = [];
+  right.push({ text: c.site.name.toUpperCase(), bold: true, fontSize: 24, color: DARK, characterSpacing: 2 });
+  right.push({ text: c.site.role, fontSize: 11, color: "#78716c", characterSpacing: 2, margin: [0, 3, 0, 0] });
+  right.push({ canvas: [{ type: "line", x1: 0, y1: 0, x2: 300, y2: 0, lineWidth: 1, lineColor: DARK }], margin: [0, 8, 0, 0] });
+  right.push(heading("À propos"));
+  right.push({ text: data.about, fontSize: 9.5, color: "#52525b", lineHeight: 1.35, alignment: "justify" });
+  right.push(heading("Expériences"));
+  for (const e of data.experience) {
+    right.push(
+      timelineItem(
+        [
+          { text: e.period, fontSize: 8.5, color: MUTED },
+          { text: e.role, bold: true, fontSize: 10.5, color: DARK },
+          { text: e.company, fontSize: 9, color: ACCENT, bold: true, margin: [0, 0, 0, 2] },
+        ],
+        [{ text: e.description, fontSize: 9, color: "#52525b", lineHeight: 1.3 }]
+      )
+    );
+  }
+  right.push(heading("Projets"));
+  for (const p of data.projects) {
+    right.push(projectBlock(p, ACCENT, DARK, "#52525b", MUTED));
+  }
+
+  return {
+    pageMargins: [42, 46, 42, 40],
+    defaultStyle: { font: "Roboto" },
+    // Fine bande "blush" tout en haut de la 1re page, comme sur les CV imprimés chics.
+    background: (page: number) =>
+      page === 1 ? { canvas: [{ type: "rect", x: 0, y: 0, w: A4.width, h: 26, color: BLUSH }] } : null,
+    content: [
+      {
+        columns: [
+          { width: 150, stack: left },
+          { width: "*", stack: right, margin: [26, 0, 0, 0] },
+        ],
+        columnGap: 0,
+      },
+    ],
+  };
+}
+
+/* ====================== TEMPLATE 5 : MARINE (sidebar bleu nuit à droite) ====================== */
+function marine(c: Content, photo: string | null, mode: CvMode): any {
+  const data = prepareCvData(c, mode);
+  const SIDE = "#1e3a5f";
+  const ACCENT = "#2563eb";
+  const SW = 185;
+  const light = "#c9d6e8";
+
+  const mainHeading = (t: string) => ({
+    stack: [
+      { text: t.toUpperCase(), bold: true, fontSize: 12, color: "#1f2937", characterSpacing: 1 },
+      { canvas: [{ type: "line", x1: 0, y1: 0, x2: A4.width - SW - 76, y2: 0, lineWidth: 0.8, lineColor: "#d1d5db" }], margin: [0, 3, 0, 0] },
+    ],
+    margin: [0, 14, 0, 8],
+  });
+  const sideHeading = (t: string) => ({
+    stack: [
+      { text: t.toUpperCase(), color: "#ffffff", bold: true, fontSize: 10, characterSpacing: 1 },
+      { canvas: [{ type: "line", x1: 0, y1: 0, x2: SW - 40, y2: 0, lineWidth: 1, lineColor: "#ffffff" }], margin: [0, 3, 0, 0] },
+    ],
+    margin: [0, 16, 0, 7],
+  });
+
+  const main: any[] = [];
+  main.push({ text: c.site.name.toUpperCase(), bold: true, fontSize: 23, color: "#111827" });
+  main.push({ text: c.site.role, fontSize: 11, color: ACCENT, margin: [0, 2, 0, 4] });
+  main.push({
+    text: contactItems(c)
+      .map((it) => it.value)
+      .join("   ·   "),
+    fontSize: 8,
+    color: "#6b7280",
+    lineHeight: 1.4,
+  });
+  main.push(mainHeading("Profil professionnel"));
+  main.push({ text: data.about, fontSize: 9.5, color: "#374151", lineHeight: 1.3 });
+  main.push(mainHeading("Expérience professionnelle"));
+  for (const e of data.experience) {
+    main.push({
+      margin: [0, 0, 0, 9],
+      stack: [
+        {
+          columns: [
+            { text: e.role, bold: true, fontSize: 10.5, color: "#111827", width: "*" },
+            { text: e.period, fontSize: 8.5, color: "#9ca3af", alignment: "right", width: "auto" },
+          ],
+        },
+        { text: e.company, color: ACCENT, fontSize: 9.5, bold: true, margin: [0, 1, 0, 2] },
+        { text: e.description, fontSize: 9, color: "#4b5563", lineHeight: 1.28 },
+      ],
+    });
+  }
+  main.push(mainHeading("Projets"));
+  for (const p of data.projects) {
+    main.push(projectBlock(p, ACCENT, "#111827", "#4b5563", "#9ca3af"));
+  }
+
+  const sidebar: any[] = [];
+  if (photo) sidebar.push({ image: photo, width: 108, alignment: "center", margin: [0, 4, 0, 12] });
+  sidebar.push(sideHeading("Compétences"));
+  for (const cat of data.skills) {
+    sidebar.push({ text: cat.name, color: "#ffffff", fontSize: 9, bold: true, margin: [0, 5, 0, 1] });
+    sidebar.push({ text: cat.items.join(", "), color: light, fontSize: 8.5, lineHeight: 1.25 });
+  }
+  sidebar.push(sideHeading("Contact"));
+  for (const it of contactItems(c)) {
+    sidebar.push({ text: it.label.toUpperCase(), fontSize: 6.5, color: "#8fa8c7", characterSpacing: 1, margin: [0, 5, 0, 0] });
+    sidebar.push({ text: it.value, fontSize: 8.5, color: "#ffffff" });
+  }
+
+  return {
+    pageMargins: [0, 24, 0, 26],
+    defaultStyle: { font: "Roboto" },
+    // Sidebar à DROITE : le rectangle est peint sur toute la hauteur, à droite, sur chaque page.
+    background: () => ({ canvas: [{ type: "rect", x: A4.width - SW, y: 0, w: SW, h: A4.height, color: SIDE }] }),
+    content: [
+      {
+        columns: [
+          { width: "*", stack: main, margin: [34, 8, 24, 6] },
+          { width: SW, stack: sidebar, margin: [20, 6, 20, 6] },
+        ],
+        columnGap: 0,
+      },
+    ],
+  };
+}
+
+/* ====================== TEMPLATE 6 : SOLAIRE (blocs jaunes encadrés) ====================== */
+function solaire(c: Content, photo: string | null, mode: CvMode): any {
+  const data = prepareCvData(c, mode);
+  const YELLOW = "#d9a509";
+  const DARK = "#27272a";
+  const SW = 190;
+
+  // Sections de droite dans des cadres jaunes, comme le modèle "blocs" des CV imprimés.
+  const framed = (title: string, body: any[]) => ({
+    table: {
+      widths: ["*"],
+      body: [
+        [
+          {
+            stack: [{ text: title.toUpperCase(), bold: true, fontSize: 12, color: DARK, characterSpacing: 1, margin: [0, 0, 0, 6] }, ...body],
+            margin: [12, 8, 12, 8],
+          },
+        ],
+      ],
+    },
+    layout: {
+      hLineWidth: () => 1.4,
+      vLineWidth: () => 1.4,
+      hLineColor: () => YELLOW,
+      vLineColor: () => YELLOW,
+    },
+    margin: [0, 0, 0, 12],
+  });
+
+  const sideHeading = (t: string) => ({
+    stack: [
+      { text: t.toUpperCase(), color: DARK, bold: true, fontSize: 11, characterSpacing: 1 },
+      { canvas: [{ type: "line", x1: 0, y1: 0, x2: 42, y2: 0, lineWidth: 1, lineColor: DARK }], margin: [0, 2, 0, 0] },
+    ],
+    margin: [0, 14, 0, 7],
+  });
+
+  const sidebar: any[] = [];
+  if (photo) sidebar.push({ image: photo, width: 116, alignment: "center", margin: [0, 0, 0, 12] });
+  // Taille contenue : un nom de famille long doit tenir sans coupure au milieu du mot.
+  sidebar.push({ text: c.site.name, color: DARK, bold: true, fontSize: 11, alignment: "center" });
+  sidebar.push({ text: c.site.role, color: "#513f05", fontSize: 9, alignment: "center", margin: [0, 2, 0, 2] });
+  sidebar.push(sideHeading("Contact"));
+  for (const it of contactItems(c)) {
+    sidebar.push({ text: it.label + " :", fontSize: 8, bold: true, color: "#513f05", margin: [0, 4, 0, 0] });
+    sidebar.push({ text: it.value, fontSize: 8.5, color: DARK });
+  }
+  sidebar.push(sideHeading("Compétences"));
+  for (const cat of data.skills) {
+    sidebar.push({ text: cat.name, color: DARK, fontSize: 9, bold: true, margin: [0, 4, 0, 1] });
+    sidebar.push({ text: cat.items.join(", "), color: "#43380a", fontSize: 8.5, lineHeight: 1.25 });
+  }
+
+  const expBody: any[] = [];
+  for (const e of data.experience) {
+    expBody.push({
+      margin: [0, 0, 0, 8],
+      stack: [
+        {
+          columns: [
+            { text: e.role, bold: true, fontSize: 10, color: DARK, width: "*" },
+            { text: e.period, fontSize: 8.5, color: "#9ca3af", alignment: "right", width: "auto" },
+          ],
+        },
+        { text: e.company, color: YELLOW, fontSize: 9.5, bold: true, margin: [0, 1, 0, 2] },
+        { text: e.description, fontSize: 9, color: "#4b5563", lineHeight: 1.26 },
+      ],
+    });
+  }
+  const projBody: any[] = data.projects.map((p) => projectBlock(p, YELLOW, DARK, "#4b5563", "#9ca3af"));
+
+  const main: any[] = [];
+  // Bandeau jaune avec le nom, posé dans le flux (répété nulle part ailleurs).
+  main.push({
+    table: { widths: ["*"], body: [[{ text: c.site.name.toUpperCase(), color: "#ffffff", bold: true, fontSize: 19, alignment: "center", fillColor: YELLOW, margin: [10, 12, 10, 12], characterSpacing: 1.5 }]] },
+    layout: "noBorders",
+    margin: [0, 0, 0, 16],
+  });
+  main.push(framed("Profil", [{ text: data.about, fontSize: 9.5, color: "#3f3f46", lineHeight: 1.3, alignment: "justify" }]));
+  main.push(framed("Expérience", expBody));
+  main.push(framed("Projets", projBody));
+
+  return {
+    pageMargins: [0, 24, 0, 26],
+    defaultStyle: { font: "Roboto" },
+    background: () => ({ canvas: [{ type: "rect", x: 0, y: 0, w: SW, h: A4.height, color: "#f59e0b" }] }),
+    content: [
+      {
+        columns: [
+          { width: SW, stack: sidebar, margin: [20, 6, 20, 6] },
+          { width: "*", stack: main, margin: [24, 8, 30, 6] },
+        ],
+        columnGap: 0,
+      },
+    ],
+  };
+}
+
+/* ====================== TEMPLATE 7 : ÉMERAUDE (pastilles turquoise) ====================== */
+function emeraude(c: Content, photo: string | null, mode: CvMode): any {
+  const data = prepareCvData(c, mode);
+  const TEAL = "#0f9d8f";
+  const DARK = "#1f2937";
+
+  // En-tête de section en "pastille" : rectangle turquoise arrondi (simulé par table pleine).
+  const pill = (t: string) => ({
+    table: {
+      widths: [170],
+      body: [[{ text: t.toUpperCase(), color: "#ffffff", bold: true, fontSize: 11, alignment: "center", fillColor: TEAL, margin: [8, 5, 8, 5], characterSpacing: 1 }]],
+    },
+    layout: "noBorders",
+    margin: [0, 14, 0, 9],
+  });
+
+  // Élément à puce turquoise (timeline).
+  const dotted = (stack: any[]) => ({
+    columns: [
+      { width: 12, canvas: [{ type: "ellipse", x: 4, y: 6, r1: 3.2, r2: 3.2, color: TEAL }] },
+      { width: "*", stack },
+    ],
+    columnGap: 2,
+    margin: [0, 0, 0, 9],
+  });
+
+  const left: any[] = [];
+  if (photo) left.push({ image: photo, width: 124, alignment: "center", margin: [0, 0, 0, 10] });
+  // Taille contenue : un nom de famille long doit tenir sans coupure au milieu du mot.
+  left.push({ text: c.site.name, bold: true, fontSize: 14, color: DARK, alignment: "center" });
+  left.push({ text: c.site.role, fontSize: 9.5, color: TEAL, alignment: "center", margin: [0, 2, 0, 8] });
+  left.push({ text: data.about, fontSize: 9, color: "#4b5563", lineHeight: 1.3, alignment: "justify" });
+  left.push(pill("Contact"));
+  for (const it of contactItems(c)) {
+    left.push(contactChip(it, TEAL, "#ffffff", "#374151"));
+  }
+  left.push(pill("Compétences"));
+  for (const cat of data.skills) {
+    left.push({ text: cat.name, fontSize: 9, bold: true, color: DARK, margin: [0, 5, 0, 1] });
+    left.push({ text: cat.items.join(", "), fontSize: 8.5, color: "#6b7280", lineHeight: 1.25 });
+  }
+
+  const right: any[] = [];
+  right.push(pill("Expérience"));
+  for (const e of data.experience) {
+    right.push(
+      dotted([
+        {
+          columns: [
+            { text: e.role, bold: true, fontSize: 10.5, color: DARK, width: "*" },
+            { text: e.period, fontSize: 8.5, color: "#9ca3af", alignment: "right", width: "auto" },
+          ],
+        },
+        { text: e.company, color: TEAL, fontSize: 9.5, bold: true, margin: [0, 1, 0, 2] },
+        { text: e.description, fontSize: 9, color: "#4b5563", lineHeight: 1.28 },
+      ])
+    );
+  }
+  right.push(pill("Projets"));
+  for (const p of data.projects) {
+    right.push(dotted([projectBlock(p, TEAL, DARK, "#4b5563", "#9ca3af")]));
+  }
+
+  return {
+    pageMargins: [40, 34, 40, 34],
+    defaultStyle: { font: "Roboto" },
+    // Coins décoratifs turquoise (1re page seulement), clin d'œil aux CV "origami".
+    background: (page: number) =>
+      page === 1
+        ? {
+            canvas: [
+              { type: "polyline", points: [{ x: 0, y: 0 }, { x: 190, y: 0 }, { x: 0, y: 64 }], closePath: true, color: TEAL },
+              { type: "polyline", points: [{ x: A4.width, y: 0 }, { x: A4.width - 190, y: 0 }, { x: A4.width, y: 64 }], closePath: true, color: "#12b3a3" },
+              { type: "polyline", points: [{ x: 0, y: A4.height }, { x: 210, y: A4.height }, { x: 0, y: A4.height - 54 }], closePath: true, color: "#12b3a3" },
+              { type: "polyline", points: [{ x: A4.width, y: A4.height }, { x: A4.width - 210, y: A4.height }, { x: A4.width, y: A4.height - 54 }], closePath: true, color: TEAL },
+            ],
+          }
+        : null,
+    content: [
+      {
+        columns: [
+          { width: "42%", stack: left },
+          { width: "*", stack: right, margin: [18, 40, 0, 0] },
+        ],
+        columnGap: 0,
+        margin: [0, 34, 0, 0],
+      },
+    ],
+  };
+}
+
+/* ====================== TEMPLATE 8 : AMÉTHYSTE (sidebar violette) ====================== */
+function amethyste(c: Content, photo: string | null, mode: CvMode): any {
+  const data = prepareCvData(c, mode);
+  const PURPLE = "#8b3a9e";
+  const SW = 195;
+  const lightText = "#f0dcf5";
+
+  const sideHeading = (t: string) => ({
+    stack: [
+      { text: t.toUpperCase(), color: "#ffffff", bold: true, fontSize: 10, characterSpacing: 3, alignment: "center" },
+      { canvas: [{ type: "line", x1: 20, y1: 0, x2: SW - 60, y2: 0, lineWidth: 0.8, lineColor: "#ffffff" }], margin: [0, 4, 0, 0] },
+    ],
+    margin: [0, 16, 0, 8],
+  });
+  const mainHeading = (t: string) => ({
+    text: t.toUpperCase(),
+    bold: true,
+    fontSize: 13,
+    color: PURPLE,
+    characterSpacing: 2,
+    margin: [0, 14, 0, 6],
+  });
+
+  const sidebar: any[] = [];
+  if (photo) sidebar.push({ image: photo, width: 112, alignment: "center", margin: [0, 0, 0, 12] });
+  sidebar.push(sideHeading("À propos"));
+  // Le "à propos" vit dans la sidebar sur ce modèle (comme le CV violet de référence).
+  sidebar.push({ text: data.about, color: lightText, fontSize: 8.5, lineHeight: 1.35, alignment: "center" });
+  sidebar.push(sideHeading("Contact"));
+  for (const it of contactItems(c)) {
+    sidebar.push({ text: it.label.toUpperCase(), fontSize: 6.5, color: "#d8b3e3", characterSpacing: 1, alignment: "center", margin: [0, 5, 0, 0] });
+    sidebar.push({ text: it.value, fontSize: 8.5, color: "#ffffff", alignment: "center" });
+  }
+  sidebar.push(sideHeading("Compétences"));
+  for (const cat of data.skills) {
+    sidebar.push({ text: cat.name, color: "#ffffff", fontSize: 9, bold: true, alignment: "center", margin: [0, 5, 0, 1] });
+    sidebar.push({ text: cat.items.join(", "), color: lightText, fontSize: 8.5, lineHeight: 1.25, alignment: "center" });
+  }
+
+  const main: any[] = [];
+  main.push({ text: c.site.name.toUpperCase(), fontSize: 25, color: "#52525b", characterSpacing: 2 });
+  main.push({ text: c.site.role.toUpperCase(), fontSize: 12, color: PURPLE, bold: true, characterSpacing: 1.5, margin: [0, 3, 0, 0] });
+  main.push({ canvas: [{ type: "line", x1: 0, y1: 0, x2: A4.width - SW - 74, y2: 0, lineWidth: 0.8, lineColor: "#d4d4d8" }], margin: [0, 8, 0, 0] });
+  main.push(mainHeading("Expérience"));
+  for (const e of data.experience) {
+    main.push({
+      margin: [0, 0, 0, 9],
+      stack: [
+        { text: e.role, bold: true, fontSize: 10.5, color: "#3f3f46" },
+        {
+          columns: [
+            { text: e.company, color: PURPLE, fontSize: 9.5, bold: true, width: "*" },
+            { text: e.period, fontSize: 8.5, color: "#a1a1aa", alignment: "right", width: "auto" },
+          ],
+          margin: [0, 1, 0, 2],
+        },
+        { text: e.description, fontSize: 9, color: "#52525b", lineHeight: 1.3 },
+      ],
+    });
+  }
+  main.push(mainHeading("Projets"));
+  for (const p of data.projects) {
+    main.push(projectBlock(p, PURPLE, "#3f3f46", "#52525b", "#a1a1aa"));
+  }
+
+  return {
+    pageMargins: [0, 24, 0, 26],
+    defaultStyle: { font: "Roboto" },
+    background: () => ({ canvas: [{ type: "rect", x: 0, y: 0, w: SW, h: A4.height, color: PURPLE }] }),
+    content: [
+      {
+        columns: [
+          { width: SW, stack: sidebar, margin: [20, 8, 20, 6] },
+          { width: "*", stack: main, margin: [26, 10, 30, 6] },
+        ],
+        columnGap: 0,
+      },
+    ],
+  };
+}
+
 const BUILDERS: Record<string, (c: Content, photo: string | null, mode: CvMode) => any> = {
   elegant,
   vibrant,
   rose,
+  sable,
+  marine,
+  solaire,
+  emeraude,
+  amethyste,
 };
 
 /** Construit la définition pdfmake (sans dépendre de pdfmake ni d'un DOM). */
