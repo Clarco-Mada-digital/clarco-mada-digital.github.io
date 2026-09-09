@@ -16,7 +16,7 @@
     "code": {
       "name": "Clarco RAHERINANDRASANA",
       "role": "Full-Stack & Mobile Architect",
-      "location": "Antsiranana,Madagascar",
+      "location": "Antsiranana, Madagascar",
       "stack": [
         "React",
         "Vue.js",
@@ -145,10 +145,10 @@
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
       "repoUrl": "",
       "demoUrl": "",
-      "cover": "/projects/the-north-madagascar-madabest-mrbp3ckg.png",
+      "cover": "/projects/the-north-madagascar-madabest-mrbp3ckg.webp",
       "gallery": [
-        "/projects/madabest-tour-in-madagascar-organizer-2-mrbp3ibh.png",
-        "/projects/madabest-tour-in-madagascar-organizer-mrbp3igo.png"
+        "/projects/madabest-tour-in-madagascar-organizer-2-mrbp3ibh.webp",
+        "/projects/madabest-tour-in-madagascar-organizer-mrbp3igo.webp"
       ],
       "features": [],
       "category": "pro",
@@ -170,11 +170,11 @@
       "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30",
       "repoUrl": "",
       "demoUrl": "",
-      "cover": "/projects/accueil-mrbovvqk.png",
+      "cover": "/projects/accueil-mrbovvqk.webp",
       "gallery": [
-        "/projects/3-1-informations-utiles-mrbow4oe.png",
-        "/projects/1-3-mode-de-paiment-mrbow4ry.png",
-        "/projects/1-1-avec-identifiant-mrbow4ut.png"
+        "/projects/3-1-informations-utiles-mrbow4oe.webp",
+        "/projects/1-3-mode-de-paiment-mrbow4ry.webp",
+        "/projects/1-1-avec-identifiant-mrbow4ut.webp"
       ],
       "features": [],
       "category": "pro",
@@ -196,10 +196,10 @@
       "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
       "repoUrl": "",
       "demoUrl": "",
-      "cover": "/projects/voghera-specialty-coffee-from-madagascar-mrbof4ac.png",
+      "cover": "/projects/voghera-specialty-coffee-from-madagascar-mrbof4ac.webp",
       "gallery": [
-        "/projects/grains-verts-voghera-mrbofa5m.png",
-        "/projects/cafe-voghera-voghera-mrbofaa0.png"
+        "/projects/grains-verts-voghera-mrbofa5m.webp",
+        "/projects/cafe-voghera-voghera-mrbofaa0.webp"
       ],
       "features": [],
       "category": "pro",
@@ -222,13 +222,13 @@
       "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
       "repoUrl": "",
       "demoUrl": "",
-      "cover": "/projects/abc-dev-mrc2jb6g.png",
+      "cover": "/projects/abc-dev-mrc2jb6g.webp",
       "gallery": [
-        "/projects/gplus-modules-mrbo7orr.png",
-        "/projects/gplus-facture-devis-mrbo7ow0.png",
-        "/projects/gplus-caisse-mrbo7ozh.png",
-        "/projects/gplus-mrbo7p2i.png",
-        "/projects/gplus-accueil-mrbo7iq8.png"
+        "/projects/gplus-modules-mrbo7orr.webp",
+        "/projects/gplus-facture-devis-mrbo7ow0.webp",
+        "/projects/gplus-caisse-mrbo7ozh.webp",
+        "/projects/gplus-mrbo7p2i.webp",
+        "/projects/gplus-accueil-mrbo7iq8.webp"
       ],
       "features": [
         "Application modulaire",
@@ -541,6 +541,165 @@
         "Prise de notes (texte, vocal, images)",
         "Support multilingue",
         "Application Android (APK)"
+      ],
+      "category": "perso",
+      "includeInCv": true
+    },
+    {
+      "id": 14,
+      "name": "Argus",
+      "year": "2026",
+      "featured": true,
+      "shortDesc": "Analyse complète d'un projet en une commande : sécurité, SEO, code mort, accessibilité, performance. Zéro dépendance, hors ligne, 12 langages.",
+      "fullDesc": "Argus lit un code source, en dresse le diagnostic, note chaque dimension sur 100 et rend un plan d'action classé par impact — avec, pour chaque problème, le correctif concret. Écrit en JavaScript pur : Node.js seul suffit, rien à installer, rien à compiler. L'analyse ne quitte jamais la machine. Plus de 40 règles de sécurité (secrets versionnés, injections, XSS, désérialisation, cryptographie faible), chacune portant sa référence CWE et sa catégorie OWASP Top 10. Il extrait aussi les routes de 21 frameworks (Express, Next.js, Django, Laravel, Flutter…) pour débusquer les liens morts. Trois usages : la ligne de commande via npx, une page web où le même cœur tourne dans le navigateur (node:fs redirigé vers des shims par une carte d'imports, empreintes SHA-1 identiques), et une GitHub Action qui annote directement la diff des pull requests.",
+      "tags": [
+        "Node.js",
+        "JavaScript",
+        "Sécurité",
+        "OWASP",
+        "CLI",
+        "GitHub Actions"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
+      "repoUrl": "https://github.com/Clarco-Mada-digital/argus",
+      "demoUrl": "https://clarco-mada-digital.github.io/argus/demo.html",
+      "cover": "/projects/argus-cover.webp",
+      "gallery": [
+        "/projects/argus-rapport.webp"
+      ],
+      "features": [
+        "40+ règles de sécurité, référencées CWE et OWASP Top 10",
+        "12 langages, 21 frameworks : routes et liens morts",
+        "Zéro dépendance — le code n'est jamais transmis",
+        "Rapport HTML autonome, filtrable, clair et sombre",
+        "Le même moteur en CLI, dans le navigateur et en CI",
+        "Sortie SARIF, mode différentiel, correctifs assistés"
+      ],
+      "category": "perso",
+      "includeInCv": true
+    },
+    {
+      "id": 15,
+      "name": "Orbit",
+      "year": "2026",
+      "featured": true,
+      "shortDesc": "Hub applicatif de bureau (Electron + React) : toutes vos apps web dans une seule fenêtre, avec profils, sessions isolées et multi-comptes.",
+      "fullDesc": "Orbit regroupe Gmail, Slack, Notion, ChatGPT et n'importe quelle URL dans une fenêtre unique, sur Windows, macOS et Linux. Chaque application dispose de son propre coffre à cookies : les profils séparent le pro du perso, et les conteneurs permettent plusieurs comptes d'un même service sans jamais se déconnecter. L'écran partagé affiche 2 à 4 apps côte à côte dans des dispositions enregistrées, et une app peut être détachée dans sa propre fenêtre sur un second écran. La palette de commandes (Alt/⌘+K) va au-delà de la navigation : calculatrice, conversions d'unités, de devises et de couleurs, calcul de dates. L'en-tête est modulaire — horloge, météo, batterie, moniteur système, minuteur Pomodoro. S'y ajoutent le verrouillage par profil, la sauvegarde chiffrée de la configuration, un bloqueur de publicités et la mise en veille des apps inactives.",
+      "tags": [
+        "Electron",
+        "React",
+        "Vite",
+        "Tailwind",
+        "Zustand",
+        "Desktop"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30",
+      "repoUrl": "https://github.com/Clarco-Mada-digital/orbit",
+      "demoUrl": "https://github.com/Clarco-Mada-digital/orbit/releases/latest",
+      "cover": "/projects/orbit-cover.webp",
+      "gallery": [],
+      "features": [
+        "Profils multiples et sessions cookies isolées",
+        "Conteneurs multi-comptes pour un même service",
+        "Écran partagé 2 à 4 apps, espaces enregistrés",
+        "Palette de commandes : calcul, conversions, dates",
+        "En-tête modulaire (horloge, météo, Pomodoro…)",
+        "Verrouillage par profil, sauvegarde chiffrée",
+        "Build multiplateforme signé et mise à jour auto"
+      ],
+      "category": "perso",
+      "includeInCv": true
+    },
+    {
+      "id": 16,
+      "name": "Aura",
+      "year": "2026",
+      "featured": false,
+      "shortDesc": "Widget de bureau qui ouvre les applications Android du téléphone sur l'ordinateur — chacune dans sa fenêtre, sur son propre écran virtuel.",
+      "fullDesc": "Une barre de recherche, les applications épinglées en dessous, une cloche pour les notifications du téléphone : Aura tient en un widget qui apparaît au raccourci Ctrl+Alt+Espace. Chaque application s'ouvre dans sa propre fenêtre, sur son propre écran virtuel Android, à une densité pensée pour un grand écran. Le parti pris technique est de ne rien décoder soi-même : tout est délégué à scrcpy, donc aucune fenêtre n'est reparentée — accroche aux bords, Alt+Tab et multi-écran fonctionnent nativement, et une app qui tombe n'emporte pas les autres. Deux problèmes ont demandé de descendre bas : Android ne sait pas livrer l'icône d'une application par ADB, il a fallu lire le sommaire du zip de l'APK puis la seule entrée utile, en résolvant les noms de ressources dans resources.arsc (les outils de build renomment les fichiers — l'icône de Brave s'appelle res/xF.png) ; et les commandes système doivent viser explicitement le profil 0, sans quoi elles échouent sur les téléphones à profils multiples.",
+      "tags": [
+        "Electron",
+        "Node.js",
+        "scrcpy",
+        "ADB",
+        "Android",
+        "Linux"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-cyan/30",
+      "repoUrl": "https://github.com/Clarco-Mada-digital/aura",
+      "demoUrl": "",
+      "cover": "",
+      "gallery": [],
+      "features": [
+        "Une app = un processus scrcpy = un écran virtuel",
+        "Recherche par nom, paquet ou initiales (gmp → Maps)",
+        "Notifications du téléphone, balayage pour écarter",
+        "Icônes extraites de l'APK via resources.arsc",
+        "Multi-appareils, inventaire mémorisé par n° de série",
+        "Glisser-déposer d'un fichier vers le téléphone"
+      ],
+      "category": "perso",
+      "includeInCv": false
+    },
+    {
+      "id": 17,
+      "name": "Silhouette",
+      "year": "2026",
+      "featured": false,
+      "shortDesc": "Boutique de vêtements avec mannequin virtuel : chaque membre renseigne ses mensurations et essaie les vêtements sur sa propre silhouette.",
+      "fullDesc": "Silhouette répond à la première cause de retour dans la mode en ligne : on ne sait pas si ça tombera bien. Le membre renseigne ses mensurations une fois, guidé pas à pas comme chez un couturier, puis chaque vêtement s'affiche sur une silhouette générée à ses mesures, à l'échelle en centimètres, avec le diagnostic du tombé zone par zone et une taille recommandée automatiquement. Côté boutique : catalogue filtrable, recherche plein texte, galerie multi-images, guide des tailles, indicateur d'urgence stock, panier persistant et commande avec décrément de stock. L'administration gère les produits, les commandes et une devise configurable (EUR, USD, MGA…) — les commandes conservant celle en vigueur au moment de l'achat. Écrit sans aucune dépendance : `node server.js` suffit, les données vivent dans un JSON créé au premier lancement.",
+      "tags": [
+        "Node.js",
+        "JavaScript",
+        "SVG",
+        "E-commerce",
+        "Zéro dépendance"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-purple/30 to-neon-green/30",
+      "repoUrl": "https://github.com/Clarco-Mada-digital/Silhouette",
+      "demoUrl": "",
+      "cover": "/projects/silhouette-cover.webp",
+      "gallery": [],
+      "features": [
+        "Mannequin virtuel généré aux mesures du membre",
+        "Diagnostic du tombé zone par zone, taille conseillée",
+        "Assistant de prise de mesures guidé",
+        "Catalogue filtrable, recherche, galerie, stock",
+        "Back-office : produits, commandes, devise",
+        "Aucune dépendance — Node.js seul suffit"
+      ],
+      "category": "perso",
+      "includeInCv": false
+    },
+    {
+      "id": 18,
+      "name": "Fiara Permis",
+      "year": "2026",
+      "featured": true,
+      "shortDesc": "Application installable et hors connexion pour réviser le code de la route à Madagascar : 6 modules, quiz, examen blanc chronométré, en français et en malgache.",
+      "fullDesc": "Réviser le code de la route à Madagascar suppose souvent d'acheter un fascicule et d'avoir du réseau. Fiara Permis fait l'inverse : une PWA qui s'installe sur le téléphone et fonctionne intégralement hors connexion, une fois la première visite faite. Le parcours est découpé en six modules présentés comme des points kilométriques, avec cartes de quiz, examen blanc chronométré de 20 questions mélangées, glossaire et exercices pratiques — reconnaissance de panneaux, cas de priorité en vrai/faux. La progression est stockée en localStorage : aucun compte, aucun backend. Le contenu s'appuie sur la loi n°2017-002 portant Code de la Route à Madagascar, chaque module citant ses sources en bas de page, et une page /sources les regroupe. Les montants et le seuil de réussite sont explicitement signalés comme indicatifs. Interface disponible en français et en malgache.",
+      "tags": [
+        "Astro",
+        "TypeScript",
+        "Tailwind CSS",
+        "Alpine.js",
+        "PWA",
+        "Offline"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
+      "repoUrl": "https://github.com/Brayan-Clark/fiara-permis",
+      "demoUrl": "https://brayan-clark.github.io/fiara-permis/",
+      "cover": "/projects/fiara-permis-cover.webp",
+      "gallery": [
+        "/projects/fiara-permis-exercices.webp"
+      ],
+      "features": [
+        "100 % hors connexion après la première visite (Workbox)",
+        "6 modules, cartes de quiz, examen blanc chronométré",
+        "Exercices : reconnaissance de panneaux, priorités",
+        "Bilingue français / malgache",
+        "Contenu sourcé sur la loi n°2017-002, sources citées",
+        "Progression en localStorage — aucun compte requis"
       ],
       "category": "perso",
       "includeInCv": true
