@@ -2,7 +2,9 @@ import Alpine from "alpinejs";
 import { refreshReveal } from "./effects";
 import { registerHighlight } from "./highlight";
 import { assetUrl } from "../lib/url";
-import { generateCv, CV_TEMPLATES } from "./cv";
+// Seules les métadonnées des templates sont chargées d'entrée (la modale les
+// affiche). Le générateur PDF lui-même est importé à la demande, au clic.
+import { CV_TEMPLATES } from "./cv-templates";
 import {
   FONT_PAIRINGS,
   COLOR_THEMES,
@@ -23,6 +25,9 @@ interface Command {
   keywords?: string;
 }
 
+/** Labo réduit à ce qu'affiche la palette de commandes (sans le code de la démo). */
+type LabMeta = Pick<Lab, "id" | "title" | "tags" | "emoji">;
+
 interface PortfolioBootstrap {
   projects: Project[];
   tagline: string;
@@ -30,7 +35,9 @@ interface PortfolioBootstrap {
   email: string;
   web3formsKey: string;
   base: string;
-  content: Content;
+  cvUrl: string;
+  socials: Content["socials"];
+  labsMeta: LabMeta[];
 }
 
 declare global {
@@ -48,8 +55,30 @@ function portfolioApp() {
     email: "",
     web3formsKey: "",
     base: "/",
-    content: null as unknown as Content,
+    cvUrl: "",
+    socials: {} as Content["socials"],
+    labsMeta: [],
   };
+
+  // Contenu complet (CV + code des démos), récupéré au premier besoin puis
+  // mémorisé. On garde la promesse elle-même : deux clics rapprochés ne
+  // déclenchent qu'un seul téléchargement.
+  let contentPromise: Promise<Content> | null = null;
+  function loadContent(): Promise<Content> {
+    if (!contentPromise) {
+      contentPromise = fetch(`${boot.base}portfolio-data.json`)
+        .then((r) => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json() as Promise<Content>;
+        })
+        .catch((err) => {
+          // Un échec ne doit pas condamner les tentatives suivantes.
+          contentPromise = null;
+          throw err;
+        });
+    }
+    return contentPromise;
+  }
 
   return {
     activeView: "home",
@@ -62,8 +91,14 @@ function portfolioApp() {
     paletteIndex: 0,
     selectedProject: null as Project | null,
     // --- Modal Labs (démo agrandie + onglets code) ---
-    labs: (boot.content?.labs ?? []) as Lab[],
+    // Métadonnées seules au démarrage ; le code des démos arrive avec
+    // /portfolio-data.json quand on ouvre un labo.
+    labs: (boot.labsMeta ?? []) as Lab[],
     selectedLab: null as Lab | null,
+    labLoading: false,
+    // Passe à true une fois le code des démos récupéré (évite de refetcher
+    // pour un labo qui n'a tout simplement pas de démo).
+    labsFull: false,
     labTab: "result" as "result" | "html" | "css" | "js",
     labViewport: "fit" as "fit" | "desktop" | "mobile",
     labCopied: null as string | null,
@@ -78,7 +113,7 @@ function portfolioApp() {
     // "complet" = tout (peut faire 2 pages), "simple" = condensé sur 1 page.
     cvMode: "complet" as "complet" | "simple",
     cvTemplates: CV_TEMPLATES,
-    customCv: boot.content?.site?.cvUrl || "",
+    customCv: boot.cvUrl || "",
     isLight:
       typeof document !== "undefined" &&
       document.documentElement.classList.contains("light"),
@@ -177,7 +212,7 @@ function portfolioApp() {
         type: "theme",
         keywords: "theme dark light sombre clair mode",
       });
-      const s = boot.content?.socials;
+      const s = boot.socials;
       if (s?.github) cmds.push({ id: "gh", label: "Ouvrir GitHub", icon: "↗", type: "link", arg: s.github, keywords: "github code repo" });
       if (s?.linkedin) cmds.push({ id: "li", label: "Ouvrir LinkedIn", icon: "↗", type: "link", arg: s.linkedin, keywords: "linkedin reseau" });
       if (s?.email) cmds.push({ id: "mail", label: "M'écrire un email", icon: "✉", type: "link", arg: "mailto:" + s.email, keywords: "email mail contact écrire" });
@@ -237,10 +272,34 @@ function portfolioApp() {
     },
 
     // --- Labs ---
-    openLab(id: number) {
-      this.selectedLab = this.labs.find((l) => l.id === id) ?? null;
+    /**
+     * Le code de la démo n'est pas dans la page : on récupère le contenu
+     * complet au premier labo ouvert (mis en cache ensuite, donc instantané).
+     * On ouvre la modale tout de suite avec les métadonnées connues pour ne pas
+     * laisser le clic sans réponse.
+     */
+    async openLab(id: number) {
+      const meta = this.labs.find((l) => l.id === id);
+      if (!meta) return;
       this.labTab = "result";
       this.labViewport = "fit";
+      this.selectedLab = meta as Lab;
+
+      if (this.labsFull) return; // code des démos déjà en mémoire
+      this.labLoading = true;
+      try {
+        const full = await loadContent();
+        this.labs = full.labs ?? this.labs;
+        this.labsFull = true;
+        // Le visiteur a pu refermer ou changer de labo entre-temps.
+        if (this.selectedLab?.id !== id) return;
+        this.selectedLab = this.labs.find((l) => l.id === id) ?? this.selectedLab;
+      } catch {
+        this.toast("Impossible de charger la démo. Réessaie.", "error");
+        if (this.selectedLab?.id === id) this.selectedLab = null;
+      } finally {
+        this.labLoading = false;
+      }
     },
     closeLab() {
       this.selectedLab = null;
@@ -410,7 +469,11 @@ function portfolioApp() {
       if (this.cvBusy) return;
       this.cvBusy = templateId;
       try {
-        await generateCv(boot.content, templateId, boot.base, this.cvMode);
+        const [{ generateCv }, fullContent] = await Promise.all([
+          import("./cv"),
+          loadContent(),
+        ]);
+        await generateCv(fullContent, templateId, boot.base, this.cvMode);
         this.toast("CV généré et téléchargé ✓", "success");
       } catch (err) {
         console.error("Génération CV échouée", err);

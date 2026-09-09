@@ -26,6 +26,9 @@ const { site, hero, contact } = content;
 // de domaine côté Web3Forms.
 const web3formsKey = process.env.WEB3FORMS_KEY || contact.web3formsKey || "";
 
+// On n'injecte QUE ce dont Alpine a besoin au premier rendu. Le contenu complet
+// (dont le code source des labos, ~116 Ko) est servi par /portfolio-data.json
+// et récupéré à la demande — voir `loadContent()` dans scripts/portfolio.ts.
 const bootstrap = {
   projects: content.projects,
   tagline: hero.tagline,
@@ -33,7 +36,16 @@ const bootstrap = {
   email: contact.email,
   web3formsKey,
   base: import.meta.env.BASE_URL,
-  content, // contenu complet, utilisé pour générer le CV PDF
+  cvUrl: content.site.cvUrl || "",
+  socials: content.socials,
+  // Métadonnées des labos pour la palette de commandes : le code des démos
+  // reste dehors (il est déjà dans le srcdoc des vignettes).
+  labsMeta: content.labs.map(({ id, title, tags, emoji }) => ({
+    id,
+    title,
+    tags,
+    emoji,
+  })),
 };
 ---
 

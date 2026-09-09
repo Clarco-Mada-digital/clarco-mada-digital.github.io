@@ -1,48 +1,24 @@
 /**
  * Coloration syntaxique côté client, bundlée localement (pas de CDN).
- * Seuls HTML / CSS / JS sont enregistrés : c'est tout ce dont les démos des
- * labos ont besoin, et ça garde le poids minimal.
  *
  * Exposé sous forme de « magies » Alpine, utilisables dans les templates :
  *   - $hl(code, lang)   → HTML coloré (échappé par highlight.js, sûr en x-html)
  *   - $linenos(code)    → colonne de numéros de ligne (<span> par ligne)
+ *
+ * highlight.js (~88 Ko) ne sert qu'aux onglets de code des labos, que la
+ * plupart des visiteurs n'ouvrent jamais. Il vit donc dans `highlight-core.ts`,
+ * importé à la volée au premier appel de `$hl`. Comme une magie Alpine doit
+ * répondre de façon synchrone, on rend d'abord le code simplement échappé,
+ * puis on incrémente un compteur réactif : Alpine ré-évalue l'expression et
+ * la version colorée remplace la première, sans que le visiteur voie de vide.
  */
-import hljs from "highlight.js/lib/core";
-import javascript from "highlight.js/lib/languages/javascript";
-import xml from "highlight.js/lib/languages/xml";
-import css from "highlight.js/lib/languages/css";
 
-hljs.registerLanguage("javascript", javascript);
-hljs.registerLanguage("xml", xml);
-hljs.registerLanguage("css", css);
-
-/** Alias d'onglets (html→xml, js→javascript) vers les langages enregistrés. */
-const LANG_ALIAS: Record<string, string> = {
-  html: "xml",
-  xml: "xml",
-  js: "javascript",
-  javascript: "javascript",
-  css: "css",
-};
-
+/** Échappement minimal, disponible sans charger le cœur. */
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-}
-
-/** Code coloré en HTML. Vide → chaîne vide. Langage inconnu → simplement échappé. */
-export function highlightCode(code: string, lang: string): string {
-  const src = String(code ?? "");
-  if (!src.trim()) return "";
-  const language = LANG_ALIAS[String(lang || "").toLowerCase()];
-  if (!language) return escapeHtml(src);
-  try {
-    return hljs.highlight(src, { language, ignoreIllegals: true }).value;
-  } catch {
-    return escapeHtml(src);
-  }
 }
 
 /** Colonne de numéros de ligne alignée sur le code (1 <span> par ligne). */
@@ -56,10 +32,39 @@ export function lineNumbers(code: string): string {
 /** Interface minimale d'Alpine (le paquet ne fournit pas de déclarations de types). */
 interface AlpineLike {
   magic(name: string, cb: () => unknown): void;
+  reactive<T extends object>(obj: T): T;
 }
+
+type Core = typeof import("./highlight-core");
 
 /** Enregistre les magies $hl et $linenos sur une instance Alpine (avant start). */
 export function registerHighlight(Alpine: AlpineLike): void {
-  Alpine.magic("hl", () => (code: string, lang: string) => highlightCode(code, lang));
+  let core: Core | null = null;
+  let pending: Promise<void> | null = null;
+  // Lu par $hl pour créer une dépendance réactive : l'incrémenter après le
+  // chargement suffit à faire recolorer tous les blocs déjà affichés.
+  const state = Alpine.reactive({ revision: 0 });
+
+  function loadCore(): void {
+    if (core || pending) return;
+    pending = import("./highlight-core")
+      .then((m) => {
+        core = m;
+        state.revision++;
+      })
+      .catch(() => {
+        // Échec réseau : on en reste au code échappé, parfaitement lisible.
+        pending = null;
+      });
+  }
+
+  Alpine.magic("hl", () => (code: string, lang: string) => {
+    state.revision; // dépendance réactive (voir loadCore)
+    const src = String(code ?? "");
+    if (!src.trim()) return "";
+    if (core) return core.highlightCode(src, lang);
+    loadCore();
+    return escapeHtml(src);
+  });
   Alpine.magic("linenos", () => (code: string) => lineNumbers(code));
 }

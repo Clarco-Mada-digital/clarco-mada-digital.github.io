@@ -75,7 +75,16 @@
               </template>
             </div>
             <div class="flex-1 min-h-0 overflow-auto flex justify-center">
+              {/* Le code de la démo est récupéré à la volée : on occupe l'espace
+                  pendant le (bref) chargement plutôt que d'afficher un vide. */}
+              <div
+                x-show="labLoading"
+                class="flex items-center gap-2 self-center font-mono text-xs text-neon-cyan"
+              >
+                <span class="animate-pulse">▋</span> chargement de la démo…
+              </div>
               <iframe
+                x-show="!labLoading"
                 :title="'Démo : ' + selectedLab.title"
                 sandbox="allow-scripts allow-downloads"
                 :srcdoc="labSrcdoc"
