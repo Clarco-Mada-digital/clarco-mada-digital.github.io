@@ -118,6 +118,9 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
     <meta name="description" content={description} />
     <meta name="author" content={content.site.name} />
     <link rel="canonical" href={canonical} />
+    {/* Branche conditionnelle : seule la console d'administration passe
+        noIndex. Toutes les pages publiques prennent « index, follow ».
+        argus-disable-next-line */}
     {
       noIndex ? (
         <meta name="robots" content="noindex, nofollow" />
@@ -147,6 +150,9 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
+    {/* Même garantie que sur les articles : JSON.stringify puis échappement
+        des « < » (voir personLdJson plus haut). Aucune saisie extérieure.
+        argus-disable-next-line */}
     {
       !noIndex && (
         <script type="application/ld+json" set:html={personLdJson} />
@@ -178,6 +184,11 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
   <body
     class="font-sans text-gray-300 antialiased bg-grid selection:bg-neon-cyan selection:text-lab-dark"
   >
+    {/* Lien d'évitement : la navigation compte une dizaine d'entrées, répétées
+        sur chaque page. Au clavier, ce lien permet de les sauter d'une touche.
+        Invisible tant qu'il n'a pas le focus. */}
+    <a href="#contenu" class="skip-link">Aller au contenu</a>
+
     <!-- Écran de chargement (ADN terminal du portfolio) -->
     <div id="preloader" aria-hidden="true">
       <div class="pl-box">

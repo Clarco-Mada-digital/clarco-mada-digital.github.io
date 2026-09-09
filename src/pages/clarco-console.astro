@@ -159,7 +159,7 @@ const addBtn =
             </div>
             <div class="flex-1">
               <label class={label}>Photo de profil (affichée sur le CV)</label>
-              <input class={input} x-model="data.site.photo" placeholder="URL ou /profile/moi.jpg" />
+              <input class={input} x-model="data.site.photo" placeholder="URL ou /profile/moi.jpg" autocomplete="off" />
               <div class="flex gap-2 mt-2">
                 <label class={addBtn + ' cursor-pointer'}>
                   ⬆ Uploader une photo
@@ -171,15 +171,15 @@ const addBtn =
           </div>
 
           <div class="grid sm:grid-cols-2 gap-4">
-            <div><label class={label}>Nom complet</label><input class={input} x-model="data.site.name" /></div>
-            <div><label class={label}>Handle (~/...)</label><input class={input} x-model="data.site.handle" /></div>
-            <div><label class={label}>Initiale (logo)</label><input class={input} x-model="data.site.initials" /></div>
-            <div><label class={label}>Rôle</label><input class={input} x-model="data.site.role" /></div>
+            <div><label class={label}>Nom complet</label><input class={input} x-model="data.site.name" autocomplete="off" /></div>
+            <div><label class={label}>Handle (~/...)</label><input class={input} x-model="data.site.handle" autocomplete="off" /></div>
+            <div><label class={label}>Initiale (logo)</label><input class={input} x-model="data.site.initials" autocomplete="off" /></div>
+            <div><label class={label}>Rôle</label><input class={input} x-model="data.site.role" autocomplete="off" /></div>
           </div>
-          <div><label class={label}>Titre de l'onglet (SEO)</label><input class={input} x-model="data.site.titleTag" /></div>
-          <div><label class={label}>Description (SEO)</label><textarea rows="2" class={input} x-model="data.site.description"></textarea></div>
+          <div><label class={label}>Titre de l'onglet (SEO)</label><input class={input} x-model="data.site.titleTag" autocomplete="off" /></div>
+          <div><label class={label}>Description (SEO)</label><textarea rows="2" class={input} x-model="data.site.description" autocomplete="off"></textarea></div>
           <div class="grid sm:grid-cols-2 gap-4 items-end">
-            <div><label class={label}>Libellé disponibilité</label><input class={input} x-model="data.site.availabilityLabel" /></div>
+            <div><label class={label}>Libellé disponibilité</label><input class={input} x-model="data.site.availabilityLabel" autocomplete="off" /></div>
             <label class="flex items-center gap-2 text-sm text-gray-300 py-2">
               <input type="checkbox" x-model="data.site.available" class="accent-neon-cyan" /> Afficher « disponible »
             </label>
@@ -189,7 +189,7 @@ const addBtn =
           <div class="border-t border-lab-border pt-4">
             <label class={label}>CV (bouton « Télécharger mon CV »)</label>
             <div class="flex flex-wrap items-center gap-2">
-              <input class={input + ' !flex-1 min-w-[200px]'} x-model="data.site.cvUrl" placeholder="URL ou /cv/mon-cv.pdf — vide = bouton masqué" />
+              <input class={input + ' !flex-1 min-w-[200px]'} x-model="data.site.cvUrl" placeholder="URL ou /cv/mon-cv.pdf — vide = bouton masqué" autocomplete="off" />
               <label class={addBtn + ' cursor-pointer'}>
                 ⬆ Uploader (PDF)
                 <input type="file" accept="application/pdf,image/*" class="hidden" @change="uploadCv($event)" />
@@ -206,20 +206,20 @@ const addBtn =
         <!-- ====== HERO ====== -->
         <section x-show="activeTab === 'hero'" style="display:none" class:list={[card, 'space-y-4']}>
           <h2 class="text-white font-bold">Section Hero</h2>
-          <div><label class={label}>Accroche (effet machine à écrire)</label><textarea rows="2" class={input} x-model="data.hero.tagline"></textarea></div>
+          <div><label class={label}>Accroche (effet machine à écrire)</label><textarea rows="2" class={input} x-model="data.hero.tagline" autocomplete="off"></textarea></div>
           <h3 class="text-gray-400 text-sm font-mono pt-2">Bloc code « developer.js »</h3>
           <div class="grid sm:grid-cols-2 gap-4">
-            <div><label class={label}>name</label><input class={input} x-model="data.hero.code.name" /></div>
-            <div><label class={label}>role</label><input class={input} x-model="data.hero.code.role" /></div>
-            <div><label class={label}>location</label><input class={input} x-model="data.hero.code.location" /></div>
-            <div><label class={label}>passions</label><input class={input} x-model="data.hero.code.passions" /></div>
+            <div><label class={label}>name</label><input class={input} x-model="data.hero.code.name" autocomplete="off" /></div>
+            <div><label class={label}>role</label><input class={input} x-model="data.hero.code.role" autocomplete="off" /></div>
+            <div><label class={label}>location</label><input class={input} x-model="data.hero.code.location" autocomplete="off" /></div>
+            <div><label class={label}>passions</label><input class={input} x-model="data.hero.code.passions" autocomplete="off" /></div>
           </div>
           <div>
             <label class={label}>stack</label>
             <div class="space-y-2">
               <template x-for="(_, i) in data.hero.code.stack" :key="i">
                 <div class="flex gap-2">
-                  <input class={input} x-model="data.hero.code.stack[i]" />
+                  <input class={input} x-model="data.hero.code.stack[i]" autocomplete="off" />
                   <button class={miniBtn} @click="remove(data.hero.code.stack, i)">✕</button>
                 </div>
               </template>
@@ -236,8 +236,8 @@ const addBtn =
           </div>
           <template x-for="(stat, i) in data.stats" :key="i">
             <div class="flex flex-wrap items-end gap-3 border border-lab-border rounded-lg p-3">
-              <div class="w-20"><label class={label}>Valeur</label><input class={input} x-model="stat.value" /></div>
-              <div class="flex-1 min-w-[140px]"><label class={label}>Libellé</label><input class={input} x-model="stat.label" /></div>
+              <div class="w-20"><label class={label}>Valeur</label><input class={input} x-model="stat.value" autocomplete="off" /></div>
+              <div class="flex-1 min-w-[140px]"><label class={label}>Libellé</label><input class={input} x-model="stat.label" autocomplete="off" /></div>
               <div class="w-36">
                 <label class={label}>Couleur</label>
                 <select class={input} x-model="stat.color">
@@ -264,7 +264,7 @@ const addBtn =
             <div class="space-y-2">
               <template x-for="(_, i) in data.about.paragraphs" :key="i">
                 <div class="flex gap-2">
-                  <textarea rows="3" class={input} x-model="data.about.paragraphs[i]"></textarea>
+                  <textarea rows="3" class={input} x-model="data.about.paragraphs[i]" autocomplete="off"></textarea>
                   <button class={miniBtn} @click="remove(data.about.paragraphs, i)">✕</button>
                 </div>
               </template>
@@ -277,7 +277,7 @@ const addBtn =
               <div class="space-y-2">
                 <template x-for="(_, i) in data.about.doing" :key="i">
                   <div class="flex gap-2">
-                    <input class={input} x-model="data.about.doing[i]" />
+                    <input class={input} x-model="data.about.doing[i]" autocomplete="off" />
                     <button class={miniBtn} @click="remove(data.about.doing, i)">✕</button>
                   </div>
                 </template>
@@ -289,7 +289,7 @@ const addBtn =
               <div class="space-y-2">
                 <template x-for="(_, i) in data.about.looking" :key="i">
                   <div class="flex gap-2">
-                    <input class={input} x-model="data.about.looking[i]" />
+                    <input class={input} x-model="data.about.looking[i]" autocomplete="off" />
                     <button class={miniBtn} @click="remove(data.about.looking, i)">✕</button>
                   </div>
                 </template>
@@ -309,8 +309,8 @@ const addBtn =
             <template x-for="(cat, ci) in data.skills" :key="ci">
               <div class="border border-lab-border rounded-lg p-4 space-y-3">
                 <div class="flex gap-3 items-end">
-                  <div class="w-16"><label class={label}>Icône</label><input class={input} x-model="cat.icon" /></div>
-                  <div class="flex-1"><label class={label}>Nom</label><input class={input} x-model="cat.name" /></div>
+                  <div class="w-16"><label class={label}>Icône</label><input class={input} x-model="cat.icon" autocomplete="off" /></div>
+                  <div class="flex-1"><label class={label}>Nom</label><input class={input} x-model="cat.name" autocomplete="off" /></div>
                   <div class="flex gap-1">
                     <button class={miniBtn} @click="move(data.skills, ci, -1)">↑</button>
                     <button class={miniBtn} @click="move(data.skills, ci, 1)">↓</button>
@@ -322,7 +322,7 @@ const addBtn =
                   <div class="flex flex-wrap gap-2">
                     <template x-for="(_, ti) in cat.items" :key="ti">
                       <div class="flex gap-1 items-center">
-                        <input class={input + ' !w-32'} x-model="cat.items[ti]" />
+                        <input class={input + ' !w-32'} x-model="cat.items[ti]" autocomplete="off" />
                         <button class={miniBtn} @click="remove(cat.items, ti)">✕</button>
                       </div>
                     </template>
@@ -338,7 +338,7 @@ const addBtn =
             <div class="flex flex-wrap gap-2">
               <template x-for="(_, i) in data.tools" :key="i">
                 <div class="flex gap-1 items-center">
-                  <input class={input + ' !w-40'} x-model="data.tools[i]" />
+                  <input class={input + ' !w-40'} x-model="data.tools[i]" autocomplete="off" />
                   <button class={miniBtn} @click="remove(data.tools, i)">✕</button>
                 </div>
               </template>
@@ -357,8 +357,7 @@ const addBtn =
             type="search"
             x-model="projectQuery"
             placeholder="Rechercher un projet par nom…"
-            class={input + ' !max-w-sm'}
-          />
+            class={input + ' !max-w-sm'} autocomplete="off" />
           <template x-for="(project, pi) in data.projects" :key="project.id">
             <div class:list={[card, 'space-y-0']} x-show="matches(project.name, projectQuery)">
               <!-- En-tête (toujours visible) : cliquer pour déplier/replier -->
@@ -387,8 +386,8 @@ const addBtn =
 
               <div x-show="isProjectOpen(project.id)" class="space-y-4 pt-4">
               <div class="grid sm:grid-cols-2 gap-4">
-                <div><label class={label}>Nom</label><input class={input} x-model="project.name" /></div>
-                <div><label class={label}>Année</label><input class={input} x-model="project.year" /></div>
+                <div><label class={label}>Nom</label><input class={input} x-model="project.name" autocomplete="off" /></div>
+                <div><label class={label}>Année</label><input class={input} x-model="project.year" autocomplete="off" /></div>
               </div>
 
               <!-- Catégorie : perso ou pro (+ entreprise/statut si pro) -->
@@ -404,7 +403,7 @@ const addBtn =
                   <input type="checkbox" x-model="project.includeInCv" class="accent-neon-cyan" /> Inclure dans le CV généré
                 </label>
                 <template x-if="project.category === 'pro'">
-                  <div><label class={label}>Entreprise / client</label><input class={input} x-model="project.company" placeholder="ex. MADA-Digital" /></div>
+                  <div><label class={label}>Entreprise / client</label><input class={input} x-model="project.company" placeholder="ex. MADA-Digital" autocomplete="off" /></div>
                 </template>
                 <template x-if="project.category === 'pro'">
                   <div>
@@ -417,12 +416,12 @@ const addBtn =
                 </template>
               </div>
 
-              <div><label class={label}>Description courte</label><textarea rows="2" class={input} x-model="project.shortDesc"></textarea></div>
-              <div><label class={label}>Description complète (modale)</label><textarea rows="3" class={input} x-model="project.fullDesc"></textarea></div>
+              <div><label class={label}>Description courte</label><textarea rows="2" class={input} x-model="project.shortDesc" autocomplete="off"></textarea></div>
+              <div><label class={label}>Description complète (modale)</label><textarea rows="3" class={input} x-model="project.fullDesc" autocomplete="off"></textarea></div>
 
               <div class="grid sm:grid-cols-2 gap-4">
-                <div><label class={label}>Lien code (repo)</label><input class={input} x-model="project.repoUrl" placeholder="https://github.com/..." /></div>
-                <div><label class={label}>Lien démo</label><input class={input} x-model="project.demoUrl" placeholder="https://..." /></div>
+                <div><label class={label}>Lien code (repo)</label><input class={input} x-model="project.repoUrl" placeholder="https://github.com/..." autocomplete="off" /></div>
+                <div><label class={label}>Lien démo</label><input class={input} x-model="project.demoUrl" placeholder="https://..." autocomplete="off" /></div>
               </div>
 
               <!-- Images -->
@@ -443,7 +442,7 @@ const addBtn =
                       </template>
                     </div>
                     <div class="flex-1 space-y-2">
-                      <input class={input} x-model="project.cover" placeholder="URL ou /projects/mon-image.jpg" />
+                      <input class={input} x-model="project.cover" placeholder="URL ou /projects/mon-image.jpg" autocomplete="off" />
                       <div class="flex gap-2">
                         <label class={addBtn + ' cursor-pointer'}>
                           ⬆ Uploader
@@ -481,7 +480,7 @@ const addBtn =
                   <div class="space-y-2 mt-2" x-show="project.gallery.length">
                     <template x-for="(_, gi) in project.gallery" :key="'u' + gi">
                       <div class="flex gap-2">
-                        <input class={input} x-model="project.gallery[gi]" placeholder="URL ou /projects/demo.jpg" />
+                        <input class={input} x-model="project.gallery[gi]" placeholder="URL ou /projects/demo.jpg" autocomplete="off" />
                         <button class={miniBtn} @click="remove(project.gallery, gi)">✕</button>
                       </div>
                     </template>
@@ -512,7 +511,7 @@ const addBtn =
                   <div class="flex flex-wrap gap-2">
                     <template x-for="(_, ti) in project.tags" :key="ti">
                       <div class="flex gap-1 items-center">
-                        <input class={input + ' !w-28'} x-model="project.tags[ti]" />
+                        <input class={input + ' !w-28'} x-model="project.tags[ti]" autocomplete="off" />
                         <button class={miniBtn} @click="remove(project.tags, ti)">✕</button>
                       </div>
                     </template>
@@ -524,7 +523,7 @@ const addBtn =
                   <div class="space-y-2">
                     <template x-for="(_, fi) in project.features" :key="fi">
                       <div class="flex gap-2">
-                        <input class={input} x-model="project.features[fi]" />
+                        <input class={input} x-model="project.features[fi]" autocomplete="off" />
                         <button class={miniBtn} @click="remove(project.features, fi)">✕</button>
                       </div>
                     </template>
@@ -550,14 +549,13 @@ const addBtn =
             type="search"
             x-model="labQuery"
             placeholder="Rechercher un labo par titre…"
-            class={input + ' !max-w-sm'}
-          />
+            class={input + ' !max-w-sm'} autocomplete="off" />
           <template x-for="(lab, li) in data.labs" :key="lab.id">
             <div class:list={[card, 'space-y-4']} x-show="matches(lab.title, labQuery)">
               <div class="flex items-start gap-3">
                 <div class="flex-1 grid sm:grid-cols-4 gap-4">
-                  <div class="sm:col-span-1"><label class={label}>Émoji</label><input class={input} x-model="lab.emoji" placeholder="🔬" /></div>
-                  <div class="sm:col-span-3"><label class={label}>Titre</label><input class={input} x-model="lab.title" /></div>
+                  <div class="sm:col-span-1"><label class={label}>Émoji</label><input class={input} x-model="lab.emoji" placeholder="🔬" autocomplete="off" /></div>
+                  <div class="sm:col-span-3"><label class={label}>Titre</label><input class={input} x-model="lab.title" autocomplete="off" /></div>
                 </div>
                 <div class="flex gap-1 pt-5">
                   <button class={miniBtn} @click="move(data.labs, li, -1)">↑</button>
@@ -567,7 +565,7 @@ const addBtn =
               </div>
               <div>
                 <label class={label}>Phrase (ce que j'ai testé + appris)</label>
-                <textarea rows="2" class={input} x-model="lab.tagline"></textarea>
+                <textarea rows="2" class={input} x-model="lab.tagline" autocomplete="off"></textarea>
               </div>
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
@@ -578,14 +576,14 @@ const addBtn =
                     <option value="done">✅ Terminé</option>
                   </select>
                 </div>
-                <div><label class={label}>Lien (démo / repo)</label><input class={input} x-model="lab.url" placeholder="https://..." /></div>
+                <div><label class={label}>Lien (démo / repo)</label><input class={input} x-model="lab.url" placeholder="https://..." autocomplete="off" /></div>
               </div>
               <div>
                 <label class={label}>Tags</label>
                 <div class="flex flex-wrap gap-2">
                   <template x-for="(_, ti) in lab.tags" :key="ti">
                     <div class="flex gap-1 items-center">
-                      <input class={input + ' !w-28'} x-model="lab.tags[ti]" />
+                      <input class={input + ' !w-28'} x-model="lab.tags[ti]" autocomplete="off" />
                       <button class={miniBtn} @click="remove(lab.tags, ti)">✕</button>
                     </div>
                   </template>
@@ -627,21 +625,21 @@ const addBtn =
                       <label class={label}>HTML</label>
                       <div class="code-editor">
                         <pre aria-hidden="true"><code class="hljs" x-html="$hl(lab.demo.html || '', 'html')"></code></pre>
-                        <textarea rows="4" spellcheck="false" x-model="lab.demo.html" @scroll="$el.previousElementSibling.scrollTop = $el.scrollTop" placeholder="<div>…</div>"></textarea>
+                        <textarea rows="4" spellcheck="false" x-model="lab.demo.html" @scroll="$el.previousElementSibling.scrollTop = $el.scrollTop" placeholder="<div autocomplete="off">…</div>"></textarea>
                       </div>
                     </div>
                     <div>
                       <label class={label}>CSS</label>
                       <div class="code-editor">
                         <pre aria-hidden="true"><code class="hljs" x-html="$hl(lab.demo.css || '', 'css')"></code></pre>
-                        <textarea rows="4" spellcheck="false" x-model="lab.demo.css" @scroll="$el.previousElementSibling.scrollTop = $el.scrollTop" placeholder="body { … }"></textarea>
+                        <textarea rows="4" spellcheck="false" x-model="lab.demo.css" @scroll="$el.previousElementSibling.scrollTop = $el.scrollTop" placeholder="body { … }" autocomplete="off"></textarea>
                       </div>
                     </div>
                     <div>
                       <label class={label}>JavaScript</label>
                       <div class="code-editor">
                         <pre aria-hidden="true"><code class="hljs" x-html="$hl(lab.demo.js || '', 'js')"></code></pre>
-                        <textarea rows="5" spellcheck="false" x-model="lab.demo.js" @scroll="$el.previousElementSibling.scrollTop = $el.scrollTop" placeholder="const x = …"></textarea>
+                        <textarea rows="5" spellcheck="false" x-model="lab.demo.js" @scroll="$el.previousElementSibling.scrollTop = $el.scrollTop" placeholder="const x = …" autocomplete="off"></textarea>
                       </div>
                     </div>
                   </div>
@@ -717,7 +715,7 @@ const addBtn =
                       </div>
                     </div>
                     <!-- Saisie libre (aucun modèle chargé, ou mode manuel). -->
-                    <input x-show="!aiModels.length || aiManualModel" class={input} x-model="ai.model" @change="persistAi()" :placeholder="aiProvider.defaultModel" />
+                    <input x-show="!aiModels.length || aiManualModel" class={input} x-model="ai.model" @change="persistAi()" :placeholder="aiProvider.defaultModel" autocomplete="off" />
                     <p class="text-[11px] text-gray-600 mt-1" x-show="!aiModels.length" x-text="aiProvider.modelHint"></p>
                     <p class="text-[11px] mt-1" x-show="aiModels.length && !aiManualModel" x-cloak>
                       <span class="text-gray-500">Sélectionné :</span> <span class="text-neon-green font-mono" x-text="ai.model || '—'"></span>
@@ -761,7 +759,7 @@ const addBtn =
 
                 <div>
                   <label class={label}>Sujet (pour « depuis un sujet ») / orientation (optionnelle pour « tendance »)</label>
-                  <textarea rows="2" class={input} x-model="ai.topic" placeholder="ex. Le edge computing pour les apps mobiles en 2026…"></textarea>
+                  <textarea rows="2" class={input} x-model="ai.topic" placeholder="ex. Le edge computing pour les apps mobiles en 2026…" autocomplete="off"></textarea>
                 </div>
 
                 <div x-show="ai.error" x-cloak class="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm" x-text="ai.error"></div>
@@ -821,18 +819,18 @@ const addBtn =
               <div class="grid lg:grid-cols-2 gap-4">
                 <!-- Colonne gauche : métadonnées + markdown -->
                 <div class="space-y-3">
-                  <div><label class={label}>Titre</label><input class={input} x-model="postDraft.title" /></div>
+                  <div><label class={label}>Titre</label><input class={input} x-model="postDraft.title" autocomplete="off" /></div>
                   <div>
                     <label class={label}>Slug (URL)</label>
                     <div class="flex items-center gap-2 text-xs font-mono text-gray-500">
                       <span>/blog/</span>
-                      <input class={input} x-model="postDraft.slug" :placeholder="postSlug" />
+                      <input class={input} x-model="postDraft.slug" :placeholder="postSlug" autocomplete="off" />
                     </div>
                     <p class="text-[11px] text-gray-600 mt-1">Laisse vide pour générer depuis le titre : <span class="text-neon-cyan" x-text="postSlug"></span></p>
                   </div>
-                  <div><label class={label}>Description</label><textarea rows="2" class={input} x-model="postDraft.description"></textarea></div>
+                  <div><label class={label}>Description</label><textarea rows="2" class={input} x-model="postDraft.description" autocomplete="off"></textarea></div>
                   <div class="grid grid-cols-2 gap-3">
-                    <div><label class={label}>Date</label><input type="date" class={input} x-model="postDraft.date" /></div>
+                    <div><label class={label}>Date</label><input type="date" class={input} x-model="postDraft.date" autocomplete="off" /></div>
                     <div class="flex items-end pb-1">
                       <label class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
                         <input type="checkbox" x-model="postDraft.draft" class="accent-neon-cyan" />
@@ -845,7 +843,7 @@ const addBtn =
                     <div class="flex flex-wrap gap-2">
                       <template x-for="(_, ti) in postDraft.tags" :key="ti">
                         <div class="flex gap-1 items-center">
-                          <input class={input + ' !w-28'} x-model="postDraft.tags[ti]" />
+                          <input class={input + ' !w-28'} x-model="postDraft.tags[ti]" autocomplete="off" />
                           <button class={miniBtn} @click="remove(postDraft.tags, ti)">✕</button>
                         </div>
                       </template>
@@ -862,12 +860,12 @@ const addBtn =
                         📁
                         <input type="file" accept="image/*" class="hidden" @change="uploadPostCover($event)" />
                       </label>
-                      <input class={input} x-model="postDraft.cover" placeholder="/blog/cover.webp ou URL" />
+                      <input class={input} x-model="postDraft.cover" placeholder="/blog/cover.webp ou URL" autocomplete="off" />
                     </div>
                   </div>
                   <div>
                     <label class={label}>Contenu (Markdown)</label>
-                    <textarea rows="16" spellcheck="false" class={input + ' font-mono !text-xs leading-relaxed'} x-model="postDraft.body"></textarea>
+                    <textarea rows="16" spellcheck="false" class={input + ' font-mono !text-xs leading-relaxed'} x-model="postDraft.body" autocomplete="off"></textarea>
                   </div>
                 </div>
 
@@ -894,9 +892,9 @@ const addBtn =
             <div class:list={[card, 'space-y-4']}>
               <div class="flex items-start gap-3">
                 <div class="flex-1 grid sm:grid-cols-2 gap-4">
-                  <div><label class={label}>Poste</label><input class={input} x-model="exp.role" /></div>
-                  <div><label class={label}>Entreprise</label><input class={input} x-model="exp.company" /></div>
-                  <div><label class={label}>Période</label><input class={input} x-model="exp.period" placeholder="2023 — Présent" /></div>
+                  <div><label class={label}>Poste</label><input class={input} x-model="exp.role" autocomplete="off" /></div>
+                  <div><label class={label}>Entreprise</label><input class={input} x-model="exp.company" autocomplete="off" /></div>
+                  <div><label class={label}>Période</label><input class={input} x-model="exp.period" placeholder="2023 — Présent" autocomplete="off" /></div>
                 </div>
                 <div class="flex gap-1 pt-5">
                   <button class={miniBtn} @click="move(data.experience, ei, -1)">↑</button>
@@ -904,13 +902,13 @@ const addBtn =
                   <button class={miniBtn} @click="remove(data.experience, ei)">✕</button>
                 </div>
               </div>
-              <div><label class={label}>Description</label><textarea rows="3" class={input} x-model="exp.description"></textarea></div>
+              <div><label class={label}>Description</label><textarea rows="3" class={input} x-model="exp.description" autocomplete="off"></textarea></div>
               <div>
                 <label class={label}>Technologies</label>
                 <div class="flex flex-wrap gap-2">
                   <template x-for="(_, ti) in exp.tech" :key="ti">
                     <div class="flex gap-1 items-center">
-                      <input class={input + ' !w-28'} x-model="exp.tech[ti]" />
+                      <input class={input + ' !w-28'} x-model="exp.tech[ti]" autocomplete="off" />
                       <button class={miniBtn} @click="remove(exp.tech, ti)">✕</button>
                     </div>
                   </template>
@@ -924,17 +922,17 @@ const addBtn =
         <!-- ====== CONTACT ====== -->
         <section x-show="activeTab === 'contact'" style="display:none" class:list={[card, 'space-y-4']}>
           <h2 class="text-white font-bold">Contact & réseaux</h2>
-          <div><label class={label}>Intro</label><textarea rows="2" class={input} x-model="data.contact.intro"></textarea></div>
+          <div><label class={label}>Intro</label><textarea rows="2" class={input} x-model="data.contact.intro" autocomplete="off"></textarea></div>
           <div class="grid sm:grid-cols-2 gap-4">
-            <div><label class={label}>Email</label><input class={input} x-model="data.contact.email" /></div>
-            <div><label class={label}>Téléphone (CV)</label><input class={input} x-model="data.contact.phone" placeholder="+261 ..." /></div>
-            <div><label class={label}>Localisation</label><input class={input} x-model="data.contact.location" /></div>
-            <div><label class={label}>Statut</label><input class={input} x-model="data.contact.status" /></div>
-            <div><label class={label}>Endpoint Formspree (option.)</label><input class={input} x-model="data.contact.formEndpoint" placeholder="https://formspree.io/f/xxxx" /></div>
+            <div><label class={label}>Email</label><input class={input} x-model="data.contact.email" autocomplete="off" /></div>
+            <div><label class={label}>Téléphone (CV)</label><input class={input} x-model="data.contact.phone" placeholder="+261 ..." autocomplete="off" /></div>
+            <div><label class={label}>Localisation</label><input class={input} x-model="data.contact.location" autocomplete="off" /></div>
+            <div><label class={label}>Statut</label><input class={input} x-model="data.contact.status" autocomplete="off" /></div>
+            <div><label class={label}>Endpoint Formspree (option.)</label><input class={input} x-model="data.contact.formEndpoint" placeholder="https://formspree.io/f/xxxx" autocomplete="off" /></div>
           </div>
           <div class="bg-lab-dark border border-lab-border rounded-lg p-4">
             <label class={label}>Clé Web3Forms (recevoir les messages par email — gratuit)</label>
-            <input class={input} x-model="data.contact.web3formsKey" placeholder="Ex: 1a2b3c4d-...." />
+            <input class={input} x-model="data.contact.web3formsKey" placeholder="Ex: 1a2b3c4d-...." autocomplete="off" />
             <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
               En production, c'est le <span class="text-neon-cyan">secret GitHub WEB3FORMS_KEY</span> qui est utilisé (hors du dépôt).
               Ce champ sert de repli (ex. dev local). Sans clé ni Formspree, le formulaire ouvre le client mail du visiteur.
@@ -942,15 +940,15 @@ const addBtn =
           </div>
           <h3 class="text-gray-400 text-sm font-mono pt-2">Réseaux (sidebar)</h3>
           <div class="grid sm:grid-cols-3 gap-4">
-            <div><label class={label}>GitHub</label><input class={input} x-model="data.socials.github" /></div>
-            <div><label class={label}>LinkedIn</label><input class={input} x-model="data.socials.linkedin" /></div>
-            <div><label class={label}>Email (icône)</label><input class={input} x-model="data.socials.email" /></div>
+            <div><label class={label}>GitHub</label><input class={input} x-model="data.socials.github" autocomplete="off" /></div>
+            <div><label class={label}>LinkedIn</label><input class={input} x-model="data.socials.linkedin" autocomplete="off" /></div>
+            <div><label class={label}>Email (icône)</label><input class={input} x-model="data.socials.email" autocomplete="off" /></div>
           </div>
 
           <h3 class="text-gray-400 text-sm font-mono pt-2">Statistiques de visite</h3>
           <div class="bg-lab-dark border border-lab-border rounded-lg p-4">
             <label class={label}>Token Cloudflare Web Analytics (gratuit, sans cookies)</label>
-            <input class={input} x-model="data.analytics.cloudflareToken" placeholder="Ex: 1a2b3c4d5e6f..." />
+            <input class={input} x-model="data.analytics.cloudflareToken" placeholder="Ex: 1a2b3c4d5e6f..." autocomplete="off" />
             <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
               En production, c'est le <span class="text-neon-cyan">secret GitHub CF_ANALYTICS_TOKEN</span> qui est utilisé (hors du dépôt).
               Token depuis Cloudflare → Analytics &amp; Logs → Web Analytics → Add a site.

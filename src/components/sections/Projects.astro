@@ -53,11 +53,19 @@ const allTags = [...new Set(projects.flatMap((p) => p.tags))].sort();
 
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
     {
+      // La carte entière ouvre la modale : elle doit donc être atteignable au
+      // clavier (tabindex) et déclenchable par Entrée et Espace, comme le
+      // ferait un vrai bouton.
       projects.map((project, index) => (
         <div
+          role="button"
+          tabindex="0"
+          aria-label={`Voir le projet ${project.name}`}
           @click={`openProject(${project.id})`}
+          @keydown.enter.prevent={`openProject(${project.id})`}
+          @keydown.space.prevent={`openProject(${project.id})`}
           x-show={`projectTag === '' || ${JSON.stringify(project.tags)}.includes(projectTag)`}
-          class="reveal bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover cursor-pointer group"
+          class="reveal bg-lab-card border border-lab-border rounded-xl overflow-hidden card-hover cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-neon-cyan"
           style={`transition-delay: ${index * 0.1}s`}
         >
           {/* Miniature */}

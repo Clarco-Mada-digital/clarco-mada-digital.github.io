@@ -27,10 +27,14 @@
 </button>
 
 <!-- Backdrop -->
+{/* Voile purement décoratif : le clic ferme le panneau, mais la même action
+    est déjà offerte par Échap et le bouton de fermeture. On le masque donc
+    aux lecteurs d'écran plutôt que d'en faire un faux bouton. */}
 <div
   x-show="customizeOpen"
   x-cloak
   x-transition.opacity
+  aria-hidden="true"
   @click="customizeOpen = false"
   class="fixed inset-0 z-40 bg-lab-dark/50 backdrop-blur-[2px]"
   style="display:none"

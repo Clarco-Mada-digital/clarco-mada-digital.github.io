@@ -30,6 +30,7 @@
       <span class="text-neon-cyan font-mono text-sm shrink-0">›</span>
       <input
         x-ref="search"
+        aria-label="Rechercher une page, un projet ou une action"
         x-model="paletteQuery"
         @input="paletteIndex = 0"
         @keydown.down.prevent="movePalette(1)"

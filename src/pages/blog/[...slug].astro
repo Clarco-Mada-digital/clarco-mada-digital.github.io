@@ -56,6 +56,10 @@ const blogPostingLdJson = JSON.stringify(blogPostingLd).replace(/</g, "\\u003c")
   ogType="article"
   publishedTime={post.data.date.toISOString()}
 >
+  {/* Données structurées : la chaîne vient de JSON.stringify, et tout « < » y
+      est déjà remplacé par < (ligne 49) — impossible d'y refermer la
+      balise <script>. La source est le frontmatter des articles du dépôt.
+      argus-disable-next-line */}
   <script type="application/ld+json" slot="head" set:html={blogPostingLdJson} />
   <!-- Barre supérieure -->
   <header
@@ -81,7 +85,7 @@ const blogPostingLdJson = JSON.stringify(blogPostingLd).replace(/</g, "\\u003c")
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-5 sm:px-8 py-12">
+  <main id="contenu" class="max-w-3xl mx-auto px-5 sm:px-8 py-12">
     <article>
       {/* Couverture */}
       {

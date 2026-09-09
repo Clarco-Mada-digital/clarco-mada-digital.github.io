@@ -160,11 +160,19 @@ const { contact } = content;
           class="hidden"
         />
         <div class="space-y-4">
+          {/* `for`/`id` relient chaque libellé à son champ : sans ça, un lecteur
+              d'écran annonce « champ de saisie » sans dire lequel, et cliquer
+              sur le libellé ne place pas le curseur. `autocomplete` laisse le
+              navigateur proposer les valeurs déjà connues. */}
           <div>
-            <label class="text-xs text-gray-500 font-mono mb-1.5 block">Nom</label
+            <label for="contact-name" class="text-xs text-gray-500 font-mono mb-1.5 block"
+              >Nom</label
             >
             <input
+              id="contact-name"
+              name="name"
               type="text"
+              autocomplete="name"
               x-model="form.name"
               required
               class="w-full bg-lab-dark border border-lab-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors"
@@ -172,11 +180,14 @@ const { contact } = content;
             />
           </div>
           <div>
-            <label class="text-xs text-gray-500 font-mono mb-1.5 block"
+            <label for="contact-email" class="text-xs text-gray-500 font-mono mb-1.5 block"
               >Email</label
             >
             <input
+              id="contact-email"
+              name="email"
               type="email"
+              autocomplete="email"
               x-model="form.email"
               required
               class="w-full bg-lab-dark border border-lab-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-neon-cyan transition-colors"
@@ -184,10 +195,13 @@ const { contact } = content;
             />
           </div>
           <div>
-            <label class="text-xs text-gray-500 font-mono mb-1.5 block"
+            <label for="contact-message" class="text-xs text-gray-500 font-mono mb-1.5 block"
               >Message</label
             >
             <textarea
+              id="contact-message"
+              name="message"
+              autocomplete="off"
               x-model="form.message"
               required
               rows="4"
