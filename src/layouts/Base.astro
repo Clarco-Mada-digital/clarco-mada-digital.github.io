@@ -158,6 +158,14 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <meta name="theme-color" content="#070a0f" />
 
+    {/* Flux RSS : découvrable par les lecteurs et les agrégateurs. */}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${content.site.name} — Blog`}
+      href={`${base}rss.xml`}
+    />
+
     <!-- PWA : installable + hors-ligne -->
     <link rel="manifest" href={`${base}manifest.webmanifest`} />
     <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />

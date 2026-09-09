@@ -3,3 +3,6 @@ Allow: /
 Disallow: /clarco-console
 
 Sitemap: https://clarco-mada-digital.github.io/sitemap-index.xml
+
+# Fiche de synthèse pour les agents IA (convention llms.txt)
+# https://clarco-mada-digital.github.io/llms.txt
