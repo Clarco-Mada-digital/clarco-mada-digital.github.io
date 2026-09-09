@@ -33,6 +33,9 @@
         >
           <img
             x-show="selectedProject.cover"
+            {/* `:src` est une expression Alpine résolue au clic (asset() préfixe le
+                base path) : ce n'est pas une route statique.
+                argus-disable-next-line */}
             :src="asset(selectedProject.cover)"
             :alt="'Couverture du projet ' + selectedProject.name"
             class="absolute inset-0 w-full h-full object-cover"
@@ -108,6 +111,8 @@
                   class="block group/g"
                 >
                   <img
+                    {/* Source liée à la galerie, résolue au moment du rendu Alpine.
+                        argus-disable-next-line */}
                     :src="img"
                     loading="lazy"
                 decoding="async"
@@ -201,6 +206,8 @@
          CSS (slide directionnel) se rejoue à chaque navigation. -->
     <template x-for="src in [lightbox]" :key="lightboxIndex">
       <img
+        {/* Source de la visionneuse, liée dynamiquement.
+            argus-disable-next-line */}
         :src="src"
         alt="Image agrandie"
         draggable="false"

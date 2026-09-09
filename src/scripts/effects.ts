@@ -115,6 +115,10 @@ function initParticles() {
     // grands écrans (le coût des connexions explose avec le nombre).
     const count = Math.min(70, Math.floor((window.innerWidth * window.innerHeight) / 22000));
     for (let i = 0; i < count; i++) {
+      // Position et vitesse d'une particule décorative : rien ici ne protège
+      // quoi que ce soit. `crypto.getRandomValues` serait plus lent sans rien
+      // apporter — la prévisibilité d'un point à l'écran n'a aucun enjeu.
+      // argus-disable-next-line
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,

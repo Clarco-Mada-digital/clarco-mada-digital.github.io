@@ -472,6 +472,10 @@ function adminApp() {
       }
       try {
         const dataUrl = await this.fileToDataUrl(file);
+        // Route servie par le plugin Vite « Admin local » (astro.config.mjs),
+        // disponible uniquement en `npm run dev`. Le site publié est statique :
+        // cette URL n'a volontairement aucune route correspondante.
+        // argus-disable-next-line
         const res = await fetch("/api/admin/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -577,6 +581,10 @@ function adminApp() {
     async refreshPosts() {
       if (!this.apiAvailable) return;
       try {
+        // Route servie par le plugin Vite « Admin local » (astro.config.mjs),
+        // disponible uniquement en `npm run dev`. Le site publié est statique :
+        // cette URL n'a volontairement aucune route correspondante.
+        // argus-disable-next-line
         const res = await fetch("/api/admin/blog");
         if (res.ok) {
           const posts: BlogPost[] = await res.json();
@@ -669,6 +677,10 @@ function adminApp() {
     async deletePost(slug: string) {
       if (!confirm("Supprimer définitivement cet article ?")) return;
       try {
+        // Route servie par le plugin Vite « Admin local » (astro.config.mjs),
+        // disponible uniquement en `npm run dev`. Le site publié est statique :
+        // cette URL n'a volontairement aucune route correspondante.
+        // argus-disable-next-line
         const res = await fetch("/api/admin/blog?slug=" + encodeURIComponent(slug), {
           method: "DELETE",
         });
@@ -729,6 +741,10 @@ function adminApp() {
       this.persistAi();
       this.aiTest = { busy: true, ok: false, msg: "" };
       try {
+        // Route servie par le plugin Vite « Admin local » (astro.config.mjs),
+        // disponible uniquement en `npm run dev`. Le site publié est statique :
+        // cette URL n'a volontairement aucune route correspondante.
+        // argus-disable-next-line
         const res = await fetch("/api/admin/ai/models", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -829,6 +845,10 @@ function adminApp() {
       this.ai.busy = true;
       this.ai.error = "";
       try {
+        // Route servie par le plugin Vite « Admin local » (astro.config.mjs),
+        // disponible uniquement en `npm run dev`. Le site publié est statique :
+        // cette URL n'a volontairement aucune route correspondante.
+        // argus-disable-next-line
         const res = await fetch("/api/admin/ai", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -15,6 +15,11 @@ const { about } = content;
   <p class="text-gray-500 mb-10 font-mono text-sm">getPersonalInfo()</p>
 
   <div class="space-y-6 text-gray-400 leading-relaxed text-base sm:text-lg reveal">
+    {/* Les paragraphes portent volontairement un peu de HTML (<span> de mise en
+        valeur). Ils viennent de src/data/content.json, versionné dans le dépôt
+        et modifiable seulement en local : aucune saisie de visiteur n'atteint
+        jamais cette valeur.
+        argus-disable-next-line */}
     {about.paragraphs.map((p) => <p set:html={p} />)}
   </div>
 

@@ -82,6 +82,8 @@
       <!-- CV importé (optionnel, défini dans l'admin) -->
       <template x-if="customCv">
         <a
+          {/* CV importé : chemin saisi dans l'admin, résolu à l'exécution.
+              argus-disable-next-line */}
           :href="asset(customCv)"
           download
           target="_blank"

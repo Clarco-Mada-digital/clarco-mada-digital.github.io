@@ -1,0 +1,65 @@
+// Configuration Argus.
+//
+// `ignore` ne contient que ce qui n'est pas du code livré :
+//
+//   _legacy/**          L'ancien portfolio en un seul fichier HTML, conservé
+//                       pour mémoire mais jamais servi ni construit. Il pesait
+//                       32 des 229 remontées, dont un faux « secret exposé » :
+//                       l'URL Google Fonts `family=Inter:wght@300;400` que le
+//                       détecteur lit comme un `identifiant:mot-de-passe@hôte`.
+//
+//   src/content/blog/** Des articles en Markdown. Les blocs de code qu'ils
+//                       contiennent sont des exemples pédagogiques, pas du code
+//                       exécuté : un `SELECT *` y était signalé comme problème
+//                       de performance alors qu'il illustre justement un propos.
+//
+// Les faux positifs ponctuels ne sont pas masqués ici mais annotés à l'endroit
+// exact, avec leur justification, par un commentaire `argus-disable-next-line`.
+{
+  "$schema": "https://argus-scan.dev/schema.json",
+  "categories": [
+    "security",
+    "routes",
+    "deadcode",
+    "seo",
+    "design",
+    "performance",
+    "quality",
+    "dependencies"
+  ],
+  "ignore": [
+    "_legacy/**",
+    "src/content/blog/**"
+  ],
+  "minSeverity": "info",
+  "failOn": "high",
+  "failUnderScore": 0,
+  "siteUrl": "https://clarco-mada-digital.github.io",
+  "disabledRules": [],
+  "ruleSeverity": {},
+  "options": {
+    "quality": {
+      "maxComplexity": 15,
+      "maxFileLines": 500,
+      "maxFunctionLines": 80,
+      "maxParams": 5,
+      "duplicationMinLines": 6
+    },
+    "design": {
+      "minContrastRatio": 4.5,
+      "minTapTargetPx": 44,
+      "minFontSizePx": 12
+    },
+    "seo": {
+      "minWordCount": 250,
+      "titleMin": 30,
+      "titleMax": 60,
+      "descriptionMin": 70,
+      "descriptionMax": 160
+    },
+    "performance": {
+      "maxImageBytes": 307200,
+      "maxAssetBytes": 1048576
+    }
+  }
+}

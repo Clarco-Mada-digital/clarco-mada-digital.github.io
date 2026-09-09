@@ -83,6 +83,8 @@
               >
                 <span class="animate-pulse">▋</span> chargement de la démo…
               </div>
+              {/* Le titre existe : `:title` le compose à partir du labo courant.
+                  argus-disable-next-line */}
               <iframe
                 x-show="!labLoading"
                 :title="'Démo : ' + selectedLab.title"
