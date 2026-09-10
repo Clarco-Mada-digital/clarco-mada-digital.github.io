@@ -775,6 +775,65 @@
         ],
         "outcome": "Six modules présentés comme des points kilométriques, cartes de quiz, examen blanc chronométré, glossaire et exercices de reconnaissance de panneaux. Installable, hors ligne, bilingue, et sourcé."
       }
+    },
+    {
+      "id": 19,
+      "name": "DocuSnap AI",
+      "year": "2026",
+      "featured": true,
+      "shortDesc": "OCR de reçus et factures B2B qui fonctionne sans clé API : extraction du marchand, de la TVA et des lignes, ledger de dépenses et synchro Google Sheets.",
+      "fullDesc": "Saisir des notes de frais à la main coûte du temps et produit des erreurs de TVA. DocuSnap lit une photo de reçu et en sort le marchand, la date, les lignes détaillées, le total TTC et la TVA déductible, puis alimente un ledger filtrable et exportable en CSV. Le point de conception qui compte : l'application reste utilisable sans aucune clé d'API. Trois moteurs se relaient — Gemini Vision pour les photos réelles quand une clé est fournie, Tesseract en local qui ne demande aucune inscription et fonctionne toujours, OpenRouter en repli. Autour, un tableau de bord d'indicateurs (TVA récupérable, total, performance OCR), une simulation de bot WhatsApp qui analyse un reçu envoyé en conversation, et des webhooks réels signés en HMAC-SHA256 avec journal de livraison.",
+      "tags": [
+        "TypeScript",
+        "Vite",
+        "OCR",
+        "Tesseract",
+        "Gemini",
+        "Webhooks"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-green/30",
+      "repoUrl": "https://github.com/Brayan-Clark/docuSnap",
+      "demoUrl": "https://brayan-clark.github.io/docuSnap/",
+      "cover": "/projects/docusnap-cover.webp",
+      "gallery": [],
+      "features": [
+        "OCR temps réel : marchand, TVA, lignes, montants",
+        "Trois moteurs, dont un 100 % local sans clé ni compte",
+        "Ledger filtrable, export CSV, TVA déductible calculée",
+        "Webhooks signés HMAC-SHA256 avec journal de livraison",
+        "Simulation de bot WhatsApp avec analyse réelle"
+      ],
+      "category": "perso",
+      "includeInCv": true
+    },
+    {
+      "id": 20,
+      "name": "Kelidora",
+      "year": "2026",
+      "featured": false,
+      "shortDesc": "Site vitrine et prise de commande pour une activité de bouchées maison à Diego-Suarez. Statique, sans serveur ni base de données.",
+      "fullDesc": "Kelidora vend des cateless, sambosa et nems faits maison à Diego-Suarez. Le besoin n'était pas une plateforme e-commerce : c'était une vitrine soignée et un moyen simple de recevoir des commandes, sans frais d'hébergement ni maintenance. Le site est donc entièrement statique — HTML, CSS et JavaScript, aucune dépendance — avec un catalogue où sambosa et nems proposent le choix de la farce (poulet ou viande, prix différents) et un panier qui garde ce choix. À la commande, le récapitulatif complet est copié dans le presse-papier et Messenger s'ouvre : le client colle et envoie. Ce collage est assumé, pas subi — un site statique ne peut pas envoyer un message Facebook au nom de quelqu'un, et une intégration Meta officielle aurait imposé un serveur et un webhook pour un gain marginal à cette échelle. Les prix sont en ariary et se modifient en une ligne.",
+      "tags": [
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "Statique",
+        "Local"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-green/30 to-neon-purple/30",
+      "repoUrl": "https://github.com/Brayan-Clark/kelidora",
+      "demoUrl": "",
+      "cover": "/projects/kelidora-cover.webp",
+      "gallery": [],
+      "features": [
+        "Catalogue avec choix de farce et prix distincts",
+        "Panier persistant, récapitulatif copié automatiquement",
+        "Commande via Messenger, sans serveur ni base",
+        "Prix en ariary, modifiables en une ligne",
+        "Hébergement gratuit, zéro maintenance"
+      ],
+      "category": "perso",
+      "includeInCv": false
     }
   ],
   "experience": [

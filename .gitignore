@@ -27,3 +27,6 @@ src/data/.content.tmp.json
 
 #IA
 .claude/
+
+# Historique des analyses Argus (généré localement)
+.argus/
