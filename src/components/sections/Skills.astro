@@ -1,5 +1,11 @@
 ---
-import { content } from "../../lib/content";
+import { getContent } from "../../lib/content";
+import { getLocale, useT, localePath } from "../../lib/i18n";
+
+// La langue se déduit de l'URL : aucun composant ne reçoit de propriété.
+const locale = getLocale(Astro.url.pathname);
+const tr = useT(locale);
+const content = getContent(locale);
 const { skills, tools } = content;
 ---
 
@@ -11,8 +17,8 @@ const { skills, tools } = content;
   class="max-w-5xl"
   style="display: none"
 >
-  <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">// Compétences</h2>
-  <p class="text-gray-500 mb-10 font-mono text-sm">getTechStack()</p>
+  <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">{tr("section.skills")}</h2>
+  <p class="text-gray-500 mb-10 font-mono text-sm">{tr("fn.skills")}</p>
 
   <div class="grid md:grid-cols-3 gap-6">
     {
@@ -39,7 +45,7 @@ const { skills, tools } = content;
 
   <!-- Outils & Workflow -->
   <div class="reveal mt-8 bg-lab-card border border-lab-border rounded-xl p-6">
-    <h3 class="text-white font-bold mb-4">🛠️ Outils & Workflow</h3>
+    <h3 class="text-white font-bold mb-4">{tr("skills.tools")}</h3>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-400">
       {
         tools.map((tool) => (

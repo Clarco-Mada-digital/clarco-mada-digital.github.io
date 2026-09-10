@@ -1,5 +1,11 @@
 ---
-import { content } from "../../lib/content";
+import { getContent } from "../../lib/content";
+import { getLocale, useT, localePath } from "../../lib/i18n";
+
+// La langue se déduit de l'URL : aucun composant ne reçoit de propriété.
+const locale = getLocale(Astro.url.pathname);
+const tr = useT(locale);
+const content = getContent(locale);
 
 const { site, hero, stats } = content;
 
@@ -65,7 +71,7 @@ const stackStr = code.stack.map((s) => `'${s}'`).join(", ");
           @click="changeView('projects')"
           class="px-6 py-3 bg-neon-cyan text-lab-dark font-bold rounded-lg hover:bg-white transition-colors flex items-center justify-center gap-2"
         >
-          Voir mes projets
+          {tr("home.viewProjects")}
           <svg
             class="w-4 h-4"
             fill="none"
@@ -80,7 +86,7 @@ const stackStr = code.stack.map((s) => `'${s}'`).join(", ");
           @click="changeView('contact')"
           class="px-6 py-3 border border-lab-border text-gray-300 font-bold rounded-lg hover:border-neon-cyan hover:text-neon-cyan transition-all"
         >
-          Me contacter
+          {tr("home.contactMe")}
         </button>
         <button
           @click="openCv()"
@@ -97,7 +103,7 @@ const stackStr = code.stack.map((s) => `'${s}'`).join(", ");
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          Télécharger mon CV
+          {tr("home.downloadCv")}
         </button>
       </div>
     </div>

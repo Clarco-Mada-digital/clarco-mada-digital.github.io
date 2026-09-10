@@ -1,6 +1,10 @@
 ---
+import { getLocale, useT } from "../lib/i18n";
 // Palette de commandes (⌘K / Ctrl+K). Pilotée par Alpine (paletteOpen,
 // paletteQuery, paletteResults, runPaletteAt, movePalette).
+
+const locale = getLocale(Astro.url.pathname);
+const tr = useT(locale);
 ---
 
 <div
@@ -30,14 +34,14 @@
       <span class="text-neon-cyan font-mono text-sm shrink-0">›</span>
       <input
         x-ref="search"
-        aria-label="Rechercher une page, un projet ou une action"
+        aria-label={tr("ui.searchPlaceholder")}
         x-model="paletteQuery"
         @input="paletteIndex = 0"
         @keydown.down.prevent="movePalette(1)"
         @keydown.up.prevent="movePalette(-1)"
         @keydown.enter.prevent="runPaletteAt(paletteIndex)"
         type="text"
-        placeholder="Rechercher une page, un projet, une action…"
+        placeholder={tr("ui.searchPlaceholder")}
         class="flex-1 bg-transparent text-white placeholder-gray-600 text-sm focus:outline-none"
         autocomplete="off"
         spellcheck="false"
@@ -79,9 +83,9 @@
     <div
       class="flex items-center gap-4 px-4 py-2 border-t border-lab-border text-[10px] font-mono text-gray-600"
     >
-      <span><span class="text-gray-400">↑↓</span> naviguer</span>
-      <span><span class="text-gray-400">↵</span> ouvrir</span>
-      <span><span class="text-gray-400">esc</span> fermer</span>
+      <span><span class="text-gray-400">↑↓</span> {tr("ui.navigate")}</span>
+      <span><span class="text-gray-400">↵</span> {tr("ui.open")}</span>
+      <span><span class="text-gray-400">esc</span> {tr("ui.close")}</span>
     </div>
   </div>
 </div>

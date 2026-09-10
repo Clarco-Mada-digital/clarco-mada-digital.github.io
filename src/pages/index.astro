@@ -14,8 +14,12 @@ import CvModal from "../components/CvModal.astro";
 import CustomizePanel from "../components/CustomizePanel.astro";
 import CommandPalette from "../components/CommandPalette.astro";
 import Toasts from "../components/Toasts.astro";
-import { content } from "../lib/content";
+import { getContent } from "../lib/content";
+import { getLocale, localePath, t, type UIKey } from "../lib/i18n";
 
+// La langue vient de l'URL : cette page et /en/ partagent tout le reste.
+const locale = getLocale(Astro.url.pathname);
+const content = getContent(locale);
 const { site, hero, contact } = content;
 
 // Données injectées dans Alpine (modale projet + formulaire + typewriter).
@@ -36,8 +40,26 @@ const bootstrap = {
   email: contact.email,
   web3formsKey,
   base: import.meta.env.BASE_URL,
+  // Chemin du contenu complet, par langue : ouvrir un labo depuis /en/ ne doit
+  // pas ramener les titres français.
+  dataUrl: localePath(locale, "portfolio-data.json", import.meta.env.BASE_URL),
   cvUrl: content.site.cvUrl || "",
   socials: content.socials,
+  // Libellés de la palette de commandes : elle est construite côté client,
+  // donc hors de portée des composants Astro. On lui passe le strict
+  // nécessaire plutôt que d'embarquer tout le dictionnaire.
+  ui: Object.fromEntries(
+    (
+      [
+        "palette.goto", "palette.blog", "palette.cv", "palette.customize",
+        "palette.toDark", "palette.toLight", "palette.github",
+        "palette.linkedin", "palette.email", "palette.project", "palette.lab",
+        "contact.sending",
+        "nav.home", "nav.about", "nav.skills", "nav.projects",
+        "nav.labs", "nav.experience", "nav.contact",
+      ] as UIKey[]
+    ).map((k) => [k, t(locale, k)]),
+  ),
   // Métadonnées des labos pour la palette de commandes : le code des démos
   // reste dehors (il est déjà dans le srcdoc des vignettes).
   labsMeta: content.labs.map(({ id, title, tags, emoji }) => ({
@@ -86,8 +108,7 @@ const bootstrap = {
         class="mt-auto pt-8 border-t border-lab-border text-center text-xs text-gray-600 font-mono"
       >
         <p>
-          Conçu et développé avec ❤️ par {site.name} — Astro, Alpine.js & Tailwind
-          CSS
+          {t(locale, "footer.built")} {site.name} — Astro, Alpine.js & Tailwind CSS
         </p>
       </footer>
     </main>

@@ -1,6 +1,12 @@
 ---
-import { content } from "../../lib/content";
+import { getContent } from "../../lib/content";
+import { getLocale, useT, localePath } from "../../lib/i18n";
 import { buildLabSrcdoc, hasDemo } from "../../lib/labs";
+
+// La langue se déduit de l'URL : aucun composant ne reçoit de propriété.
+const locale = getLocale(Astro.url.pathname);
+const tr = useT(locale);
+const content = getContent(locale);
 const { labs } = content;
 const base = import.meta.env.BASE_URL;
 
@@ -20,32 +26,31 @@ const STATUS: Record<string, { label: string; cls: string }> = {
   class="max-w-6xl"
   style="display: none"
 >
-  <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">// Labs</h2>
-  <p class="text-gray-500 mb-3 font-mono text-sm">runExperiments()</p>
+  <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">{tr("section.labs")}</h2>
+  <p class="text-gray-500 mb-3 font-mono text-sm">{tr("fn.labs")}</p>
   <p class="text-gray-400 mb-6 max-w-2xl leading-relaxed">
-    Mon bac à sable : prototypes, tests d'API, mini-projets et idées en vrac.
-    Chaque démo tourne <span class="text-neon-cyan">en vrai</span>, directement ci-dessous. 🧪
+    {tr("labs.intro")} <span class="text-neon-cyan">{tr("labs.introLive")}</span>{tr("labs.introEnd")}
   </p>
 
   {/* Mise en avant : la seule démo où le visiteur apporte ses propres données. */}
   <a
-    href={`${base}analyser`}
+    href={localePath(locale, "analyser", base)}
     class="group flex flex-col sm:flex-row sm:items-center gap-4 mb-10 p-5 rounded-xl border border-neon-cyan/30 bg-gradient-to-br from-neon-cyan/10 to-neon-purple/10 hover:border-neon-cyan transition-colors"
   >
     <span class="text-3xl shrink-0">🛰</span>
     <span class="flex-1">
       <span class="block text-white font-bold mb-1">
-        Analysez <span class="text-neon-cyan">votre propre projet</span> avec Argus
+        {tr("labs.argusTitle")}
+        <span class="text-neon-cyan">{tr("labs.argusHighlight")}</span>
+        {tr("labs.argusTitleEnd")}
       </span>
       <span class="block text-gray-400 text-sm leading-relaxed">
-        Mon analyseur de code tourne entièrement dans le navigateur : choisissez
-        un dossier, il en sort un rapport noté. Vos fichiers ne quittent pas
-        votre machine.
+        {tr("labs.argusText")}
       </span>
     </span>
     <span
       class="shrink-0 font-mono text-xs px-3 py-1.5 rounded-lg border border-neon-cyan/40 text-neon-cyan group-hover:bg-neon-cyan group-hover:text-lab-dark transition-colors"
-      >Essayer →</span
+      >{tr("labs.argusCta")}</span
     >
   </a>
 
@@ -87,7 +92,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
                 />
                 <span class="absolute inset-0 flex items-center justify-center bg-lab-dark/0 group-hover/p:bg-lab-dark/50 transition-colors">
                   <span class="px-2.5 py-1 rounded-md bg-lab-dark/80 border border-neon-cyan/40 text-[11px] font-mono text-neon-cyan opacity-0 group-hover/p:opacity-100 transition-opacity">
-                    ⛶ Agrandir
+                    {tr("labs.enlarge")}
                   </span>
                 </span>
               </button>
@@ -127,7 +132,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
                     @click={`openLab(${lab.id})`}
                     class="flex-1 py-2 rounded-lg bg-lab-dark border border-lab-border text-xs font-mono text-neon-cyan hover:border-neon-cyan transition-colors flex items-center justify-center gap-1.5"
                   >
-                    ▶ Voir le code
+                    ▶ {tr("labs.viewCode")}
                   </button>
                 )}
                 {lab.url && (

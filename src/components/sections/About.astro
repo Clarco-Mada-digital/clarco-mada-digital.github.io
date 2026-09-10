@@ -1,5 +1,11 @@
 ---
-import { content } from "../../lib/content";
+import { getContent } from "../../lib/content";
+import { getLocale, useT, localePath } from "../../lib/i18n";
+
+// La langue se déduit de l'URL : aucun composant ne reçoit de propriété.
+const locale = getLocale(Astro.url.pathname);
+const tr = useT(locale);
+const content = getContent(locale);
 const { about } = content;
 ---
 
@@ -11,8 +17,8 @@ const { about } = content;
   class="max-w-4xl"
   style="display: none"
 >
-  <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">// À propos</h2>
-  <p class="text-gray-500 mb-10 font-mono text-sm">getPersonalInfo()</p>
+  <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">{tr("section.about")}</h2>
+  <p class="text-gray-500 mb-10 font-mono text-sm">{tr("fn.about")}</p>
 
   <div class="space-y-6 text-gray-400 leading-relaxed text-base sm:text-lg reveal">
     {/* Les paragraphes portent volontairement un peu de HTML (<span> de mise en
@@ -26,7 +32,7 @@ const { about } = content;
   <div class="grid md:grid-cols-2 gap-6 mt-12">
     <div class="reveal bg-lab-card border border-lab-border rounded-xl p-6">
       <h3 class="text-white font-bold mb-4 flex items-center gap-2">
-        <span class="text-neon-cyan">⚡</span> Ce que je fais
+        <span class="text-neon-cyan">⚡</span> {tr("about.doing")}
       </h3>
       <ul class="space-y-2 text-gray-400 text-sm">
         {
@@ -43,7 +49,7 @@ const { about } = content;
       style="transition-delay: 0.2s"
     >
       <h3 class="text-white font-bold mb-4 flex items-center gap-2">
-        <span class="text-neon-purple">🎯</span> Ce que je recherche
+        <span class="text-neon-purple">🎯</span> {tr("about.looking")}
       </h3>
       <ul class="space-y-2 text-gray-400 text-sm">
         {

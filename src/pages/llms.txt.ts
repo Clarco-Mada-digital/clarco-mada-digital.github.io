@@ -80,6 +80,8 @@ ${bullets(about?.looking)}
 
 - Site : ${url("")}
 ${contact?.email ? `- Email : ${contact.email}\n` : ""}${socials?.github ? `- GitHub : ${socials.github}\n` : ""}${socials?.linkedin ? `- LinkedIn : ${socials.linkedin}\n` : ""}- Flux RSS des articles : ${url("rss.xml")}
+- Version anglaise de cette page : ${url("en/")}
+- Analyseur Argus embarqué : ${url("analyser/")}
 
 ## Compétences
 

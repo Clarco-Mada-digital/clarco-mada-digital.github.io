@@ -1,4 +1,6 @@
 import data from "../data/content.json";
+import overridesEn from "../data/content.en.json";
+import type { Locale } from "./i18n";
 
 export interface Stat {
   value: string;
@@ -140,6 +142,59 @@ export interface Content {
 
 export const content = data as Content;
 export default content;
+
+/* ------------------------------------------------------------------ */
+/*  Localisation du contenu                                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Fusionne les traductions par-dessus le contenu français.
+ *
+ * `content.en.json` ne contient que ce qui diffère : une valeur absente
+ * retombe sur le français, ce qui évite de dupliquer les 36 Ko de projets
+ * pour n'en traduire que deux champs, et laisse le site cohérent même si une
+ * traduction manque.
+ *
+ * Les tableaux de projets et de labos sont appariés par `id`, jamais par
+ * position : réordonner un projet dans l'admin ne doit pas décaler les
+ * traductions.
+ */
+function mergeTranslations<T>(base: T, over: unknown): T {
+  if (over === undefined || over === null) return base;
+  if (Array.isArray(base)) {
+    if (!Array.isArray(over)) return base;
+    const byId = new Map<unknown, unknown>();
+    for (const o of over) {
+      if (o && typeof o === "object" && "id" in (o as Record<string, unknown>)) {
+        byId.set((o as Record<string, unknown>).id, o);
+      }
+    }
+    return base.map((item, i) => {
+      const key = item && typeof item === "object" ? (item as Record<string, unknown>).id : undefined;
+      const match = key !== undefined ? byId.get(key) : over[i];
+      return mergeTranslations(item, match);
+    }) as unknown as T;
+  }
+  if (base && typeof base === "object" && over && typeof over === "object") {
+    const out = { ...(base as Record<string, unknown>) };
+    for (const [k, v] of Object.entries(over as Record<string, unknown>)) {
+      if (k === "id") continue;
+      out[k] = mergeTranslations((base as Record<string, unknown>)[k], v);
+    }
+    return out as T;
+  }
+  return (over as T) ?? base;
+}
+
+const localized: Record<Locale, Content> = {
+  fr: content,
+  en: mergeTranslations(content, overridesEn),
+};
+
+/** Contenu du site dans la langue demandée. */
+export function getContent(locale: Locale): Content {
+  return localized[locale] ?? content;
+}
 
 /** Presets de dégradés disponibles (doivent rester dans le safelist Tailwind). */
 export const GRADIENT_PRESETS = [

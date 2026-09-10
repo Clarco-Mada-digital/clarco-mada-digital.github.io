@@ -1,0 +1,145 @@
+---
+/**
+ * Version anglaise de la page d'accueil.
+ *
+ * Le contenu et les libellés ne sont pas dupliqués : les composants déduisent
+ * la langue de l'URL (voir lib/i18n.ts) et `getContent("en")` fusionne
+ * content.en.json par-dessus le français. Cette page n'existe donc que pour
+ * créer la route /en/ — toute divergence de contenu se règle dans les données.
+ */
+import Base from "../../layouts/Base.astro";
+import Sidebar from "../../components/Sidebar.astro";
+import Home from "../../components/sections/Home.astro";
+import About from "../../components/sections/About.astro";
+import Skills from "../../components/sections/Skills.astro";
+import Projects from "../../components/sections/Projects.astro";
+import Labs from "../../components/sections/Labs.astro";
+import Experience from "../../components/sections/Experience.astro";
+import Contact from "../../components/sections/Contact.astro";
+import ProjectModal from "../../components/ProjectModal.astro";
+import LabModal from "../../components/LabModal.astro";
+import CvModal from "../../components/CvModal.astro";
+import CustomizePanel from "../../components/CustomizePanel.astro";
+import CommandPalette from "../../components/CommandPalette.astro";
+import Toasts from "../../components/Toasts.astro";
+import { getContent } from "../../lib/content";
+import { getLocale, localePath, t, type UIKey } from "../../lib/i18n";
+
+// La langue vient de l'URL : cette page et la racine partagent tout le reste.
+const locale = getLocale(Astro.url.pathname);
+const content = getContent(locale);
+const { site, hero, contact } = content;
+
+// Données injectées dans Alpine (modale projet + formulaire + typewriter).
+// Clé Web3Forms : priorité au SECRET GitHub (hors du dépôt), sinon champ admin
+// (content.json) en repli local. On garde la clé hors du code source : un fork
+// n'hérite pas de la clé. NB : elle reste visible dans le JS livré du site en
+// ligne (clé publique par conception) — la vraie protection est la restriction
+// de domaine côté Web3Forms.
+const web3formsKey = process.env.WEB3FORMS_KEY || contact.web3formsKey || "";
+
+// On n'injecte QUE ce dont Alpine a besoin au premier rendu. Le contenu complet
+// (dont le code source des labos, ~116 Ko) est servi par /portfolio-data.json
+// et récupéré à la demande — voir `loadContent()` dans scripts/portfolio.ts.
+const bootstrap = {
+  projects: content.projects,
+  tagline: hero.tagline,
+  formEndpoint: contact.formEndpoint || "",
+  email: contact.email,
+  web3formsKey,
+  base: import.meta.env.BASE_URL,
+  // Chemin du contenu complet, par langue : ouvrir un labo depuis /en/ ne doit
+  // pas ramener les titres français.
+  dataUrl: localePath(locale, "portfolio-data.json", import.meta.env.BASE_URL),
+  cvUrl: content.site.cvUrl || "",
+  socials: content.socials,
+  // Libellés de la palette de commandes : elle est construite côté client,
+  // donc hors de portée des composants Astro. On lui passe le strict
+  // nécessaire plutôt que d'embarquer tout le dictionnaire.
+  ui: Object.fromEntries(
+    (
+      [
+        "palette.goto", "palette.blog", "palette.cv", "palette.customize",
+        "palette.toDark", "palette.toLight", "palette.github",
+        "palette.linkedin", "palette.email", "palette.project", "palette.lab",
+        "contact.sending",
+        "nav.home", "nav.about", "nav.skills", "nav.projects",
+        "nav.labs", "nav.experience", "nav.contact",
+      ] as UIKey[]
+    ).map((k) => [k, t(locale, k)]),
+  ),
+  // Métadonnées des labos pour la palette de commandes : le code des démos
+  // reste dehors (il est déjà dans le srcdoc des vignettes).
+  labsMeta: content.labs.map(({ id, title, tags, emoji }) => ({
+    id,
+    title,
+    tags,
+    emoji,
+  })),
+};
+---
+
+<Base>
+  <div
+    x-data="portfolioApp"
+    x-effect="document.body.style.overflow = (selectedProject || selectedLab || mobileMenuOpen || paletteOpen) ? 'hidden' : ''"
+    @keydown.meta.k.window.prevent="togglePalette()"
+    @keydown.ctrl.k.window.prevent="togglePalette()"
+    @keydown.slash.window="!paletteOpen && $event.target === document.body && (togglePalette(), $event.preventDefault())"
+    class="min-h-screen flex flex-col md:flex-row"
+  >
+    <Sidebar />
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main id="contenu" class="flex-1 p-6 md:p-12 overflow-y-auto flex flex-col min-h-screen">
+      <!-- Zone de contenu : grandit pour pousser le footer en bas -->
+      <div class="flex-1">
+        <!-- Indicateur de navigation -->
+        <div class="font-mono text-xs text-gray-600 mb-8 flex items-center gap-2">
+          <span class="text-neon-purple">~/{site.handle}</span>
+          <span>/</span>
+          <span class="text-neon-cyan" x-text="activeView"></span>
+          <span class="cursor"></span>
+        </div>
+
+        <Home />
+        <About />
+        <Skills />
+        <Projects />
+        <Labs />
+        <Experience />
+        <Contact />
+      </div>
+
+      <!-- Footer mini : toujours collé en bas (mt-auto) -->
+      <footer
+        class="mt-auto pt-8 border-t border-lab-border text-center text-xs text-gray-600 font-mono"
+      >
+        <p>
+          {t(locale, "footer.built")} {site.name} — Astro, Alpine.js & Tailwind CSS
+        </p>
+      </footer>
+    </main>
+
+    <ProjectModal />
+    <LabModal />
+    <CvModal />
+    <CustomizePanel />
+    <CommandPalette />
+    <Toasts />
+  </div>
+
+  <script
+    is:inline
+    define:vars={{ bootstrap }}
+  >
+    window.__PORTFOLIO__ = bootstrap;
+  </script>
+  <script>
+    import "../../scripts/portfolio";
+  </script>
+  <!-- Accès caché à la console (Konami code / triple-clic logo) -->
+  <script>
+    import "../../scripts/secret";
+  </script>
+</Base>

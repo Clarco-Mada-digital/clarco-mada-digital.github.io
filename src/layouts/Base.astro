@@ -19,7 +19,8 @@ import "@fontsource-variable/outfit/index.css";
 import "@fontsource-variable/manrope/index.css";
 import "@fontsource-variable/fira-code/index.css";
 import "../styles/global.css";
-import { content } from "../lib/content";
+import { getContent } from "../lib/content";
+import { getLocale, localePath, t, LOCALES } from "../lib/i18n";
 import { assetUrl } from "../lib/url";
 
 interface Props {
@@ -34,6 +35,13 @@ interface Props {
   publishedTime?: string;
 }
 
+const base = import.meta.env.BASE_URL;
+// La langue vient de l'URL ; le contenu et les libellés suivent. Doit rester
+// avant la destructuration des props : leurs valeurs par défaut lisent
+// `content`, qui dépend de la locale.
+const locale = getLocale(Astro.url.pathname);
+const content = getContent(locale);
+
 const {
   title = content.site.titleTag,
   description = content.site.description,
@@ -43,9 +51,13 @@ const {
   publishedTime,
 } = Astro.props;
 
-const base = import.meta.env.BASE_URL;
 const site = Astro.site ?? new URL(Astro.url.origin);
 const canonical = new URL(Astro.url.pathname, site);
+// Chemin « neutre » (sans le préfixe /en) : sert à générer les hreflang.
+const altPath = Astro.url.pathname
+  .replace(base, "")
+  .replace(/^\/?(en)(\/|$)/, "")
+  .replace(/^\//, "");
 // Image de partage : celle fournie par la page (couverture d'article…) sinon
 // l'image générique du site. Toujours résolue en URL absolue (requis par OG).
 const ogImage = image
@@ -74,7 +86,7 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
 ---
 
 <!doctype html>
-<html lang="fr" class="dark scroll-smooth">
+<html lang={locale} class="dark scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -118,6 +130,23 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
     <meta name="description" content={description} />
     <meta name="author" content={content.site.name} />
     <link rel="canonical" href={canonical} />
+
+    {/* Versions alternatives : chaque page déclare ses équivalents dans les
+        autres langues, plus un x-default pointant sur le français. */}
+    {
+      LOCALES.map((l) => (
+        <link
+          rel="alternate"
+          hreflang={l}
+          href={new URL(localePath(l, altPath, base), site).href}
+        />
+      ))
+    }
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(localePath("fr", altPath, base), site).href}
+    />
     {/* Branche conditionnelle : seule la console d'administration passe
         noIndex. Toutes les pages publiques prennent « index, follow ».
         argus-disable-next-line */}
@@ -132,7 +161,7 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
     <!-- Open Graph / réseaux sociaux -->
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={content.site.name} />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale" content={locale === "fr" ? "fr_FR" : "en_GB"} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -187,7 +216,7 @@ const personLdJson = JSON.stringify(personLd).replace(/</g, "\\u003c");
     {/* Lien d'évitement : la navigation compte une dizaine d'entrées, répétées
         sur chaque page. Au clavier, ce lien permet de les sauter d'une touche.
         Invisible tant qu'il n'a pas le focus. */}
-    <a href="#contenu" class="skip-link">Aller au contenu</a>
+    <a href="#contenu" class="skip-link">{t(locale, "ui.skip")}</a>
 
     <!-- Écran de chargement (ADN terminal du portfolio) -->
     <div id="preloader" aria-hidden="true">

@@ -1,6 +1,12 @@
 ---
-import { content } from "../lib/content";
+import { getContent } from "../lib/content";
+import { getLocale, useT, localePath } from "../lib/i18n";
 import { NAV_ITEMS } from "../lib/nav";
+
+// La langue se déduit de l'URL : aucun composant ne reçoit de propriété.
+const locale = getLocale(Astro.url.pathname);
+const tr = useT(locale);
+const content = getContent(locale);
 
 const { site, socials } = content;
 const year = new Date().getFullYear();
@@ -112,16 +118,16 @@ const base = import.meta.env.BASE_URL;
             class="opacity-60"
             x-text={`activeView === '${item.id}' ? '▸' : '▹'`}
           />
-          <span>{item.label}</span>
+          <span>{tr(`nav.${item.id}`)}</span>
         </a>
       ))
     }
     <a
-      href={`${base}blog`}
+      href={localePath(locale, "blog", base)}
       class="py-3 px-4 rounded-lg transition-all flex items-center gap-3 text-gray-400 hover:text-white hover:bg-lab-card/50"
     >
       <span class="opacity-60">▹</span>
-      <span>Blog ↗</span>
+      <span>{tr("nav.blog")} ↗</span>
     </a>
 
     <div class="flex items-center justify-between pt-4 mt-3 border-t border-lab-border">
@@ -161,7 +167,7 @@ const base = import.meta.env.BASE_URL;
             ></path>
           </svg>
         </span>
-        <span x-text="isLight ? 'Mode sombre' : 'Mode clair'"></span>
+        <span x-text={`isLight ? '${tr("ui.darkMode")}' : '${tr("ui.lightMode")}'`}></span>
       </button>
 
       <div class="flex gap-3">
@@ -258,16 +264,16 @@ const base = import.meta.env.BASE_URL;
               class="mr-3 opacity-60 group-hover:opacity-100"
               x-text={`activeView === '${item.id}' ? '▸' : '▹'`}
             />
-            <span>{item.label}</span>
+            <span>{tr(`nav.${item.id}`)}</span>
           </a>
         ))
       }
       <a
-        href={`${base}blog`}
+        href={localePath(locale, "blog", base)}
         class="block py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center group text-gray-500 hover:text-white hover:bg-lab-card/50"
       >
         <span class="mr-3 opacity-60 group-hover:opacity-100">▹</span>
-        <span>Blog ↗</span>
+        <span>{tr("nav.blog")} ↗</span>
       </a>
     </nav>
 
@@ -280,7 +286,7 @@ const base = import.meta.env.BASE_URL;
         <circle cx="11" cy="11" r="7"></circle>
         <path d="m21 21-4.3-4.3"></path>
       </svg>
-      <span class="flex-1 text-left">Rechercher</span>
+      <span class="flex-1 text-left">{tr("ui.search")}</span>
       <kbd class="text-[10px] border border-lab-border rounded px-1.5 py-0.5">⌘K</kbd>
     </button>
   </div>
@@ -323,8 +329,23 @@ const base = import.meta.env.BASE_URL;
           ></path>
         </svg>
       </span>
-      <span x-text="isLight ? 'Mode sombre' : 'Mode clair'"></span>
+      <span x-text={`isLight ? '${tr("ui.darkMode")}' : '${tr("ui.lightMode")}'`}></span>
     </button>
+
+    {/* Bascule de langue : deux URL distinctes (/ et /en/), donc partageables
+        et indexables — plutôt qu'un basculement côté client invisible pour un
+        moteur de recherche. */}
+    <a
+      href={localePath(locale === "fr" ? "en" : "fr", "", base)}
+      hreflang={locale === "fr" ? "en" : "fr"}
+      class="flex items-center gap-2 mb-6 text-xs font-mono text-gray-500 hover:text-neon-purple transition-colors"
+    >
+      <span
+        class="w-9 h-9 rounded-lg border border-lab-border flex items-center justify-center"
+        >{locale === "fr" ? "EN" : "FR"}</span
+      >
+      <span>{tr("ui.langSwitch")}</span>
+    </a>
 
     <div class="text-[10px] text-gray-600 uppercase tracking-[0.2em] mb-4">
       Connect

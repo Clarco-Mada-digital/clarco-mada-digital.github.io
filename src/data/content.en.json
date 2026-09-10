@@ -1,0 +1,454 @@
+{
+  "site": {
+    "titleTag": "Bryan Clark // Full-Stack & Mobile Architect",
+    "description": "Clarco RAHERINANDRASANA — Full-Stack & Mobile developer (React, Node.js, Flutter) based in Antsiranana, Madagascar. Portfolio, interactive labs (WebGL, Canvas) and writing on web, mobile and AI.",
+    "availabilityLabel": "Available"
+  },
+  "hero": {
+    "tagline": "Full-Stack & Mobile Architect. I build applications that are fast, elegant and built to scale.",
+    "code": {
+      "passions": "Solving complex problems with elegant code"
+    }
+  },
+  "stats": [
+    {
+      "label": "Projects delivered"
+    },
+    {
+      "label": "Happy clients"
+    },
+    {
+      "label": "Years of experience"
+    },
+    {
+      "label": "All-nighters spent coding"
+    }
+  ],
+  "about": {
+    "paragraphs": [
+      "Hi! I'm <span class=\"text-neon-cyan font-semibold\">Clarco</span>, a Full-Stack &amp; Mobile developer. I don't just ship applications; I build digital systems that are robust, scalable and meant to last.",
+      "My experience was forged on serious technical challenges: from designing complex modular ERPs to running platforms serving more than 2 million users. My approach rests on three pillars — clean code, a deliberate microservices architecture, and an obsession with performance.",
+      "On the technical side, I move comfortably between the front end (React, Vue.js, Tailwind), the back end (Node.js, Go, Python, Rust) and mobile (Flutter, React Native).",
+      "Driven by open source and AI, I thrive on hard problems. Today I help companies and founders turn a vision into a production-grade product, from strategic design through to final deployment."
+    ],
+    "doing": [
+      "SaaS web application architecture",
+      "Cross-platform mobile development (Flutter, React Native)",
+      "RESTful & GraphQL APIs",
+      "Performance & SEO optimisation",
+      "CI/CD & DevOps (Docker, K8s)"
+    ],
+    "looking": [
+      "Technical challenges worth solving",
+      "A strong engineering culture",
+      "A product with real impact",
+      "A supportive, ambitious team",
+      "Autonomy and ownership"
+    ]
+  },
+  "skills": [
+    {
+      "name": "Frontend"
+    },
+    {
+      "name": "Backend"
+    },
+    {
+      "name": "Mobile & Other"
+    }
+  ],
+  "contact": {
+    "intro": "I'm currently open to new opportunities. Whether it's a full-time role, freelance work, or just talking through a project, feel free to reach out.",
+    "location": "Diego, Madagascar (Remote OK)",
+    "status": "Available immediately"
+  },
+  "experience": [
+    {
+      "id": 2,
+      "role": "Senior Full-Stack Developer",
+      "period": " 2023 — Present",
+      "description": "Development and scale: designed and maintained high-traffic web platforms, keeping them stable and fast for more than 2 million users.\nArchitectural modernisation: led the migration from a monolith to microservices to improve flexibility and maintainability.\nPerformance: improved user experience and SEO through rigorous Core Web Vitals work.\nERP software: designed and built a modular ERP (in the spirit of Odoo) for centralised, extensible management of the company's business processes.\nMobile & API development: built intuitive mobile applications and robust APIs to interconnect services."
+    },
+    {
+      "id": 3,
+      "role": "Mobile & Web Developer",
+      "period": "2021 — 2023",
+      "description": "Cross-platform development: designed and shipped bespoke web and mobile applications for clients in demanding sectors (fintech, e-commerce, healthcare), adapting each solution to specific business needs.\nDevOps & quality: shortened the software lifecycle with CI/CD pipelines and automated testing, cutting production bugs and speeding up delivery."
+    },
+    {
+      "id": 4,
+      "role": "Junior Developer",
+      "period": "2018 — 2020",
+      "description": "Web development: built brochure sites and optimised e-commerce solutions with WordPress.\nTechnical growth: moved up to React and Node.js for dynamic application development.\nSoftware quality: applied development standards and good coding practice to keep codebases sound and extensible."
+    },
+    {
+      "id": 5,
+      "role": "Computer Science studies, BDGL track",
+      "period": "2016 — 2020",
+      "description": "Studied at CNTEMAD on the BDGL track (Databases & Software Engineering)."
+    }
+  ],
+  "labs": [
+    {
+      "id": 13,
+      "title": "Web image optimiser",
+      "tagline": "Drop in any image: it's resized, converted to WebP at an adjustable quality, and renamed cleanly for SEO (lowercase, hyphens, keywords). Compare the before/after weight live — nothing is uploaded."
+    },
+    {
+      "id": 12,
+      "title": "Sorting visualiser",
+      "tagline": "Five classic sorting algorithms (bubble, insertion, selection, quicksort, merge) animated as you watch: each comparison lights up red, the pivot yellow, and bars turn green once in place. The best way to feel the difference between O(n²) and O(n log n)."
+    },
+    {
+      "id": 11,
+      "title": "Particle text",
+      "tagline": "Thousands of neon particles assemble into a word, as if pulled by invisible springs. Move your mouse through them: they scatter, then reform. Type your own text and watch it materialise — 100% Canvas 2D, no library."
+    },
+    {
+      "id": 10,
+      "title": "Neon fluid",
+      "tagline": "A real-time fluid simulation running entirely on your GPU: the Navier-Stokes equations (advection, pressure, vorticity) solved in pure WebGL2, with no library. Touch the screen and watch the fluorescent smoke swirl — multi-touch supported."
+    },
+    {
+      "id": 9,
+      "title": "Exploded view 3D",
+      "tagline": "An interactive exploded view of real industrial assemblies: a 2-cylinder engine (67 parts), a reciprocating saw (113 parts) and a gearbox (95 parts) — genuine CAD models in glTF. Drag to disassemble, orbit around, hover any part. Requires an internet connection (models load from a CDN)."
+    },
+    {
+      "id": 8,
+      "title": "Flow field",
+      "tagline": "Thousands of neon particles follow an undulating vector field and trace luminous currents. The mouse pushes the flows away — click to invert it and attract everything. Canvas with additive blending, ~60 fps, no library."
+    },
+    {
+      "id": 7,
+      "title": "Synthwave sunset",
+      "tagline": "A retrowave scene in pure CSS: striped sun, neon grid in perspective, and twinkling stars."
+    },
+    {
+      "id": 6,
+      "title": "Login page",
+      "tagline": ""
+    },
+    {
+      "id": 5,
+      "title": "3D card",
+      "tagline": ""
+    },
+    {
+      "id": 4,
+      "title": "Password generator",
+      "tagline": "An app that generates strong, random passwords."
+    },
+    {
+      "id": 1,
+      "title": "Palette generator",
+      "tagline": "A Coolors-style mini app: generates harmonious palettes, lock the colours you want to keep, and copy any hex code in one click."
+    },
+    {
+      "id": 2,
+      "title": "Reflex — mini game",
+      "tagline": "Hit as many targets as you can in 20 seconds: the smaller and faster you click them, the more they score."
+    },
+    {
+      "id": 3,
+      "title": "Matrix rain",
+      "tagline": "The Matrix « digital rain » effect on canvas — a classic for playing with trails and transparency."
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "shortDesc": "Web app to create, share and analyse surveys — private by design (local-first, AES-256 encryption).",
+      "fullDesc": "SurveySense is a modern web app for building, managing and analysing surveys. Private-by-design: every piece of data — questionnaires and answers alike — stays in the browser, never on a third-party server, encrypted with AES-256. Intuitive form builder, visual analysis with charts, and JSON/CSV export.",
+      "features": [
+        "Intuitive form builder",
+        "Visual analysis (Recharts charts)",
+        "AES-256 encrypted local storage",
+        "JSON / CSV export",
+        "Responsive interface"
+      ]
+    },
+    {
+      "id": 2,
+      "shortDesc": "Project management dashboard (Astro + React): drag-and-drop Kanban, real-time collaboration (Firebase) and an AI assistant.",
+      "fullDesc": "A modern project management dashboard built with Astro, React and Tailwind CSS. Drag-and-drop task management, Kanban boards, real-time collaboration and sync through Firebase, and team management. It includes « Nexus AI », a contextual assistant, and an « AI Vision Assistant » that turns a brief into a structured plan.",
+      "features": [
+        "Drag-and-drop Kanban",
+        "Real-time collaboration (Firebase)",
+        "Contextual AI assistant (Nexus)",
+        "AI-generated strategy documents",
+        "PDF / HTML / Markdown export"
+      ]
+    },
+    {
+      "id": 3,
+      "shortDesc": "Desktop AI assistant (Tauri + Rust) combining local models (Ollama) and cloud (GPT-4o, Claude, Gemini), with local RAG search.",
+      "fullDesc": "OmniAgent is a fast, customisable desktop AI assistant built with Tauri, Rust and JavaScript. Hybrid local-first intelligence through Ollama (complete privacy) plus cloud support (GPT-4o, Claude 3.5, Gemini 1.5 Pro, OpenRouter), switching between models in one click. Local RAG search indexes your folders so the assistant can read and reason over your own files, alongside an image generation module.",
+      "features": [
+        "Local AI (Ollama) + cloud (GPT-4o, Claude, Gemini)",
+        "Smart routing between models",
+        "Local RAG search over your files",
+        "Image generation",
+        "Desktop application (Tauri)"
+      ]
+    },
+    {
+      "id": 4,
+      "shortDesc": "Desktop app (Tauri + React) for projecting song lyrics and Bible verses during services and events.",
+      "fullDesc": "MyProjector is a desktop application built with Tauri, React and TypeScript, designed to project lyrics (songs, hymnals) and Bible verses during services and events. Built-in Bible with reference search, songbooks with full-text search, service agenda, dual-screen operation and a real-time preview.",
+      "features": [
+        "Built-in Bible (reference search)",
+        "Songbooks + full-text search",
+        "Dual screen (operator / projection)",
+        "Real-time preview & camera mode",
+        "Service agenda / playlist"
+      ]
+    },
+    {
+      "id": 5,
+      "shortDesc": "Brochure site + solar energy calculator (Astro, Tailwind, Alpine.js) with optional Supabase integration.",
+      "fullDesc": "SolarNova pairs a brochure site with a solar energy calculator, built with Astro, Tailwind CSS and Alpine.js, plus an optional Supabase integration. The app works immediately without a database: until Supabase is configured, reviews come from local data and forms degrade gracefully rather than breaking.",
+      "features": [
+        "Solar energy calculator",
+        "Works without a database (graceful degradation)",
+        "Optional Supabase integration",
+        "Reviews & contact/quote forms",
+        "Animated responsive design"
+      ]
+    },
+    {
+      "id": 6,
+      "shortDesc": "Learning platform that generates courses with AI (Gemini, OpenRouter, Ollama), with personalised paths and a community.",
+      "fullDesc": "My Professor is a learning platform that combines generative AI with hand-authored content. It generates structured courses (modules, lessons, exercises, quizzes) through Google Gemini, OpenRouter or local Ollama models (free and private). A full Markdown editor lets you write your own, with learning paths, progress tracking and community sharing.",
+      "features": [
+        "AI course generation (Gemini/OpenRouter/Ollama)",
+        "Markdown course editor",
+        "Learning paths & progress tracking",
+        "Interactive quizzes and exercises",
+        "Community path sharing"
+      ]
+    },
+    {
+      "id": 7,
+      "shortDesc": "Web platform (Next.js 14) connecting clients with freelancers: projects, bids, messaging and ratings.",
+      "fullDesc": "Freelance Suarez is a modern web application built with Next.js 14 (App Router) to connect clients with qualified freelancers. Clients post projects and manage incoming bids; freelancers browse available work, submit proposals and build a profile. Advanced search, built-in messaging, ratings, NextAuth authentication and Prisma.",
+      "features": [
+        "Project posting & bid management",
+        "Freelancer profiles & proposals",
+        "Advanced search and categories",
+        "Built-in messaging",
+        "Authentication (NextAuth) + Prisma"
+      ]
+    },
+    {
+      "id": 8,
+      "shortDesc": "Brochure site (Astro + Tailwind) for a camping and events equipment rental business in Antsiranana.",
+      "fullDesc": "The official website of Camping Store & Event Madagascar, built with Astro and Tailwind CSS. It presents camping equipment rental and outdoor event organisation services in Antsiranana. Very fast thanks to Astro, responsive design, persistent light/dark theme, interactive location map and optimised SEO.",
+      "features": [
+        "Very fast site (Astro)",
+        "Persistent light/dark theme",
+        "Interactive location map",
+        "Contact form",
+        "Optimised SEO"
+      ]
+    },
+    {
+      "id": 9,
+      "shortDesc": "All-in-one Android app for Bible study, singing and note-taking.",
+      "fullDesc": "Adventools is an all-in-one Android application, designed as a digital companion for Bible study, singing and note-taking (text, voice, images). Multilingual with downloadable language packs. Distributed directly as an APK.",
+      "features": [
+        "Bible study",
+        "Songbooks",
+        "Note-taking (text, voice, images)",
+        "Multilingual support",
+        "Android application (APK)"
+      ]
+    },
+    {
+      "id": 10,
+      "shortDesc": "GPlus core: a modular Django platform configured through a web wizard, with pluggable business modules (stock, sales, POS, banking).",
+      "fullDesc": "The GPlus core is a modular Django application designed to start on its own and configure itself through a web wizard. Business modules — stock, sales, point of sale, banking — install according to each company's needs, so deployment requires no technical intervention. The architecture keeps modules independent, so a client only carries what they actually use.",
+      "features": [
+        "Modular application",
+        "ERP"
+      ]
+    },
+    {
+      "id": 11,
+      "shortDesc": "E-commerce platform for Voghera Coffee, Madagascar's first specialty coffee, funding a reforestation programme.",
+      "fullDesc": "Voghera Coffee is an e-commerce project selling Madagascar's first specialty coffee while funding a reforestation programme. I built a platform that tells the story of this coffee, grown under the canopy of Malagasy forests. The site presents both roasted coffee and green beans, and gives the reforestation work the visibility it deserves rather than treating it as a footnote."
+    },
+    {
+      "id": 12,
+      "shortDesc": "Mobile solution against gender-based violence and for the protection of minors: two applications forming a secure reporting ecosystem.",
+      "fullDesc": "BASY is a complete mobile solution dedicated to fighting gender-based violence and protecting minors. The project comprises two distinct applications working together to provide a secure reporting ecosystem — one for the people who need to report, one for the organisations who respond."
+    },
+    {
+      "id": 13,
+      "shortDesc": "Madabestour, a booking platform for tours and organised trips across Madagascar.",
+      "fullDesc": "Madabestour is a tourism platform that lets travellers discover Madagascar through organised tours and bespoke experiences. I designed an online booking system presenting tours in the North, the West and the island's hidden treasures. The site handles packages, excursions and vehicle rental — a digital route between visitors and the country."
+    },
+    {
+      "id": 14,
+      "shortDesc": "Full project analysis in one command: security, SEO, dead routes, dead code, accessibility, performance. Zero dependencies, offline, 12 languages.",
+      "fullDesc": "Argus reads a codebase, diagnoses it, scores each dimension out of 100 and returns an action plan ranked by impact — with a concrete fix for every problem. Written in plain JavaScript: Node.js alone is enough, nothing to install, nothing to compile. The analysis never leaves your machine. Over 40 security rules (committed secrets, injections, XSS, deserialisation, weak cryptography), each carrying its CWE reference and OWASP Top 10 category. It also extracts routes from 21 frameworks (Express, Next.js, Django, Laravel, Flutter…) to flush out dead links. Three ways to use it: the command line via npx, a web page where the same core runs in the browser (node:fs redirected to shims through an import map, with identical SHA-1 fingerprints), and a GitHub Action that annotates pull request diffs directly.",
+      "features": [
+        "40+ security rules, CWE and OWASP Top 10 referenced",
+        "12 languages, 21 frameworks: routes and dead links",
+        "Zero dependencies — your code is never transmitted",
+        "Standalone HTML report, filterable, light and dark",
+        "The same engine in CLI, in the browser and in CI",
+        "SARIF output, diff mode, assisted fixes"
+      ],
+      "caseStudy": {
+        "context": "Auditing a project means chaining half a dozen tools, each with its own config, dependencies and output format. On a slow connection, the install alone is discouraging. I wanted one command, no installation, and an actionable verdict.",
+        "challenges": [
+          {
+            "title": "Running the same engine in the browser",
+            "problem": "The core reads files with `node:fs`. Running it in a tab through a port would have meant two codebases to maintain — and two behaviours that drift apart.",
+            "decision": "Redirect `node:fs`, `node:path` and `node:crypto` to shims through an import map, rather than duplicating the code.",
+            "result": "One core for both targets. SHA-1 fingerprints are identical, so a baseline stays interchangeable between the CLI and the browser."
+          },
+          {
+            "title": "Zero dependencies, for real",
+            "problem": "Every dependency adds download weight, attack surface and a reason to break. For a security audit tool, that's a contradiction.",
+            "decision": "Write everything on Node's standard library: parsers, route resolver, contrast computation, HTML report generation.",
+            "result": "`npx` is enough, nothing to compile. Analysis is offline by default: only `sync` and `crawl` reach the network, explicitly."
+          },
+          {
+            "title": "Making results rankable",
+            "problem": "A list of 200 problems in no particular order gets ignored. That's the classic failure mode of linters.",
+            "decision": "Score each dimension out of 100, group occurrences of the same rule, and rank an action plan by impact rather than by file.",
+            "result": "The report is a single standalone HTML file, filterable, giving the concrete fix for each problem — not just its name."
+          }
+        ],
+        "outcome": "12 languages, 21 frameworks, over 40 security rules referenced against CWE and OWASP Top 10. Usable as a CLI, in the browser, and as a GitHub Action that annotates a pull request diff directly. This portfolio is audited by Argus on every push."
+      }
+    },
+    {
+      "id": 15,
+      "shortDesc": "Desktop app hub (Electron + React): all your web apps in one window, with profiles, isolated sessions and multi-account containers.",
+      "fullDesc": "Orbit gathers Gmail, Slack, Notion, ChatGPT and any URL into a single window, on Windows, macOS and Linux. Each application gets its own cookie jar: profiles separate work from personal, and containers allow several accounts of the same service without ever signing out. Split screen shows 2 to 4 apps side by side in saved layouts, and any app can be detached into its own window on a second screen. The command palette (Alt/⌘+K) goes beyond navigation: calculator, unit, currency and colour conversions, date arithmetic. The header is modular — clock, weather, battery, system monitor, Pomodoro timer. On top of that: per-profile locking, encrypted configuration backup, an ad blocker and sleep for idle apps.",
+      "features": [
+        "Multiple profiles and isolated cookie sessions",
+        "Multi-account containers for the same service",
+        "Split screen 2 to 4 apps, saved workspaces",
+        "Command palette: maths, conversions, dates",
+        "Modular header (clock, weather, Pomodoro…)",
+        "Per-profile locking, encrypted backup",
+        "Signed cross-platform builds with auto-update"
+      ]
+    },
+    {
+      "id": 16,
+      "shortDesc": "Desktop widget that opens your phone's Android apps on your computer — each in its own window, on its own virtual display.",
+      "fullDesc": "A search bar, your pinned apps beneath it, a bell for phone notifications: Aura fits in a widget that appears on Ctrl+Alt+Space. Each application opens in its own window, on its own Android virtual display, at a density meant for a large screen. The technical stance is to decode nothing itself — everything is delegated to scrcpy, so no window is ever reparented: edge snapping, Alt+Tab and multi-monitor work natively, and one app crashing doesn't take the others with it. Two problems required going low: Android cannot serve an app icon over ADB, so Aura reads only the useful bytes of the APK — the zip directory, then the single icon entry — resolving resource names in resources.arsc (build tools rename files: Brave's icon is called res/xF.png); and system commands must explicitly target profile 0, or they fail on phones with multiple profiles.",
+      "features": [
+        "One app = one scrcpy process = one virtual display",
+        "Search by name, package or initials (gmp → Maps)",
+        "Phone notifications, swipe to dismiss",
+        "Icons extracted from the APK via resources.arsc",
+        "Multi-device, inventory cached per serial number",
+        "Drag and drop a file to send it to the phone"
+      ],
+      "caseStudy": {
+        "context": "Using an Android app from your computer usually means a heavy emulator, or a single screen mirror where everything overlaps. I wanted phone applications in real desktop windows, each independent.",
+        "challenges": [
+          {
+            "title": "Not reinventing video rendering",
+            "problem": "Decoding and compositing the video stream yourself means handling hardware acceleration across three operating systems, and reparenting windows — fragile by nature.",
+            "decision": "Delegate everything to scrcpy: one application = one scrcpy process = one Android virtual display. No window is ever reparented.",
+            "result": "Edge snapping, Alt+Tab and multi-monitor work natively, because the system's window manager genuinely owns each window. One app crashing takes down neither the others nor the widget."
+          },
+          {
+            "title": "Retrieving application icons",
+            "problem": "Android cannot serve an app icon over ADB. The only source is the APK, sometimes a hundred megabytes — unthinkable to download for a thumbnail.",
+            "decision": "Read only the useful bytes: the zip directory, then the single icon entry. And resolve its real path in `resources.arsc`, because build tools rename resources — Brave's icon is called `res/xF.png`.",
+            "result": "Faithful icons, extracted in a few kilobytes and cached on disk. An app whose icon is only XML keeps a coloured chip rather than an empty square."
+          },
+          {
+            "title": "Phones with multiple profiles",
+            "problem": "On a device with Secure Folder, Dual Messenger or Island, `pm` and `am` target the foreground profile and fail with a SecurityException — with no clear message.",
+            "decision": "Explicitly target profile 0 in every system command, and refuse a too-old scrcpy with an explicit message rather than failing further downstream.",
+            "result": "Predictable behaviour on Samsung and derivative devices, and a readable error instead of a delayed crash when a distribution still ships scrcpy 1.25."
+          }
+        ],
+        "outcome": "A widget that appears on a shortcut, fits into a search bar and a row of favourites, and handles notifications, radios, file transfer and multiple devices. Platform constraints drove the architecture rather than being worked around."
+      }
+    },
+    {
+      "id": 17,
+      "shortDesc": "Clothing shop with a virtual mannequin: each member enters their measurements and tries garments on their own silhouette.",
+      "fullDesc": "Silhouette addresses the leading cause of returns in online fashion: you can't tell how it will hang. A member enters their measurements once, guided step by step as a tailor would, then every garment is displayed on a silhouette generated to their size, to scale in centimetres, with a fit diagnosis zone by zone and an automatically recommended size. On the shop side: filterable catalogue, full-text search, multi-image gallery, size guide, stock urgency indicator, persistent basket and checkout with stock decrement. Administration covers products, orders and a configurable currency (EUR, USD, MGA…) — orders keeping whichever was in force at purchase. Written with no dependencies at all: `node server.js` is enough, and the data lives in a JSON file created on first run.",
+      "features": [
+        "Virtual mannequin generated from the member's measurements",
+        "Fit diagnosis zone by zone, recommended size",
+        "Guided measurement assistant",
+        "Filterable catalogue, search, gallery, stock",
+        "Back office: products, orders, currency",
+        "No dependencies — Node.js alone is enough"
+      ]
+    },
+    {
+      "id": 18,
+      "shortDesc": "Installable, offline-capable app for revising Madagascar's highway code: 6 modules, quizzes, timed mock exam, in French and Malagasy.",
+      "fullDesc": "Revising the highway code in Madagascar usually means buying a booklet and having a connection to fill the gaps. Fiara Permis does the opposite: a PWA that installs on the phone and works entirely offline after the first visit. The course is split into six modules presented as kilometre markers, with quiz cards, a timed 20-question mock exam drawn at random, a glossary and practical exercises — sign recognition, right-of-way true/false. Progress is stored in localStorage: no account, no backend. The content is grounded in law n°2017-002 establishing the Highway Code, each module citing its sources, with a /sources page collecting them all. Amounts and the pass threshold are explicitly flagged as indicative. Interface available in French and Malagasy.",
+      "features": [
+        "100% offline after the first visit (Workbox)",
+        "6 modules, quiz cards, timed mock exam",
+        "Exercises: sign recognition, right of way",
+        "Bilingual French / Malagasy",
+        "Content sourced from law n°2017-002, sources cited",
+        "Progress in localStorage — no account required"
+      ],
+      "caseStudy": {
+        "context": "Revising the highway code in Madagascar usually means buying a booklet and having a connection to fill the gaps. Here, losing the network isn't an edge case: it's daily life. A revision app that demands a connection is useless in a bush taxi.",
+        "challenges": [
+          {
+            "title": "Genuinely working offline",
+            "problem": "A plain browser cache isn't enough: every page, icon and font has to be there before the cut, not at the moment it's needed.",
+            "decision": "Precache the entire site on first load through Workbox, and provide a dedicated page for URLs that aren't cached.",
+            "result": "After a single online visit, navigation works entirely offline. The app installs to the home screen."
+          },
+          {
+            "title": "Content you can verify",
+            "problem": "On this subject misinformation spreads: outdated fine amounts, invented rules. An app that gets it wrong makes someone fail an exam.",
+            "decision": "Ground the six modules in law n°2017-002 establishing the Highway Code, cite sources at the foot of each module, and gather them on a dedicated page. Flag amounts explicitly as indicative.",
+            "result": "Every claim is traceable. The app presents itself as a revision tool, not a substitute for driving school — it says so in the footer."
+          },
+          {
+            "title": "Staying light and account-free",
+            "problem": "A backend means hosting to pay for, personal data to protect, and a connection just to log in — the opposite of the need.",
+            "decision": "Static Astro site, zero JS by default, progress stored in localStorage. No server, no account.",
+            "result": "Free hosting on GitHub Pages, no personal data collected, and a site that loads fast on a 2G connection. Interface available in French and Malagasy."
+          }
+        ],
+        "outcome": "Six modules presented as kilometre markers, quiz cards, a timed mock exam, a glossary and sign recognition exercises. Installable, offline, bilingual and sourced."
+      }
+    },
+    {
+      "id": 19,
+      "shortDesc": "OCR for B2B receipts and invoices that works without an API key: merchant, VAT and line items extracted, expense ledger and Google Sheets sync.",
+      "fullDesc": "Entering expense claims by hand costs time and produces VAT errors. DocuSnap reads a photo of a receipt and extracts the merchant, date, line items, gross total and deductible VAT, then feeds a filterable ledger exportable to CSV. The design point that matters: the app stays usable with no API key at all. Three engines take turns — Gemini Vision for real photographs when a key is supplied, Tesseract locally which requires no sign-up and always works, OpenRouter as a fallback. Around it: a dashboard of indicators (recoverable VAT, total, OCR performance), a WhatsApp bot simulation that analyses a receipt sent in conversation, and real webhooks signed with HMAC-SHA256 including a delivery log.",
+      "features": [
+        "Real-time OCR: merchant, VAT, line items, amounts",
+        "Three engines, one fully local with no key or account",
+        "Filterable ledger, CSV export, deductible VAT computed",
+        "HMAC-SHA256 signed webhooks with delivery log",
+        "WhatsApp bot simulation with real analysis"
+      ]
+    },
+    {
+      "id": 20,
+      "shortDesc": "Brochure and ordering site for a homemade savoury snacks business in Diego-Suarez. Static, with no server or database.",
+      "fullDesc": "Kelidora sells homemade cateless, sambosa and nems in Diego-Suarez. The need wasn't an e-commerce platform: it was a well-made shopfront and a simple way to receive orders, with no hosting costs and no maintenance. The site is therefore entirely static — HTML, CSS and JavaScript, no dependencies — with a catalogue where sambosa and nems offer a filling choice (chicken or beef, different prices) and a basket that remembers it. At checkout the full summary is copied to the clipboard and Messenger opens: the customer pastes and sends. That paste is a deliberate trade-off, not an oversight — a static site cannot send a Facebook message on someone's behalf, and an official Meta integration would have required a server and a webhook for marginal gain at this scale. Prices are in ariary and change in one line.",
+      "features": [
+        "Catalogue with filling choice and distinct prices",
+        "Persistent basket, summary copied automatically",
+        "Ordering through Messenger, no server or database",
+        "Prices in ariary, editable in one line",
+        "Free hosting, zero maintenance"
+      ]
+    }
+  ]
+}

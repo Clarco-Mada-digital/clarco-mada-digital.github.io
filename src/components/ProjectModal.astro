@@ -1,6 +1,10 @@
 ---
+import { getLocale, useT } from "../lib/i18n";
 // Modale projet : pilotée par Alpine (selectedProject). Les données viennent
 // du tableau `projects` injecté dans le composant portfolioApp.
+
+const locale = getLocale(Astro.url.pathname);
+const tr = useT(locale);
 ---
 
 <div
@@ -37,13 +41,13 @@
                 base path) : ce n'est pas une route statique.
                 argus-disable-next-line */}
             :src="asset(selectedProject.cover)"
-            :alt="'Couverture du projet ' + selectedProject.name"
+            :alt="selectedProject.name"
             class="absolute inset-0 w-full h-full object-cover"
           />
           <div class="absolute inset-0 bg-lab-dark/30"></div>
           <button
             @click="selectedProject = null"
-            aria-label="Fermer"
+            aria-label={tr("ui.close")}
             class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-lab-dark/80 flex items-center justify-center text-gray-400 hover:text-white hover:bg-lab-dark transition-colors"
           >
             <svg
@@ -89,7 +93,7 @@
                 <h4
                   class="text-xs text-neon-purple font-mono uppercase tracking-wider mb-2"
                 >
-                  Le contexte
+                  {tr("projects.context")}
                 </h4>
                 <p
                   class="text-sm text-gray-400 leading-relaxed"
@@ -101,7 +105,7 @@
               <h4
                 class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
               >
-                Décisions techniques
+                {tr("projects.decisions")}
               </h4>
               <ol class="space-y-4 mb-5">
                 <template
@@ -121,19 +125,19 @@
                     </h5>
                     <p class="text-sm text-gray-500 leading-relaxed mb-1.5">
                       <span class="text-gray-600 font-mono text-xs">
-                        Problème —
+                        {tr("projects.problem")}
                       </span>
                       <span x-text="c.problem"></span>
                     </p>
                     <p class="text-sm text-gray-400 leading-relaxed mb-1.5">
                       <span class="text-neon-cyan font-mono text-xs">
-                        Décision —
+                        {tr("projects.decision")}
                       </span>
                       <span x-text="c.decision"></span>
                     </p>
                     <p class="text-sm text-gray-300 leading-relaxed">
                       <span class="text-neon-green font-mono text-xs">
-                        Résultat —
+                        {tr("projects.result")}
                       </span>
                       <span x-text="c.result"></span>
                     </p>
@@ -147,7 +151,7 @@
                 <h4
                   class="text-xs text-neon-green font-mono uppercase tracking-wider mb-2"
                 >
-                  Où ça en est
+                  {tr("projects.outcome")}
                 </h4>
                 <p
                   class="text-sm text-gray-300 leading-relaxed"
@@ -162,7 +166,7 @@
             <h4
               class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
             >
-              Fonctionnalités clés
+              {tr("projects.features")}
             </h4>
             <ul class="space-y-1.5">
               <template
@@ -181,7 +185,7 @@
             <h4
               class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
             >
-              Galerie
+              {tr("projects.gallery")}
             </h4>
             <div class="grid grid-cols-3 gap-2">
               <template x-for="(img, gi) in galleryAll" :key="gi">
@@ -221,27 +225,31 @@
             </div>
           </div>
 
+          {/* `selectedProject?.` : à la fermeture, Alpine réévalue ces
+              expressions pendant la transition de sortie, alors que la valeur
+              est déjà nulle. Sans l'optional chaining, la console se remplit
+              d'erreurs à chaque fermeture de modale. */}
           <div class="flex gap-3">
             <a
-              :href="selectedProject.repoUrl || '#'"
-              x-show="selectedProject.repoUrl"
+              :href="selectedProject?.repoUrl || '#'"
+              x-show="selectedProject?.repoUrl"
               target="_blank"
               rel="noopener noreferrer"
               class="flex-1 py-2.5 bg-neon-cyan text-lab-dark font-bold text-center rounded-lg text-sm hover:bg-white transition-colors"
-              >Voir le code</a
+              >{tr("projects.viewCode")}</a
             >
             <a
-              :href="selectedProject.demoUrl || '#'"
-              x-show="selectedProject.demoUrl"
+              :href="selectedProject?.demoUrl || '#'"
+              x-show="selectedProject?.demoUrl"
               target="_blank"
               rel="noopener noreferrer"
               class="flex-1 py-2.5 border border-lab-border text-gray-300 font-bold text-center rounded-lg text-sm hover:border-neon-cyan hover:text-neon-cyan transition-all"
-              >Démo live</a
+              >{tr("projects.liveDemo")}</a
             >
             <span
-              x-show="!selectedProject.repoUrl && !selectedProject.demoUrl"
+              x-show="selectedProject && !selectedProject.repoUrl && !selectedProject.demoUrl"
               class="flex-1 py-2.5 text-center text-gray-600 text-sm font-mono"
-              >Liens à venir</span
+              >{tr("projects.noLinks")}</span
             >
           </div>
         </div>
@@ -320,7 +328,7 @@
   <button
     type="button"
     @click.stop="closeLightbox()"
-    aria-label="Fermer"
+    aria-label={tr("ui.close")}
     class="absolute top-4 right-4 w-9 h-9 rounded-lg bg-lab-card/80 border border-lab-border flex items-center justify-center text-gray-400 hover:text-white transition-colors z-10"
   >
     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

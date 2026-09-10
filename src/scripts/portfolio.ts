@@ -38,6 +38,10 @@ interface PortfolioBootstrap {
   cvUrl: string;
   socials: Content["socials"];
   labsMeta: LabMeta[];
+  /** Libellés de la palette, résolus côté serveur selon la langue. */
+  ui: Record<string, string>;
+  /** Chemin du contenu complet correspondant à la langue de la page. */
+  dataUrl: string;
 }
 
 declare global {
@@ -58,7 +62,12 @@ function portfolioApp() {
     cvUrl: "",
     socials: {} as Content["socials"],
     labsMeta: [],
+    ui: {},
+    dataUrl: "/portfolio-data.json",
   };
+
+  /** Libellé d'interface fourni par la page ; retombe sur la clé si absente. */
+  const ui = (key: string) => boot.ui?.[key] ?? key;
 
   // Contenu complet (CV + code des démos), récupéré au premier besoin puis
   // mémorisé. On garde la promesse elle-même : deux clics rapprochés ne
@@ -66,7 +75,7 @@ function portfolioApp() {
   let contentPromise: Promise<Content> | null = null;
   function loadContent(): Promise<Content> {
     if (!contentPromise) {
-      contentPromise = fetch(`${boot.base}portfolio-data.json`)
+      contentPromise = fetch(boot.dataUrl)
         .then((r) => {
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
           return r.json() as Promise<Content>;
@@ -195,32 +204,32 @@ function portfolioApp() {
       for (const n of NAV_ITEMS) {
         cmds.push({
           id: "view-" + n.id,
-          label: "Aller : " + n.label,
+          label: `${ui("palette.goto")} ${ui("nav." + n.id)}`,
           icon: "→",
           type: "view",
           arg: n.id,
           keywords: n.id,
         });
       }
-      cmds.push({ id: "blog", label: "Lire le blog", icon: "📝", type: "href", arg: boot.base + "blog", keywords: "blog articles notes écrits" });
-      cmds.push({ id: "cv", label: "Générer mon CV", icon: "📄", type: "cv", keywords: "cv pdf resume curriculum" });
-      cmds.push({ id: "customize", label: "Personnaliser l'apparence", icon: "🎨", type: "customize", keywords: "theme couleur police palette personnaliser" });
+      cmds.push({ id: "blog", label: ui("palette.blog"), icon: "📝", type: "href", arg: boot.base + "blog", keywords: "blog articles notes écrits" });
+      cmds.push({ id: "cv", label: ui("palette.cv"), icon: "📄", type: "cv", keywords: "cv pdf resume curriculum" });
+      cmds.push({ id: "customize", label: ui("palette.customize"), icon: "🎨", type: "customize", keywords: "theme couleur police palette personnaliser" });
       cmds.push({
         id: "theme",
-        label: this.isLight ? "Passer en mode sombre" : "Passer en mode clair",
+        label: this.isLight ? ui("palette.toDark") : ui("palette.toLight"),
         icon: "🌓",
         type: "theme",
         keywords: "theme dark light sombre clair mode",
       });
       const s = boot.socials;
-      if (s?.github) cmds.push({ id: "gh", label: "Ouvrir GitHub", icon: "↗", type: "link", arg: s.github, keywords: "github code repo" });
-      if (s?.linkedin) cmds.push({ id: "li", label: "Ouvrir LinkedIn", icon: "↗", type: "link", arg: s.linkedin, keywords: "linkedin reseau" });
-      if (s?.email) cmds.push({ id: "mail", label: "M'écrire un email", icon: "✉", type: "link", arg: "mailto:" + s.email, keywords: "email mail contact écrire" });
+      if (s?.github) cmds.push({ id: "gh", label: ui("palette.github"), icon: "↗", type: "link", arg: s.github, keywords: "github code repo" });
+      if (s?.linkedin) cmds.push({ id: "li", label: ui("palette.linkedin"), icon: "↗", type: "link", arg: s.linkedin, keywords: "linkedin reseau" });
+      if (s?.email) cmds.push({ id: "mail", label: ui("palette.email"), icon: "✉", type: "link", arg: "mailto:" + s.email, keywords: "email mail contact écrire" });
       for (const p of this.projects) {
-        cmds.push({ id: "p-" + p.id, label: "Projet : " + p.name, icon: "◆", type: "project", arg: p.id, keywords: ((p.tags ?? []).join(" ") + " projet").toLowerCase() });
+        cmds.push({ id: "p-" + p.id, label: `${ui("palette.project")} ${p.name}`, icon: "◆", type: "project", arg: p.id, keywords: ((p.tags ?? []).join(" ") + " projet").toLowerCase() });
       }
       for (const l of this.labs) {
-        cmds.push({ id: "l-" + l.id, label: "Labo : " + l.title, icon: "🧪", type: "lab", arg: l.id, keywords: ((l.tags ?? []).join(" ") + " labo").toLowerCase() });
+        cmds.push({ id: "l-" + l.id, label: `${ui("palette.lab")} ${l.title}`, icon: "🧪", type: "lab", arg: l.id, keywords: ((l.tags ?? []).join(" ") + " labo").toLowerCase() });
       }
       return cmds;
     },

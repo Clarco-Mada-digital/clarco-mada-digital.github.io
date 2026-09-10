@@ -1,7 +1,11 @@
 ---
+import { getLocale, useT } from "../lib/i18n";
 // Personnaliseur visiteur : ambiance (clair/sombre) + police + palette.
 // Piloté par portfolioApp (customizeOpen, fontPairings, colorThemes,
 // setFont, setPalette, toggleTheme, resetCustomize).
+
+const locale = getLocale(Astro.url.pathname);
+const tr = useT(locale);
 ---
 
 <!-- Bouton flottant (pilule, libellé visible pour la découvrabilité) -->
@@ -23,7 +27,7 @@
       ></path>
     </svg>
   </span>
-  <span class="hidden sm:inline">Personnaliser</span>
+  <span class="hidden sm:inline">{tr("ui.customize")}</span>
 </button>
 
 <!-- Backdrop -->
@@ -69,14 +73,14 @@
         </svg>
       </span>
       <div>
-        <div class="text-white font-bold leading-none">Personnaliser</div>
-        <div class="text-gray-500 text-[10px] font-mono mt-1">mémorisé sur cet appareil</div>
+        <div class="text-white font-bold leading-none">{tr("ui.customize")}</div>
+        <div class="text-gray-500 text-[10px] font-mono mt-1">{tr("ui.stored")}</div>
       </div>
     </div>
     <button
       type="button"
       @click="customizeOpen = false"
-      aria-label="Fermer"
+      aria-label={tr("ui.close")}
       class="w-8 h-8 rounded-lg bg-lab-dark flex items-center justify-center text-gray-400 hover:text-white transition-colors"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -88,7 +92,7 @@
   <div class="p-5 space-y-7">
     <!-- Ambiance : segmenté Sombre / Clair -->
     <section>
-      <div class="text-[11px] text-gray-500 uppercase tracking-wider mb-2.5 font-mono">Ambiance</div>
+      <div class="text-[11px] text-gray-500 uppercase tracking-wider mb-2.5 font-mono">{tr("ui.mood")}</div>
       <div class="grid grid-cols-2 gap-1.5 p-1.5 bg-lab-dark rounded-xl border border-lab-border">
         <button
           type="button"
@@ -99,7 +103,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
           </svg>
-          Sombre
+          {tr("ui.dark")}
         </button>
         <button
           type="button"
@@ -111,14 +115,14 @@
             <circle cx="12" cy="12" r="4"></circle>
             <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
           </svg>
-          Clair
+          {tr("ui.light")}
         </button>
       </div>
     </section>
 
     <!-- Police -->
     <section>
-      <div class="text-[11px] text-gray-500 uppercase tracking-wider mb-2.5 font-mono">Police</div>
+      <div class="text-[11px] text-gray-500 uppercase tracking-wider mb-2.5 font-mono">{tr("ui.font")}</div>
       <div class="grid grid-cols-2 gap-2.5">
         <template x-for="f in fontPairings" :key="f.id">
           <button
@@ -140,7 +144,7 @@
 
     <!-- Palette -->
     <section>
-      <div class="text-[11px] text-gray-500 uppercase tracking-wider mb-2.5 font-mono">Palette</div>
+      <div class="text-[11px] text-gray-500 uppercase tracking-wider mb-2.5 font-mono">{tr("ui.palette")}</div>
       <div class="space-y-2">
         <template x-for="t in colorThemes" :key="t.id">
           <button
