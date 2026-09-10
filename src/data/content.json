@@ -6,7 +6,7 @@
     "role": "Full-Stack & Mobile Architect",
     "titleTag": "Bryan Clark // Full-Stack & Mobile Architect",
     "description": "Clarco RAHERINANDRASANA — développeur Full-Stack & Mobile (React, Node.js, Flutter) basé à Antsiranana, Madagascar. Portfolio, labos interactifs (WebGL, Canvas) et articles sur le développement web, mobile et l'IA.",
-    "available": false,
+    "available": true,
     "availabilityLabel": "Disponible",
     "cvUrl": "",
     "photo": "https://res.cloudinary.com/dqhksjmzp/image/upload/v1783446311/BC_Image_no_backround_vuqnxo.png"
@@ -562,7 +562,7 @@
       ],
       "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30",
       "repoUrl": "https://github.com/Clarco-Mada-digital/argus",
-      "demoUrl": "https://clarco-mada-digital.github.io/argus/demo.html",
+      "demoUrl": "/analyser",
       "cover": "/projects/argus-cover.webp",
       "gallery": [
         "/projects/argus-rapport.webp"
@@ -576,7 +576,31 @@
         "Sortie SARIF, mode différentiel, correctifs assistés"
       ],
       "category": "perso",
-      "includeInCv": true
+      "includeInCv": true,
+      "caseStudy": {
+        "context": "Auditer un projet demande d'enchaîner une demi-douzaine d'outils, chacun avec sa config, ses dépendances et son format de sortie. Sur une connexion lente, la seule installation décourage. Je voulais une commande, aucune installation, et un verdict actionnable.",
+        "challenges": [
+          {
+            "title": "Faire tourner le même moteur dans le navigateur",
+            "problem": "Le cœur lit des fichiers avec `node:fs`. Pour l'exécuter dans un onglet, un portage aurait signifié deux bases de code à maintenir — et deux comportements qui divergent.",
+            "decision": "Rediriger `node:fs`, `node:path` et `node:crypto` vers des shims via une carte d'imports, plutôt que de dupliquer le code.",
+            "result": "Un seul cœur pour les deux cibles. Les empreintes SHA-1 sont identiques, donc une baseline reste interchangeable entre la CLI et le navigateur."
+          },
+          {
+            "title": "Zéro dépendance, vraiment",
+            "problem": "Chaque dépendance ajoute du poids à télécharger, une surface de faille et une raison de casser. Pour un outil d'audit de sécurité, c'est contradictoire.",
+            "decision": "Tout écrire sur la bibliothèque standard de Node : parseurs, résolveur de routes, calcul de contraste, génération du rapport HTML.",
+            "result": "`npx` suffit, rien à compiler. L'analyse est hors ligne par défaut : seules `sync` et `crawl` sortent sur le réseau, explicitement."
+          },
+          {
+            "title": "Rendre les résultats hiérarchisables",
+            "problem": "Une liste de 200 problèmes sans ordre est ignorée. C'est le mode d'échec classique des linters.",
+            "decision": "Noter chaque dimension sur 100, regrouper les occurrences d'une même règle, et classer un plan d'action par impact plutôt que par fichier.",
+            "result": "Le rapport tient en un fichier HTML autonome, filtrable, et donne pour chaque problème le correctif concret — pas seulement son nom."
+          }
+        ],
+        "outcome": "12 langages, 21 frameworks, plus de 40 règles de sécurité référencées CWE et OWASP Top 10. Utilisable en CLI, dans le navigateur et en GitHub Action qui annote directement la diff d'une pull request. Ce portfolio est audité par Argus à chaque push."
+      }
     },
     {
       "id": 15,
@@ -639,7 +663,31 @@
         "Glisser-déposer d'un fichier vers le téléphone"
       ],
       "category": "perso",
-      "includeInCv": false
+      "includeInCv": false,
+      "caseStudy": {
+        "context": "Utiliser une application Android depuis son ordinateur suppose en général un émulateur lourd, ou un miroir d'écran unique où tout se superpose. Je voulais des applications du téléphone dans de vraies fenêtres du bureau, chacune indépendante.",
+        "challenges": [
+          {
+            "title": "Ne pas réinventer le rendu vidéo",
+            "problem": "Décoder et composer soi-même le flux vidéo signifie gérer l'accélération matérielle sur trois systèmes, et reparenter des fenêtres — fragile par nature.",
+            "decision": "Tout déléguer à scrcpy : une application = un processus scrcpy = un écran virtuel Android. Aucune fenêtre n'est reparentée.",
+            "result": "Accroche aux bords, Alt+Tab et multi-écran fonctionnent nativement, puisque le gestionnaire de fenêtres du système possède réellement chaque fenêtre. Une application qui tombe n'emporte ni les autres, ni le widget."
+          },
+          {
+            "title": "Récupérer les icônes des applications",
+            "problem": "Android ne sait pas livrer l'icône d'une application par ADB. La seule source est l'APK, qui pèse parfois cent mégaoctets — impensable à télécharger pour une vignette.",
+            "decision": "Lire uniquement les octets utiles : le sommaire du zip, puis la seule entrée de l'icône. Et résoudre son vrai chemin dans `resources.arsc`, parce que les outils de construction renomment les ressources — l'icône de Brave s'appelle `res/xF.png`.",
+            "result": "Icônes fidèles, extraites en quelques kilooctets et mises en cache sur disque. Une application dont l'icône n'est qu'un XML garde une pastille colorée plutôt qu'un carré vide."
+          },
+          {
+            "title": "Les téléphones à profils multiples",
+            "problem": "Sur un appareil avec Secure Folder, Dual Messenger ou Island, `pm` et `am` visent le profil au premier plan et échouent avec une SecurityException — sans message clair.",
+            "decision": "Cibler explicitement le profil 0 dans toutes les commandes système, et refuser un scrcpy trop ancien avec un message explicite plutôt que d'échouer plus loin.",
+            "result": "Comportement prévisible sur les appareils Samsung et dérivés, et une erreur lisible au lieu d'un plantage à retardement quand la distribution livre encore scrcpy 1.25."
+          }
+        ],
+        "outcome": "Un widget qui apparaît au raccourci, tient en une barre de recherche et une ligne de favoris, et gère notifications, radios, transfert de fichiers et multi-appareils. Les contraintes de la plateforme ont dicté l'architecture plutôt que d'être contournées."
+      }
     },
     {
       "id": 17,
@@ -702,7 +750,31 @@
         "Progression en localStorage — aucun compte requis"
       ],
       "category": "perso",
-      "includeInCv": true
+      "includeInCv": true,
+      "caseStudy": {
+        "context": "Réviser le code de la route à Madagascar suppose souvent d'acheter un fascicule et d'avoir du réseau pour compléter. Ici, la coupure n'est pas un cas limite : c'est le quotidien. Une application de révision qui exige une connexion ne sert à rien dans un taxi-brousse.",
+        "challenges": [
+          {
+            "title": "Fonctionner vraiment sans réseau",
+            "problem": "Un simple cache navigateur ne suffit pas : il faut que chaque page, chaque icône et chaque police soient là avant la coupure, pas au moment où on en a besoin.",
+            "decision": "Précacher l'intégralité du site au premier chargement via Workbox, et prévoir une page dédiée pour les URL non mises en cache.",
+            "result": "Après une seule visite en ligne, la navigation est intégralement fonctionnelle hors connexion. L'application s'installe sur l'écran d'accueil."
+          },
+          {
+            "title": "Un contenu qu'on peut vérifier",
+            "problem": "Sur ce sujet, la désinformation circule : montants d'amendes périmés, règles inventées. Une application qui se trompe fait rater un examen.",
+            "decision": "Adosser les six modules à la loi n°2017-002 portant Code de la Route, citer les sources en bas de chaque module, et regrouper le tout sur une page dédiée. Signaler explicitement les montants comme indicatifs.",
+            "result": "Chaque affirmation est traçable. L'application se présente comme un outil de révision, pas comme un substitut à l'auto-école — c'est écrit dans le pied de page."
+          },
+          {
+            "title": "Rester léger et sans compte",
+            "problem": "Un backend implique un hébergement à payer, des données personnelles à protéger, et une connexion pour se connecter — l'inverse du besoin.",
+            "decision": "Site statique Astro, zéro JS par défaut, progression stockée en localStorage. Aucun serveur, aucun compte.",
+            "result": "Hébergement gratuit sur GitHub Pages, aucune donnée personnelle collectée, et un site qui se charge vite sur une connexion 2G. Interface disponible en français et en malgache."
+          }
+        ],
+        "outcome": "Six modules présentés comme des points kilométriques, cartes de quiz, examen blanc chronométré, glossaire et exercices de reconnaissance de panneaux. Installable, hors ligne, bilingue, et sourcé."
+      }
     }
   ],
   "experience": [
@@ -830,7 +902,7 @@
       "demo": {
         "html": "<canvas id=\"ptx\"></canvas>\n<div id=\"ui\">\n  <div id=\"hint\"><b>Texte Particules</b> — passe ta souris dans le texte pour le disperser, il se reforme tout seul. Tape ton propre mot :</div>\n  <div id=\"row\">\n    <input id=\"word\" type=\"text\" maxlength=\"14\" value=\"ABC.DEV\" autocomplete=\"off\" spellcheck=\"false\" />\n    <button id=\"go\">✨ Former</button>\n  </div>\n</div>",
         "css": "html, body { height: 100%; overflow: hidden; background: #05060f; }\n#ptx { position: fixed; inset: 0; width: 100%; height: 100%; display: block; cursor: crosshair; }\n#ui { position: fixed; left: 12px; bottom: 12px; right: 12px; display: flex; flex-direction: column; gap: 8px;\n  font-family: system-ui, sans-serif; pointer-events: none; }\n#hint { color: #9aa3b5; font-size: 12px; max-width: 480px; background: rgba(5,6,15,.6); padding: 6px 10px;\n  border-radius: 8px; backdrop-filter: blur(4px); width: fit-content; }\n#hint b { color: #22d3ee; }\n#row { display: flex; gap: 8px; pointer-events: auto; }\n#word { background: rgba(15,18,34,.85); border: 1px solid #263050; color: #e2e8f0; padding: 8px 12px;\n  border-radius: 8px; font-size: 14px; font-family: inherit; letter-spacing: 2px; text-transform: uppercase;\n  outline: none; width: 180px; }\n#word:focus { border-color: #22d3ee; }\n#go { background: linear-gradient(135deg, #06b6d4, #7c3aed); color: #fff; border: 0; padding: 8px 14px;\n  border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }\n#go:active { transform: scale(.96); }",
-        "js": "const canvas = document.getElementById(\"ptx\");\nconst ctx = canvas.getContext(\"2d\");\nconst input = document.getElementById(\"word\");\nconst btn = document.getElementById(\"go\");\n\nlet W, H, DPR;\nlet particles = [];\nconst mouse = { x: -9999, y: -9999, r: 70 };\n\nfunction resize() {\n  DPR = Math.min(window.devicePixelRatio || 1, 2);\n  W = canvas.clientWidth; H = canvas.clientHeight;\n  canvas.width = W * DPR; canvas.height = H * DPR;\n  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);\n}\n\n// Échantillonne le texte dans un canvas hors-écran pour obtenir les points cibles.\nfunction targetsFor(text) {\n  const off = document.createElement(\"canvas\");\n  off.width = W; off.height = H;\n  const o = off.getContext(\"2d\");\n  let size = Math.min(W / (text.length * 0.62), H * 0.42);\n  o.font = `900 ${size}px Arial, sans-serif`;\n  o.textAlign = \"center\"; o.textBaseline = \"middle\";\n  o.fillStyle = \"#fff\";\n  o.fillText(text, W / 2, H / 2);\n  const img = o.getImageData(0, 0, W, H).data;\n  const gap = Math.max(3, Math.round(size / 42));\n  const pts = [];\n  for (let y = 0; y < H; y += gap)\n    for (let x = 0; x < W; x += gap)\n      if (img[(y * W + x) * 4 + 3] > 128) pts.push({ x, y });\n  return pts;\n}\n\nconst PALETTE = [\"#22d3ee\", \"#38bdf8\", \"#818cf8\", \"#a78bfa\", \"#c084fc\"];\n\nfunction morph(text) {\n  const pts = targetsFor(text);\n  // Réutilise les particules existantes, en crée ou en retire selon le besoin.\n  while (particles.length < pts.length)\n    particles.push({ x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0, tx: 0, ty: 0,\n      c: PALETTE[(Math.random() * PALETTE.length) | 0], s: 1 + Math.random() * 1.6 });\n  particles.length = pts.length;\n  // Mélange les cibles pour un morphing organique (pas ligne par ligne).\n  for (let i = pts.length - 1; i > 0; i--) {\n    const j = (Math.random() * (i + 1)) | 0;\n    [pts[i], pts[j]] = [pts[j], pts[i]];\n  }\n  particles.forEach((p, i) => { p.tx = pts[i].x; p.ty = pts[i].y; });\n}\n\nfunction tick() {\n  ctx.fillStyle = \"rgba(5,6,15,0.28)\";\n  ctx.fillRect(0, 0, W, H);\n  for (const p of particles) {\n    // Ressort vers la cible.\n    p.vx += (p.tx - p.x) * 0.045;\n    p.vy += (p.ty - p.y) * 0.045;\n    // Répulsion de la souris.\n    const dx = p.x - mouse.x, dy = p.y - mouse.y;\n    const d2 = dx * dx + dy * dy;\n    if (d2 < mouse.r * mouse.r) {\n      const d = Math.sqrt(d2) || 1;\n      const f = (mouse.r - d) / mouse.r * 9;\n      p.vx += (dx / d) * f;\n      p.vy += (dy / d) * f;\n    }\n    p.vx *= 0.82; p.vy *= 0.82;\n    p.x += p.vx; p.y += p.vy;\n    ctx.fillStyle = p.c;\n    ctx.fillRect(p.x, p.y, p.s, p.s);\n  }\n  requestAnimationFrame(tick);\n}\n\nfunction setWord() {\n  const t = (input.value || \"ABC.DEV\").trim().toUpperCase() || \"ABC.DEV\";\n  morph(t);\n}\n\ncanvas.addEventListener(\"pointermove\", (e) => {\n  const r = canvas.getBoundingClientRect();\n  mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;\n});\ncanvas.addEventListener(\"pointerleave\", () => { mouse.x = -9999; mouse.y = -9999; });\nbtn.addEventListener(\"click\", setWord);\ninput.addEventListener(\"keydown\", (e) => { if (e.key === \"Enter\") setWord(); });\nwindow.addEventListener(\"resize\", () => { resize(); setWord(); });\n\nresize();\nsetWord();\ntick();"
+        "js": "const canvas = document.getElementById(\"ptx\");\nconst ctx = canvas.getContext(\"2d\");\nconst input = document.getElementById(\"word\");\nconst btn = document.getElementById(\"go\");\n\nlet W, H, DPR;\nlet particles = [];\nconst mouse = { x: -9999, y: -9999, r: 70 };\n\n// Renvoie false tant que le canvas n'a pas de taille : c'est le cas quand la\n// section Labs est encore masquee (display:none) ou que la mise en page n'est\n// pas posee. Sans ce garde, W vaut 0 et getImageData leve une IndexSizeError\n// dont la demo ne se releve jamais.\nfunction resize() {\n  const w = canvas.clientWidth, h = canvas.clientHeight;\n  if (!w || !h) return false;\n  DPR = Math.min(window.devicePixelRatio || 1, 2);\n  W = w; H = h;\n  canvas.width = W * DPR; canvas.height = H * DPR;\n  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);\n  return true;\n}\n\n// Échantillonne le texte dans un canvas hors-écran pour obtenir les points cibles.\nfunction targetsFor(text) {\n  const off = document.createElement(\"canvas\");\n  off.width = W; off.height = H;\n  const o = off.getContext(\"2d\");\n  let size = Math.min(W / (text.length * 0.62), H * 0.42);\n  o.font = `900 ${size}px Arial, sans-serif`;\n  o.textAlign = \"center\"; o.textBaseline = \"middle\";\n  o.fillStyle = \"#fff\";\n  o.fillText(text, W / 2, H / 2);\n  const img = o.getImageData(0, 0, W, H).data;\n  const gap = Math.max(3, Math.round(size / 42));\n  const pts = [];\n  for (let y = 0; y < H; y += gap)\n    for (let x = 0; x < W; x += gap)\n      if (img[(y * W + x) * 4 + 3] > 128) pts.push({ x, y });\n  return pts;\n}\n\nconst PALETTE = [\"#22d3ee\", \"#38bdf8\", \"#818cf8\", \"#a78bfa\", \"#c084fc\"];\n\nfunction morph(text) {\n  const pts = targetsFor(text);\n  // Réutilise les particules existantes, en crée ou en retire selon le besoin.\n  while (particles.length < pts.length)\n    particles.push({ x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0, tx: 0, ty: 0,\n      c: PALETTE[(Math.random() * PALETTE.length) | 0], s: 2.2 + Math.random() * 1.8 });\n  particles.length = pts.length;\n  // Mélange les cibles pour un morphing organique (pas ligne par ligne).\n  for (let i = pts.length - 1; i > 0; i--) {\n    const j = (Math.random() * (i + 1)) | 0;\n    [pts[i], pts[j]] = [pts[j], pts[i]];\n  }\n  particles.forEach((p, i) => { p.tx = pts[i].x; p.ty = pts[i].y; });\n}\n\nfunction tick() {\n  ctx.fillStyle = \"rgba(5,6,15,0.28)\";\n  ctx.fillRect(0, 0, W, H);\n  for (const p of particles) {\n    // Ressort vers la cible.\n    p.vx += (p.tx - p.x) * 0.08;\n    p.vy += (p.ty - p.y) * 0.08;\n    // Répulsion de la souris.\n    const dx = p.x - mouse.x, dy = p.y - mouse.y;\n    const d2 = dx * dx + dy * dy;\n    if (d2 < mouse.r * mouse.r) {\n      const d = Math.sqrt(d2) || 1;\n      const f = (mouse.r - d) / mouse.r * 9;\n      p.vx += (dx / d) * f;\n      p.vy += (dy / d) * f;\n    }\n    p.vx *= 0.82; p.vy *= 0.82;\n    p.x += p.vx; p.y += p.vy;\n    ctx.fillStyle = p.c;\n    ctx.fillRect(p.x, p.y, p.s, p.s);\n  }\n  requestAnimationFrame(tick);\n}\n\nfunction setWord() {\n  const t = (input.value || \"ABC.DEV\").trim().toUpperCase() || \"ABC.DEV\";\n  morph(t);\n}\n\ncanvas.addEventListener(\"pointermove\", (e) => {\n  const r = canvas.getBoundingClientRect();\n  mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;\n});\ncanvas.addEventListener(\"pointerleave\", () => { mouse.x = -9999; mouse.y = -9999; });\nbtn.addEventListener(\"click\", setWord);\ninput.addEventListener(\"keydown\", (e) => { if (e.key === \"Enter\") setWord(); });\nwindow.addEventListener(\"resize\", () => { if (resize()) setWord(); });\n\n// La demo peut demarrer masquee (vignette dans un onglet non actif) ou avant\n// que la mise en page soit posee. On observe donc le canvas et on (re)forme le\n// mot des qu'il obtient enfin une taille.\nlet started = false;\nfunction start() {\n  if (started || !resize()) return;\n  started = true;\n  setWord();\n  tick();\n}\nnew ResizeObserver(start).observe(canvas);\nstart();"
       }
     },
     {
