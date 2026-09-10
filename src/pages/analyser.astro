@@ -1,0 +1,150 @@
+---
+import Base from "../layouts/Base.astro";
+import { content } from "../lib/content";
+
+const { site } = content;
+const base = import.meta.env.BASE_URL;
+
+// L'analyseur est publié par le dépôt `argus` sur les mêmes GitHub Pages,
+// donc à la même origine que ce portfolio : l'iframe n'a besoin d'aucune
+// permission particulière et la sélection de dossier fonctionne.
+//
+// Cette page s'appelle /analyser et non /argus : GitHub Pages sert déjà le
+// site de projet du dépôt `argus` sous /argus/, qui masquerait cette page.
+//
+// En développement local, /argus/ n'existe pas — l'iframe y affichera un 404.
+// C'est normal : la démonstration ne vaut qu'une fois en ligne.
+const analyseur = "/argus/analyser.html";
+const repo = "https://github.com/Clarco-Mada-digital/argus";
+const rapportDemo = "/argus/demo.html";
+
+const points = [
+  {
+    titre: "Vos fichiers ne bougent pas",
+    texte:
+      "La page n'a pas de serveur. Coupez votre connexion avant de lancer l'analyse : elle fonctionnera quand même.",
+  },
+  {
+    titre: "Le même cœur qu'en ligne de commande",
+    texte:
+      "Ce n'est pas un portage. `node:fs`, `node:path` et `node:crypto` sont redirigés vers des shims par une carte d'imports — les empreintes SHA-1 sont identiques.",
+  },
+  {
+    titre: "Zéro dépendance",
+    texte:
+      "Node.js seul suffit en CLI, rien à compiler. 12 langages, 21 frameworks, plus de 40 règles de sécurité référencées CWE et OWASP.",
+  },
+];
+---
+
+<Base
+  title={`Argus — analyser un projet dans le navigateur // ${site.name}`}
+  description="Analysez votre propre code source directement dans cette page : sécurité, SEO, routes mortes, code mort, accessibilité, performance. Rien n'est envoyé sur un serveur."
+>
+  <header
+    class="sticky top-0 z-30 bg-lab-dark/90 backdrop-blur-md border-b border-lab-border"
+  >
+    <div
+      class="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between"
+    >
+      <a href={base} class="flex items-center gap-2.5 group">
+        <div
+          class="w-9 h-9 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center text-lab-dark font-extrabold"
+        >
+          {site.initials}
+        </div>
+        <span
+          class="font-mono text-sm text-white group-hover:text-neon-cyan transition-colors"
+        >
+          {site.handle}
+        </span>
+      </a>
+      <a
+        href={base}
+        class="text-sm font-mono text-gray-400 hover:text-neon-cyan transition-colors"
+        >← Portfolio</a
+      >
+    </div>
+  </header>
+
+  <main id="contenu" class="max-w-6xl mx-auto px-5 sm:px-8 py-12">
+    <p class="font-mono text-xs text-neon-purple mb-3">~/{site.handle} / analyser</p>
+    <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight mb-4">
+      Analysez <span class="text-neon-cyan">votre</span> projet, ici même.
+    </h1>
+    <p class="text-gray-400 text-lg leading-relaxed max-w-3xl mb-3">
+      Argus lit un code source, note chaque dimension sur 100 et rend un plan
+      d'action classé par impact — sécurité, SEO, liens morts, code mort,
+      accessibilité, performance, qualité, dépendances.
+    </p>
+    <p class="text-gray-500 leading-relaxed max-w-3xl mb-10">
+      C'est un outil que j'ai écrit. Plutôt que de vous en montrer une capture
+      d'écran, autant vous laisser l'essayer sur votre propre code : choisissez
+      un dossier ci-dessous, tout se passe dans votre navigateur.
+    </p>
+
+    <div class="grid sm:grid-cols-3 gap-4 mb-10">
+      {
+        points.map((p) => (
+          <div class="bg-lab-card border border-lab-border rounded-xl p-5">
+            <h2 class="text-white font-bold text-sm mb-2">{p.titre}</h2>
+            <p class="text-gray-500 text-sm leading-relaxed">{p.texte}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-8">
+      <a
+        href={repo}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-5 py-2.5 rounded-lg border border-lab-border text-gray-300 font-mono text-sm hover:border-neon-cyan hover:text-neon-cyan transition-all"
+        >Code source ↗</a
+      >
+      <a
+        href={rapportDemo}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-5 py-2.5 rounded-lg border border-lab-border text-gray-300 font-mono text-sm hover:border-neon-purple hover:text-neon-purple transition-all"
+        >Voir un rapport réel ↗</a
+      >
+    </div>
+
+    <div class="bg-lab-card border border-lab-border rounded-xl overflow-hidden">
+      <div
+        class="flex items-center gap-2 px-4 py-2.5 border-b border-lab-border bg-lab-dark/60"
+      >
+        <span class="w-2.5 h-2.5 rounded-full bg-red-400/70"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-yellow-300/70"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-neon-green/70"></span>
+        <span class="ml-2 font-mono text-[11px] text-gray-500"
+          >argus — analyseur embarqué</span
+        >
+      </div>
+      {/* Pas d'attribut sandbox : la sélection de dossier exige une origine
+          réelle, et la page est servie depuis la même que ce portfolio. */}
+      <iframe
+        src={analyseur}
+        title="Analyseur Argus"
+        loading="lazy"
+        class="w-full block bg-lab-dark"
+        style="height: min(1100px, 145vh); border: 0"></iframe>
+    </div>
+
+    <p class="text-gray-600 text-xs font-mono mt-4 leading-relaxed">
+      Le sélecteur de dossier demande un navigateur Chromium (Chrome, Edge,
+      Opera) ; ailleurs, un champ de fichiers classique prend le relais. Les
+      fonctions liées à Git — mode différentiel, historique — ne sont
+      disponibles qu'en ligne de commande.
+    </p>
+
+    <div class="mt-12 pt-8 border-t border-lab-border">
+      <p class="text-gray-500 text-sm mb-4 font-mono">
+        En ligne de commande, sans rien installer :
+      </p>
+      <pre
+        class="bg-lab-dark border border-lab-border rounded-lg p-4 overflow-x-auto"><code class="font-mono text-sm text-neon-green">npx github:Clarco-Mada-digital/argus scan ./mon-projet</code></pre>
+    </div>
+  </main>
+</Base>

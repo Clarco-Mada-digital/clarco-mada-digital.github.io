@@ -28,6 +28,16 @@ export interface Project {
   /** Images de démo affichées dans la modale. */
   gallery?: string[];
   features: string[];
+  /**
+   * Étude de cas détaillée, affichée dans la modale. Optionnelle : réservée
+   * aux projets qui ont une vraie histoire technique — une contrainte, un
+   * arbitrage, un résultat — plutôt qu'une liste de fonctionnalités.
+   */
+  caseStudy?: {
+    context: string;
+    challenges: { title: string; problem: string; decision: string; result: string }[];
+    outcome: string;
+  };
   /** Projet personnel (side-project) ou réalisé en contexte professionnel. */
   category?: "perso" | "pro";
   /** Entreprise / client pour lequel le projet a été réalisé (si category = "pro"). */

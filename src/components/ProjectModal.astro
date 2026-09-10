@@ -78,6 +78,86 @@
           >
           </p>
 
+          {/* Étude de cas : contrainte → décision → résultat. Présente
+              seulement sur les projets où il y a une vraie histoire technique
+              à raconter, plutôt qu'une liste de fonctionnalités. */}
+          <template x-if="selectedProject.caseStudy">
+            <div class="mb-8">
+              <div
+                class="p-4 rounded-xl border border-lab-border bg-lab-dark/60 mb-5"
+              >
+                <h4
+                  class="text-xs text-neon-purple font-mono uppercase tracking-wider mb-2"
+                >
+                  Le contexte
+                </h4>
+                <p
+                  class="text-sm text-gray-400 leading-relaxed"
+                  x-text="selectedProject.caseStudy.context"
+                >
+                </p>
+              </div>
+
+              <h4
+                class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"
+              >
+                Décisions techniques
+              </h4>
+              <ol class="space-y-4 mb-5">
+                <template
+                  x-for="(c, ci) in selectedProject.caseStudy.challenges"
+                  :key="ci"
+                >
+                  <li
+                    class="relative pl-6 border-l-2 border-lab-border hover:border-neon-cyan/50 transition-colors"
+                  >
+                    <span
+                      class="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-lab-card border-2 border-neon-cyan"
+                    ></span>
+                    <h5
+                      class="text-white font-bold text-sm mb-2"
+                      x-text="c.title"
+                    >
+                    </h5>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-1.5">
+                      <span class="text-gray-600 font-mono text-xs">
+                        Problème —
+                      </span>
+                      <span x-text="c.problem"></span>
+                    </p>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-1.5">
+                      <span class="text-neon-cyan font-mono text-xs">
+                        Décision —
+                      </span>
+                      <span x-text="c.decision"></span>
+                    </p>
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                      <span class="text-neon-green font-mono text-xs">
+                        Résultat —
+                      </span>
+                      <span x-text="c.result"></span>
+                    </p>
+                  </li>
+                </template>
+              </ol>
+
+              <div
+                class="p-4 rounded-xl border border-neon-green/25 bg-neon-green/5"
+              >
+                <h4
+                  class="text-xs text-neon-green font-mono uppercase tracking-wider mb-2"
+                >
+                  Où ça en est
+                </h4>
+                <p
+                  class="text-sm text-gray-300 leading-relaxed"
+                  x-text="selectedProject.caseStudy.outcome"
+                >
+                </p>
+              </div>
+            </div>
+          </template>
+
           <div class="mb-6">
             <h4
               class="text-xs text-gray-500 font-mono uppercase tracking-wider mb-3"

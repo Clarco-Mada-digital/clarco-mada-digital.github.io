@@ -2,6 +2,7 @@
 import { content } from "../../lib/content";
 import { buildLabSrcdoc, hasDemo } from "../../lib/labs";
 const { labs } = content;
+const base = import.meta.env.BASE_URL;
 
 // Métadonnées d'affichage par statut (badge + couleur néon).
 const STATUS: Record<string, { label: string; cls: string }> = {
@@ -21,10 +22,32 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 >
   <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">// Labs</h2>
   <p class="text-gray-500 mb-3 font-mono text-sm">runExperiments()</p>
-  <p class="text-gray-400 mb-10 max-w-2xl leading-relaxed">
+  <p class="text-gray-400 mb-6 max-w-2xl leading-relaxed">
     Mon bac à sable : prototypes, tests d'API, mini-projets et idées en vrac.
     Chaque démo tourne <span class="text-neon-cyan">en vrai</span>, directement ci-dessous. 🧪
   </p>
+
+  {/* Mise en avant : la seule démo où le visiteur apporte ses propres données. */}
+  <a
+    href={`${base}analyser`}
+    class="group flex flex-col sm:flex-row sm:items-center gap-4 mb-10 p-5 rounded-xl border border-neon-cyan/30 bg-gradient-to-br from-neon-cyan/10 to-neon-purple/10 hover:border-neon-cyan transition-colors"
+  >
+    <span class="text-3xl shrink-0">🛰</span>
+    <span class="flex-1">
+      <span class="block text-white font-bold mb-1">
+        Analysez <span class="text-neon-cyan">votre propre projet</span> avec Argus
+      </span>
+      <span class="block text-gray-400 text-sm leading-relaxed">
+        Mon analyseur de code tourne entièrement dans le navigateur : choisissez
+        un dossier, il en sort un rapport noté. Vos fichiers ne quittent pas
+        votre machine.
+      </span>
+    </span>
+    <span
+      class="shrink-0 font-mono text-xs px-3 py-1.5 rounded-lg border border-neon-cyan/40 text-neon-cyan group-hover:bg-neon-cyan group-hover:text-lab-dark transition-colors"
+      >Essayer →</span
+    >
+  </a>
 
   {
     labs.length === 0 && (
