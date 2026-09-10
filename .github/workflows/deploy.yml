@@ -31,6 +31,17 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Les tests gardent les deux fonctions qui cassent en silence : la
+      # résolution des URL d'images (invisible en local, visible seulement une
+      # fois en ligne) et l'échappement du code des labos.
+      - name: Tests
+        run: npm test
+
+      # NB : `npm run check` (astro check) n'est pas encore dans la chaîne
+      # bloquante — il remonte 86 erreurs de types préexistantes, surtout des
+      # déclarations manquantes (@types/alpinejs, pdfmake). À traiter avant de
+      # l'ajouter ici, sinon plus aucun déploiement ne passe.
+
       - name: Build
         run: npm run build
         env:
@@ -51,6 +62,30 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
+
+  # Audit du portfolio par Argus — mon propre outil, appliqué à mon propre
+  # site. Volontairement non bloquant : il reste des remontées « Élevé » qui
+  # sont des faux positifs connus (voir argus.config.json), et un déploiement
+  # ne doit pas échouer pour ça. Le rapport est publié en artefact.
+  audit:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Analyse Argus
+        run: npx --yes github:Clarco-Mada-digital/argus scan . --html argus-rapport.html
+        continue-on-error: true
+
+      - name: Publier le rapport
+        uses: actions/upload-artifact@v4
+        with:
+          name: argus-rapport
+          path: argus-rapport.html
+          if-no-files-found: warn
 
   deploy:
     needs: build

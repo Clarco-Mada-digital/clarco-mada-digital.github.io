@@ -489,7 +489,11 @@ function portfolioApp() {
       // Anti-spam : honeypot rempli => on ignore silencieusement (bot).
       if (this.form.botcheck) return;
 
-      const web3key = (boot.web3formsKey || boot.content?.contact?.web3formsKey || "").trim();
+      // `boot.web3formsKey` est la seule source : index.astro y met déjà le
+      // secret GitHub sinon la valeur de content.json. L'ancien repli
+      // `boot.content.contact.web3formsKey` visait un champ qui n'est plus
+      // injecté dans la page (le contenu complet est chargé à la demande).
+      const web3key = (boot.web3formsKey || "").trim();
       const endpoint = boot.formEndpoint?.trim();
       this.formSending = true;
 
