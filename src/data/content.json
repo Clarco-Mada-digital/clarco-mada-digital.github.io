@@ -834,6 +834,37 @@
       ],
       "category": "perso",
       "includeInCv": false
+    },
+    {
+      "id": 21,
+      "name": "NovaTerm",
+      "year": "2026",
+      "featured": true,
+      "shortDesc": "Terminal Linux écrit en Rust : onglets, splits, thèmes, transparence, image de fond et curseur animé, dans une fenêtre entièrement personnalisable.",
+      "fullDesc": "NovaTerm est un terminal pour Linux écrit en Rust, pensé comme un outil du quotidien plutôt qu'une démo : onglets et panneaux splittés, thèmes de couleurs, transparence et image de fond, police, interligne et marges réglables. La fenêtre elle-même est personnalisable — barre de titre dessinée par l'application, boutons, coins arrondis — et les notifications apparaissent sous forme de toasts animés. Sous le capot, l'émulation VT s'appuie sur alacritty_terminal et le rendu sur egui/eframe ; la configuration tient dans un seul config.toml, éditable à chaud via Ctrl+, sans redémarrage. Le curseur va plus loin qu'un simple clignotement : fondu, pulsation, rotation verticale et déplacement fluide avec traînée. Les suggestions de commandes reprennent l'historique zsh sans modifier la configuration de l'utilisateur — si zsh-autosuggestions est déjà installé, NovaTerm s'efface. Le binaire release est optimisé (LTO, panic=abort, strip) et s'installe avec son icône et son entrée de menu via un script unique.",
+      "tags": [
+        "Rust",
+        "egui",
+        "alacritty_terminal",
+        "Linux",
+        "Desktop"
+      ],
+      "gradient": "bg-gradient-to-br from-neon-cyan/30 to-neon-green/30",
+      "repoUrl": "https://github.com/Clarco-Mada-digital/novaterm",
+      "demoUrl": "",
+      "cover": "/projects/novaterm-cover.webp",
+      "gallery": [],
+      "features": [
+        "Onglets, splits, zoom et déplacement de panneaux",
+        "Thèmes, transparence et image de fond",
+        "Curseur animé : fondu, pulsation, rotation, traînée",
+        "Suggestions de commandes d'après l'historique zsh",
+        "Palette de commandes et raccourcis remappables",
+        "Fenêtre personnalisable et notifications animées",
+        "Configuration TOML rechargée à chaud (Ctrl+,)"
+      ],
+      "category": "perso",
+      "includeInCv": true
     }
   ],
   "experience": [

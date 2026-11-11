@@ -449,6 +449,20 @@
         "Prices in ariary, editable in one line",
         "Free hosting, zero maintenance"
       ]
+    },
+    {
+      "id": 21,
+      "shortDesc": "Linux terminal written in Rust: tabs, splits, themes, transparency, background image and animated cursor, in a fully customisable window.",
+      "fullDesc": "NovaTerm is a Linux terminal written in Rust, built as an everyday tool rather than a demo: tabs and split panes, colour themes, transparency and background image, adjustable font, line height and margins. The window itself is customisable — the title bar is drawn by the application, with its buttons and rounded corners — and actions surface as animated toast notifications. Under the hood, VT emulation relies on alacritty_terminal and rendering on egui/eframe; configuration lives in a single config.toml, editable live through Ctrl+, with no restart. The cursor goes beyond a simple blink: fade, pulse, vertical flip and smooth movement with a trail. Command suggestions draw on zsh history without touching the user's configuration — if zsh-autosuggestions is already installed, NovaTerm steps aside. The release binary is optimised (LTO, panic=abort, strip) and installs with its icon and menu entry through a single script.",
+      "features": [
+        "Tabs, splits, zoom and pane moving",
+        "Themes, transparency and background image",
+        "Animated cursor: fade, pulse, flip, trail",
+        "Command suggestions from zsh history",
+        "Command palette and remappable shortcuts",
+        "Customisable window and animated notifications",
+        "TOML configuration hot-reloaded (Ctrl+,)"
+      ]
     }
   ]
 }
